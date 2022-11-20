@@ -11,33 +11,21 @@ import dayjs from "dayjs"
 import { Songinfo, PlaySong } from "../Song"
 
 const Song=(props)=>{
-    const [show,setShow]=useState(false)
+   
     const {song,index}=props
     const songref=useRef()
     const dotref=useRef()
     const dropref=useRef()
-    const artistRef=useRef()
+    
     const player=useSelector(state => state.player)
     const {currentIndex,play,showinfo,infoRef,keepinfo}=player
     
     const datasongs=useSelector(state => state.player.songs)
     const dispatch = useDispatch()
     
-    useEffect(()=>{
-        const handleClick=(event)=>{
-            const {target}=event
-            if(show && dotref.current && !dotref.current.contains(target) && !dropref.current.contains(target) ){
-                setShow(false)
-            }
-        }
-        document.addEventListener('click',handleClick)
-        return ()=>{
-            document.removeEventListener('click',handleClick)
-        }
-    },[show])
-
     
     return(
+        <div className="list-item hide-right media-item hide-right full-left">
         <div  ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <PlaySong song={song}/>        
             <div className="card-info flex-col">
@@ -46,18 +34,15 @@ const Song=(props)=>{
                 />
                 <p className="song-date">{timeago(song.created_at)} ago</p>
             </div>
-            <div ref={dotref} onClick={()=>{setShow(!show)}} className="icon-button">           
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>        
-                {show &&(
-            <div ref={dropref} className="detail-song" style={{position:'absolute',top:`40px`,right:`40px`,width:'280px',transform:`translateY(-${index>1?50:10}%)`}}>
             <Actionsong
-                show={show}
-                dotref={dotref}
                 song={song}
-                setshow={(data)=>setShow(data)}
-            /></div>)}
-            </div>
+                className={`icon-button`}
+                top={40}
+                right={40}
+                transformY={index>1?50:10}
+            />
             
+            </div>
         </div>
     )
 }
@@ -75,22 +60,25 @@ const Listnewsong=(props)=>{
         ( async ()=>{
             const res=await axios.get(`${newsongURL}?limit=true`,headers)
         setListnewsong(res.data.map(item=>{
-            return({...item,image_cover:'http://localhost:8000'+item.image_cover,url:'http://localhost:8000'+item.url})
+            return({...item,image_cover:'http://localhost:8000'+item.image_cover})
         }))
         })()
         
     },[])
 
     return(
-        <div className="row">
+        <div className="columns is-multiline">
             {newsongs.map((item,index)=>
-                <div key={index} style={{flex:1}} className="group-item">
+                <div key={index} className="column mar-b-0 is-fullhd-4 is-widescreen-4 is-desktop-4 is-touch-6 is-tablet-6">
+                    <div className="list">
                     {item.map(song=>
+
                         <Song
                         index={index}
                         song={song}
                         />
                     )}
+                    </div>
                 </div>
             )}
         </div>

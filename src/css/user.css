@@ -8,10 +8,10 @@ position:fixed;
 background: rgba(37, 37, 37, 0.6);
 }
 .modal-content {
-    position: absolute;
+    position: fixed;
     left:50%;
     top:50%;
-    padding:12px;
+    padding:16px;
     overflow: hidden;
     z-index:1000;
     transform: translate(-50%,-50%);
@@ -32,7 +32,7 @@ font-weight: 600;
 }
 
 .modal-body{
-position:relative
+width:100%
 }
 .lyric-content{
 border:1px solid #fff;
@@ -250,12 +250,14 @@ left: 0;
 background-color: #9b4de0;
 }
 
-.option-all__song-slider {
-    width: 270px;
-    height: 244px;
+.option-all__song-slider,.song-slider {
+    
     position: relative;
 }
-
+.option-all__song-slider{
+    width:273px;
+    height: 230px;
+}
 
 .option-all__song-slider-img {
     border-radius: 5px;
@@ -316,7 +318,7 @@ background-color: #9b4de0;
 }
 
 .option-all__songs-list {
-    height: 241px;
+    height: 260px;
     overflow-y: auto;
 }
 

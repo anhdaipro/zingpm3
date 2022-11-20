@@ -1,7 +1,7 @@
 import {useState,useRef,useEffect} from 'react'
 import axios from "axios"
 import { dataURLtoFile } from '../constants';
-import { logout, setrequestlogin } from '../actions/auth';
+import { logout, setrequestlogin,valid } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
@@ -10,7 +10,6 @@ const token=localStorage.getItem('token')
 const Navbar=()=>{
     const dispatch = useDispatch()
     const inputref=useRef()
-    const [show,setShow]=useState(false)
     const user=useSelector(state=>state.auth.user)
     const previewFile= async (e)=>{
         [].forEach.call(e.target.files, function(file) {
@@ -76,7 +75,14 @@ const Navbar=()=>{
                 <div class="header-right">
                     <div class="_header-icon_1fdcg_34 _header-theme_1fdcg_48" aria-label="Chủ đề">
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M32 144l48 64 64-32-16 304c64 16 192 16 256 0l-16-304 64 32 48-64-112-96-48-16c-16 64-112 64-128 0l-48 16z"></path></svg></div>
-                    <div onClick={()=>inputref.current.click()}  class="_header-icon_1fdcg_34" aria-label="Tải lên">
+                    <div onClick={()=>{
+                        if(valid){
+                        inputref.current.click()
+                        }
+                        else{
+                            dispatch(setrequestlogin(true))
+                        }
+                        }}  class="_header-icon_1fdcg_34" aria-label="Tải lên">
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                         <input ref={inputref} multiple={true} onChange={(e)=>previewFile(e)} type="file" accept="audio/*"/>
                     </div>

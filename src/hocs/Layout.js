@@ -18,7 +18,9 @@ const Layout = ({children}) => {
     const player=useSelector(state=>state.player)
     const dispatch = useDispatch()
     const dotref=useRef()
-    const {requestlogin,showinfo,songs,showpost}=player
+    const {showinfo,songs,showpost}=player
+    const requestlogin=useSelector(state=>state.auth.requestlogin)
+    
     const CloseButton=({ closeToast })=>(  
         <button >
     <svg width="12px" color="#fff" height="12px" onClick={closeToast} ref={dotref} viewBox="0 0 16 16" stroke="#EE4D2D" class="popup__close-button">
@@ -35,13 +37,15 @@ const Layout = ({children}) => {
        
     }, [localStorage.token]);
     
-    
+    console.log(requestlogin)
     return (
         <div className="wrapper main">  
             <Sibar/>
+            <Navbar/>
             <div className="main-container">
-                <Navbar/>
+                <div className="container">
                 {children}
+                </div>
             </div>
             {songs.length>0&&(
             <Player/>)}
@@ -50,13 +54,13 @@ const Layout = ({children}) => {
             
             <ToastContainer 
                 hideProgressBar={true}
-                autoClose={4000}
+                autoClose={3000}
                 pauseOnHover={false}
                 pauseOnFocusLoss={false}
                 icon={false}
                 closeButton={CloseButton}
                 closeOnClick={false}
-                limit={1}
+                limit={4}
             />
             {requestlogin &&(
             <Login/>)}

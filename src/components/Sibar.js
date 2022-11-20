@@ -1,5 +1,5 @@
 import { actionuser, showmodal,updateplaylists } from "../actions/player"
-import { headers } from "../actions/auth"
+import { headers,setrequestlogin,valid } from "../actions/auth"
 import {useDispatch,useSelector} from "react-redux"
 import {NavLink} from "react-router-dom"
 import {useState,useEffect} from "react"
@@ -8,24 +8,35 @@ import {listplaylistURL} from "../urls"
 
 const Sibar=()=>{
     const dispatch = useDispatch()
-    
+    const user=useSelector(state=>state.auth.user)
     const addplaylist=()=>{
+        if(valid){
         dispatch(showmodal(true))
         dispatch(actionuser({data:{title:'Thêm playlist'},action:'addplaylist'}))
+        }
     }
     useEffect(()=>{
         ( async ()=>{
+            if(valid){
             const res= await axios.get(listplaylistURL,headers)
             dispatch(updateplaylists(res.data))
+            }
             
         })()
-    },[dispatch])
+    },[dispatch,valid])
+    const checkuser=(e)=>{
+        if(!valid){
+            e.preventDefault()
+            dispatch(setrequestlogin(true))
+        }
+       
+    }
     return(
         <div class="sideNav tablet">
             <div className="sibar-content">
             <NavLink  to="/"><div class="logo"></div></NavLink>
             <div class="navigation">
-                <NavLink title="Cá nhân" class="navigation-item" to="/mymusic">
+                <NavLink onClick={e=>checkuser(e)} title="Cá nhân" class="navigation-item" to="/mymusic">
                 {({ isActive }) => (
                     <div className={`navigation-item ${isActive?'active':''}`}>
                         <div class="navigation-item-icon">

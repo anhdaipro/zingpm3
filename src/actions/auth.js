@@ -287,12 +287,11 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
         });
     }
 };
-const expirationDate = localStorage.getItem("expirationDate")
-console.log(new Date(expirationDate))
-console.log(new Date())
+export const expirationDate = localStorage.getItem("expirationDate")
+export const token=localStorage.getItem('token')
 export const expiry=new Date(expirationDate).getTime() - new Date().getTime()
-console.log(expiry)
-export const headers={'headers': localStorage.token!='null' && expiry>0?{ Authorization:`JWT ${localStorage.token}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
+export const valid=token && expirationDate && expiry>0
+export const headers={'headers':token && expirationDate && expiry>0?{ Authorization:`JWT ${localStorage.token}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
 export const logout = () => dispatch => {
     localStorage.removeItem('token')
     

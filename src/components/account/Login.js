@@ -9,7 +9,8 @@ import styled from 'styled-components'
 import LoginGoogle from "./LoginGoogle"
 import LoginFacebook from "./LoginFacebook"
 import LoginInstagram from "./LoginInstagram"
-
+import {ToastContainer, toast } from'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 const Btnpass=styled.button`
 display:flex;
 width:20px;
@@ -74,6 +75,15 @@ const Login=()=>{
             window.location.href="/"
         } 
         catch (err) {
+            toast.dismiss();
+            
+            toast.info(<span>tên tài khoản hoặc mật khẩu không chính xác</span>, {
+                    position: toast.POSITION.TOP_CENTER,
+                    delay:200,
+                    className:"toast-message"
+            });
+            
+            
             dispatch({
                 type: LOGIN_FAIL
             })

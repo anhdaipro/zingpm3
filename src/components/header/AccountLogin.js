@@ -7,6 +7,8 @@ const AccountLogin=()=>{
     const dispatch= useDispatch()
     const [show,setShow]=useState(false)
     const user=useSelector(state=>state.auth.user)
+    
+    console.log(user)
     useEffect(()=>{
         const handleClick=(event)=>{
             const {target}=event
@@ -19,7 +21,9 @@ const AccountLogin=()=>{
             document.removeEventListener('click',handleClick)
         }
     },[show])
-    const showlogin=()=>{
+    const setshowlogin=(e)=>{
+        e.preventDefault();
+        
         if(user){
             setShow(!show)
         }
@@ -30,7 +34,7 @@ const AccountLogin=()=>{
     }
     return(
         <div ref={parentRef}  style={{position:'relative'}} aria-label="Tài khoản">
-            <div onClick={showlogin} className="item-center">
+            <div onClick={setshowlogin} className="item-center">
                 <button className='item-center'>
                 <img className="avatar" src={user?`http://localhost:8000${user.avatar}`:'https://avatar.talk.zdn.vn/default'} alt="avartar"/>
                 </button>

@@ -3,10 +3,12 @@ import { useSelector,useDispatch } from "react-redux"
 import { showmodal } from "../../actions/player"
 import { useState,useEffect,useRef,useMemo } from "react"
 import { songURL,newplaylistURL } from "../../urls"
+import { slugify } from "../../constants"
 import axios from "axios"
 import styled from "styled-components"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
+import { headers, setrequestlogin,valid } from "../../actions/auth"
 const StyleSwitch=styled.div`
 position:relative;
 border-radius:12px;
@@ -24,8 +26,7 @@ width: 14px;
 height: 14px;
 margin-top: 1px;
 `
-const token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY4NDc2MDEwLCJqdGkiOiJmMDRjZjczYzE4ODY0NmRhOWEzN2UyM2U4YWM0YTVmYSIsInVzZXJfaWQiOjF9.XC53T6Y_OCqfGJ3t8vdvdstEm3WHANC2an_LXjGnCsE"
-const headers={'headers': token?{ Authorization:`JWT ${token}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
+
 const Addplaylist=()=>{
     const [ramdomplay,setRamdomplay]=useState(true)
     const [publics,setPublic]=useState(true)
@@ -33,12 +34,17 @@ const Addplaylist=()=>{
     const dispatch = useDispatch()
     const addplaylist= async () =>{
         try{
-        const rss= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay}),headers)
-        dispatch(showmodal(false))
-        toast.success(<span>Tạo playlist  "{keyword}" thành công</span>,{ 
-            position: toast.POSITION.BOTTOM_LEFT,
-            className:'toast-message'
-        });
+            if(valid){
+            const rss= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay,slug:slugify(keyword)}),headers)
+            dispatch(showmodal(false))
+            toast.success(<span>Tạo playlist  "{keyword}" thành công</span>,{ 
+                position: toast.POSITION.BOTTOM_LEFT,
+                className:'toast-message'
+            });
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     catch(e){
         console.log(e)
@@ -49,9 +55,15 @@ const Addplaylist=()=>{
         });
     }
     }
-    const valid=keyword.trim()
+    const validkey=keyword.trim()
     return(
             <div>
+                <button onClick={()=>dispatch(showmodal(false))} className="close-btn type-1">
+                    <svg viewBox="0 0 16 16" stroke="#EE4D2D" class="home-popup__close-button">
+                    <path stroke-linecap="round" d="M1.1,1.1L15.2,15.2"></path>
+                    <path stroke-linecap="round" d="M15,1L0.9,15.1"></path>
+                    </svg>
+                </button>
                 <div className="content-input">
                     <input maxLength="30" type="text" onChange={e=>setKeyword(e.target.value)} placeholder="Nhập tên playlist" value={keyword}/>
                 </div>
@@ -80,7 +92,7 @@ const Addplaylist=()=>{
                     </div>
                 </div>
                 <div>
-                    <button disabled={valid?false:true} onClick={addplaylist} style={{width:'100%'}} className={`btn ${valid?'':'disabled'} btn-second`}><span>Tạo mới</span></button>
+                    <button disabled={validkey?false:true} onClick={addplaylist} style={{width:'100%'}} className={`btn ${validkey?'':'disabled'} btn-second`}><span>Tạo mới</span></button>
                 </div>
                 
         </div>

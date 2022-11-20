@@ -1,7 +1,7 @@
 
 import {useState,useRef} from 'react'
 import axios from "axios"
-import { songURL,artistInfohURL } from "../urls"
+import { songURL,artistInfohURL,streamingURL } from "../urls"
 import {actionuser, setsong,showmodal,showplaylist,updatesongs,showinfoArtist} from "../actions/player"
 import {useSelector,useDispatch} from "react-redux"
 import { headers } from "../actions/auth"
@@ -35,9 +35,9 @@ const Songinfo=({song})=>{
       <h3 className="song-name">{song.name}</h3>
       <h4 className="song-artist"><span
       ref={artistRef} onMouseLeave={()=>{
-        if(!keepinfo){
+        
         dispatch(showinfoArtist({showinfo:false}))
-        }
+        
       }} onMouseEnter={()=>{
         if(song.artists.length>0){
         setshowartist(song.artist_name)}}} 
@@ -54,17 +54,15 @@ const PlaySong=({song})=>{
   const setplaysong= async (e)=>{
     e.stopPropagation()
     if(datasongs.every(item=>item.id!=song.id)){
-      const res = await axios.get(`${songURL}/${song.id}`)
-      
-      const addsong=[{...res.data,...song,url:'http://localhost:8000'+res.data.url},...datasongs]
-      dispatch(setsong({songs:addsong,currentIndex:0,view:false,play:true}))  
+      const addsong=[song,...datasongs]
+      dispatch(setsong({change:true,songs:addsong,currentIndex:0,view:false,play:true}))  
     }
     else{
       if(datasongs[currentIndex].id==song.id){
-        dispatch(setsong({play:!play}))
+        dispatch(setsong({change:true,play:!play}))
       }
       else{
-        dispatch(setsong({play:true,currentIndex:datasongs.findIndex(item=>item.id==song.id)}))
+        dispatch(setsong({change:true,play:true,currentIndex:datasongs.findIndex(item=>item.id==song.id)}))
       }
     }
   }

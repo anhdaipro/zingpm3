@@ -6,7 +6,7 @@ import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, l
 import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"
-import { headers } from "../../actions/auth"
+import { headers, setrequestlogin,valid } from "../../actions/auth"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 const listimage=[
@@ -21,7 +21,7 @@ const listimage=[
 ]
 
 const Song=(props)=>{
-    const [show,setShow]=useState(false)
+    
     const {song,index}=props
     const songref=useRef()
     const dotref=useRef()
@@ -31,19 +31,6 @@ const Song=(props)=>{
     const dispatch = useDispatch()
     const dropref=useRef()
 
-    useEffect(()=>{
-        const handleClick=(event)=>{
-            const {target}=event
-            if(show && dotref.current && !dotref.current.contains(target) && !dropref.current.contains(target) ){
-                setShow(false)
-            }
-        }
-        document.addEventListener('click',handleClick)
-        return ()=>{
-            document.removeEventListener('click',handleClick)
-        }
-    },[show])
-
     
     return(
         <div  ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
@@ -52,20 +39,14 @@ const Song=(props)=>{
                 <Songinfo
                 song={song}
                 />
-                
             </div>
-            <div ref={dotref} onClick={()=>{setShow(!show)}} className="icon-button">           
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>        
-                {show &&(
-            <div ref={dropref} className="detail-song" style={{position:'absolute',top:`40px`,right:`40px`,width:'280px',transform:`translateY(-${index>1?50:10}%)`}}>
             <Actionsong
-                show={show}
-                dotref={dotref}
                 song={song}
-                setshow={(data)=>setShow(data)}
-            /></div>)}
-            </div>
-            
+                className={`icon-button`}
+                top={40}
+                right={40}
+                transformY={index>1?50:10}
+            />
         </div>
     )
 }
@@ -102,6 +83,7 @@ const Follow=()=>{
     console.log(posts)
     const slideRef=useRef()
     const setfollow=useCallback( async (itemchoice,name,value)=>{
+        if(valid){
         const res = await axios.post(`${artistURL}${itemchoice.artist.slug}`,JSON.stringify({action:'follow'}),headers)
         const dataposts=posts.map(item=>{
             if(item.artist.id===itemchoice.artist.id){
@@ -110,9 +92,14 @@ const Follow=()=>{
             return({...item})
         })
         dispatch(updateposts(dataposts))
-    },[posts])
+    }
+    else{
+        dispatch(setrequestlogin(true))
+    }
+    },[posts,valid])
 
     const setposts= useCallback(async (itemchoice,name,value)=>{
+        if(valid){
         const res= await axios.post(`${postURL}/${itemchoice.id}`,JSON.stringify({'action':'like'}),headers)
         const dataposts=posts.map(item=>{
             if(item.id===itemchoice.id){
@@ -121,6 +108,10 @@ const Follow=()=>{
             return({...item})
         })
         dispatch(updateposts(dataposts))
+    }
+    else{
+        dispatch(setrequestlogin(true))
+    }
     },[posts])
     const showcomment= async (itemchoice)=>{
         const res= await axios.get(`${listcommentURL}?post_id=${itemchoice.id}`,headers)
@@ -238,7 +229,7 @@ const Follow=()=>{
             <div className="zm-section channel-section song-animate-section">
                 <h3 class="zm-section-title title is-2">Bài hát nổi bật</h3>
                 <div className="content">
-                    <div className="flex-center">
+                    <div className="flex">
                         <div className="songs-animate-container"> 
                             <div className="option-all__song-slider">
                                 {songs.slice(0,10).map((item,index)=>

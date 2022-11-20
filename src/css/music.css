@@ -189,13 +189,23 @@ display:block
 .stardust-carousel__arrow--next {
   right: 12px;
 }
-.container-discover-slider{
-margin-left: -12px;
-margin-right: -12px;
-}
+
 .slider-item{
   padding:0 12px 12px 12px ;
   cursor: pointer;
+}
+.close-btn.type-1{
+background-color: transparent;
+font-size: 14px;
+width: 32px;
+top:6px;
+height:32px;
+right:10px
+
+}
+.close-btn.type-1 .home-popup__close-button{
+  width: 14px;
+    height: 14px;
 }
 .container-discover-slider:hover .stardust-carousel__arrow{
   opacity: 1;

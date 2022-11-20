@@ -21,6 +21,7 @@ import Detailgenre from './components/genres/Detailgenre'
 import Artist from './components/follow/Artist'
 import Top100 from './components/Top100'
 import Newsongs from './components/Newsongs'
+import PlaylistDetail from './components/Individual/PlaylistDetail'
 const App=()=>{ 
   return(
     <Provider store={store}>
@@ -34,6 +35,7 @@ const App=()=>{
                 <Route exact path="/" element={<Discover/>}/> 
                 <Route exact path="/hub" element={<Genres/>}/> 
                 <Route exact path="/album/:slug" element={<Detailgenre/>}/>
+                <Route exact path="/:slug/:id" element={<PlaylistDetail/>}/>    
                 <Route exact path="/:slug" element={<Artist/>}/>    
                 <Route exact path="/top100" element={<Top100/>}/>    
                 <Route exact path="/moi-phat-hanh" element={<Newsongs/>}/>       

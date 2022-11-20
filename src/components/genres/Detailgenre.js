@@ -4,7 +4,7 @@ import axios from "axios"
 import {useState,useEffect, useRef,useMemo, useCallback} from "react"
 import {listsongURL,songURL,genreURL,artistInfohURL} from "../../urls"
 import { actionuser, setsong, showmodal, showinfoArtist, updatesongs } from "../../actions/player"
-import { headers } from "../../actions/auth"
+import { headers, setrequestlogin,valid } from "../../actions/auth"
 import Actionsong from "../home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
@@ -62,7 +62,7 @@ height:2px;
 background-color:#9b4de0
 `
 const Song=(props)=>{
-    const [show,setShow]=useState(false)
+    
     const dispatch = useDispatch()
     const {song,index,setsongs,songs,count}=props
     const datasongs=useSelector(state => state.player.songs)
@@ -73,6 +73,7 @@ const Song=(props)=>{
     const songref=useRef()
     const dotref=useRef()
     const setliked= async (name,value)=>{
+        if(valid){
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers)
         const data=datasongs.map((item,index)=>{
             if(song.id==item.id){
@@ -94,22 +95,15 @@ const Song=(props)=>{
         });
         dispatch(updatesongs(data))
     }
+    else{
+        dispatch(setrequestlogin(true))
+    }
+    }
     const dropref=useRef()
     
     console.log(count)
     
-    useEffect(()=>{
-        const handleClick=(event)=>{
-            const {target}=event
-            if(show && dotref.current && !dotref.current.contains(target) && !dropref.current.contains(target) ){
-                setShow(false)
-            }
-        }
-        document.addEventListener('click',handleClick)
-        return ()=>{
-            document.removeEventListener('click',handleClick)
-        }
-    },[show])
+    
 
     
     const setitem=(itemchoice,name,value)=>{
@@ -165,19 +159,17 @@ const Song=(props)=>{
                 <div className={`duration ${showaction?'hiden':''} mr-8`}>
                     <p className="author">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</p>
                 </div>
-                <div ref={dotref} onClick={()=>{setShow(!show)}} className={`icon-button ${showaction?'':'hiden'} mr-8`}>           
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>        
-                </div>
-                {show &&(
-                    <div ref={dropref} className="detail-song" style={{position:'absolute',top:`40px`,right:`40px`,width:'280px',transform:`translateY(-50%)`}}>
-                        <Actionsong   
-                            show={show}
-                            dotref={dotref}
-                            song={song}
-                            setshow={(data)=>setShow(data)}
-                        />
-                    </div>
-                )}
+                
+                <Actionsong             
+                    song={song}
+                    className={`icon-button ${showaction?'':'hiden'} mr-8`}
+                    top={40}
+                    right={40}
+                    transformY={50}
+                    songs={songs}
+                    setsongs={data=>setsongs(data)}
+                />
+                   
             </div>                        
         </div>
     )
@@ -199,10 +191,10 @@ const Detailgenre=()=>{
             const data=res.data  
             setGenre(data)
             const genre_songs=data.songs.map(item=>{
-                return({...item,checked:false,url:'http://localhost:8000'+item.url,image_cover:'http://localhost:8000'+item.image_cover})
+                return({...item,checked:false,image_cover:'http://localhost:8000'+item.image_cover})
             })
             setSongs(genre_songs) 
-            dispatch(setsong({play:false}))
+            dispatch(setsong({change:true,play:false}))
         })()
     }, [slug,dispatch])
 
@@ -210,11 +202,7 @@ const Detailgenre=()=>{
         return songs.length
     },[songs.length])
 
-    const addplaylist=()=>{
-        dispatch(showmodal(true))
-        dispatch(actionuser({data:{title:'Thêm playlist'},action:'addplaylist'}))
-    }
-
+   
     const checked=songs.find(item=>item.checked)
     const allchecked=songs.every(item=>item.checked)
     const songchecked=songs.filter(item=>item.checked)
@@ -227,7 +215,7 @@ const Detailgenre=()=>{
         const addsong=songchecked.filter(song=>datasongs.every(item=>item.id!==song.id))
         dispatch(updatesongs([...addsong,...datasongs]))
         if(addsong.length>0){
-        dispatch(setsong({currentIndex:currentIndex+addsong.length}))
+        dispatch(setsong({change:true,currentIndex:currentIndex+addsong.length}))
         }
     }
    
@@ -236,10 +224,10 @@ const Detailgenre=()=>{
     },[songs])
     const setplay=()=>{
         if(!play){
-            dispatch(setsong({songs:songs,play:true,currentIndex:0}))
+            dispatch(setsong({change:true,songs:songs,play:true,currentIndex:0}))
         }
         else{
-            dispatch(setsong({play:false}))
+            dispatch(setsong({change:true,play:false}))
         }
     }
     return(

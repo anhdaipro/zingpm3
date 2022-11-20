@@ -2,13 +2,14 @@ import { useDispatch,useSelector } from "react-redux"
 import styled from "styled-components"
 import axios from "axios"
 import {useState,useEffect, useRef,useMemo, useCallback} from "react"
-import {listsongURL,songURL,listsonguserURL,artistInfohURL} from "../../urls"
-import { actionuser, setsong, showmodal, showinfoArtist, updatesongs } from "../../actions/player"
-import { headers } from "../../actions/auth"
+import {listsongURL,songURL,listsonguserURL,artistInfohURL, playlistURL} from "../../urls"
+import { actionuser, setsong, showmodal, updateplaylists, updatesongs } from "../../actions/player"
+import { headers, setrequestlogin,valid } from "../../actions/auth"
 import Actionsong from "../home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import {Songinfo,PlaySong} from '../Song'
+import { Link } from "react-router-dom"
 const listitem=[
     {name:'Bài hát',value:'song'},
     {name:'Posdcast',value:'podcast'},
@@ -60,7 +61,7 @@ height:2px;
 background-color:#9b4de0
 `
 const Song=(props)=>{
-    const [show,setShow]=useState(false)
+    
     const dispatch = useDispatch()
     const {song,index,setsongs,songs,count}=props
     const datasongs=useSelector(state => state.player.songs)
@@ -68,9 +69,7 @@ const Song=(props)=>{
     const checked=songs.find(item=>item.checked)
     const {playlists,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
     const [showaction,setShowaction]=useState(false)
-    
     const songref=useRef()
-    const dotref=useRef()
     const setliked= async (name,value)=>{
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers)
         const data=datasongs.map((item,index)=>{
@@ -97,21 +96,7 @@ const Song=(props)=>{
     
     console.log(count)
     
-    useEffect(()=>{
-        const handleClick=(event)=>{
-            const {target}=event
-            if(show && dotref.current && !dotref.current.contains(target) && !dropref.current.contains(target) ){
-                setShow(false)
-            }
-            
-        }
-        document.addEventListener('click',handleClick)
-        return ()=>{
-            document.removeEventListener('click',handleClick)
-        }
-    },[show])
 
-    
     const setitem=(itemchoice,name,value)=>{
         const data=songs.map(item=>{
             if(item.id==itemchoice.id){
@@ -165,25 +150,134 @@ const Song=(props)=>{
                 <div className={`duration ${showaction?'hiden':''} mr-8`}>
                     <p className="author">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</p>
                 </div>
-                <div ref={dotref} onClick={()=>{setShow(!show)}} className={`icon-button ${showaction?'':'hiden'} mr-8`}>           
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>        
-                </div>
-                {show &&(
-                    <div ref={dropref} className="detail-song" style={{position:'absolute',top:`40px`,right:`40px`,width:'280px',transform:`translateY(-50%)`}}>
-                        <Actionsong 
-                            show={show}
-                            dotref={dotref}
-                            song={song}
-                            setshow={(data)=>setShow(data)}
-                        />
-                    </div>
-                )}
+                <Actionsong 
+                    song={song}
+                    className={`icon-button ${showaction?'':'hiden'} mr-8`}
+                    top={40}
+                    right={40}
+                    transformY={50}
+                    songs={songs}
+                    setsongs={data=>setsongs(data)}
+                />
+                     
             </div>                        
         </div>
     )
 }
 
+const Playlist=(props)=>{
+    const dispatch = useDispatch()
+    const player=useSelector(state => state.player)
+    const {playlists,currentIndex,play, time_stop_player,showinfo}=player
+    const {item}=props
+    const user=useSelector(state => state.auth.user)
+    const [show,setShow]=useState(false)
+    const removeplaylist= async (e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+        const res= await axios.post(`${playlistURL}/${item.id}`,JSON.stringify({action:'delete'}),headers)
+        dispatch(updateplaylists(playlists.filter(playlist=>playlist.id!==item.id)))
+        toast(<span>Đã xóa playlist khỏi thư viện</span>,{  
+            position:toast.POSITION.BOTTOM_LEFT,
+            className:'toast-message',
+        });
+    }
+    const showaction= (e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+        setShow(!show)
+    }
+    const download=(e)=>{
+        e.preventDefault()
+        fetch(item.url)
+        .then(response => response.blob())
+        .then(blob => {
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = item.name;
+            link.click();
+        })
+        .catch(console.error); 
+    }
+    const dropref=useRef()
+    return(
+        <div style={{width:'25%'}} key={item.id} className="slider-item">
+            <Link to={`/${item.slug}/${item.id}`}>
+                <div className="playlist-image-wrapper">
+                    <div class="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`http://localhost:8000${item.images[0]}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
+                    <div class="card-list-image-hover">
+                        <button className="icon-button">
+                        {user.id==item.user?
+                            <svg width='16px' height="16px" onClick={removeplaylist} viewBox="0 0 16 16" >
+                                <path stroke-linecap="round" d="M1.1,1.1L15.2,15.2"></path>
+                                <path stroke-linecap="round" d="M15,1L0.9,15.1"></path>
+                            </svg>:
+                            <svg  stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" class="card-list-icon small" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.8 264.4 264.4 0 0 0-84-55.5A265.34 265.34 0 0 0 679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 0 0-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z"></path></svg>
+                        }
+                        </button>
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" class="card-list-icon big" height="32px" width="32px" xmlns="http://www.w3.org/2000/svg"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path></svg>
+                        <svg onClick={showaction} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" class="card-list-icon small" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+                        {show &&(<div ref={dropref} style={{position:'fixed',left:'100%'}} className="detail-song">
+                            <div class="menus">
+                                <div  class="menu-item">
+                                    <div className='item-center'>
+                                        <div class="menu-icon">
+                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                                        </div>
+                                        <div class="menu-name">Thêm vào danh sách phát</div>
+                                    </div>
+                                    <div className="icon-next">
+                                        <svg viewBox="0 0 12 12" fill="none" width="12" height="12" color="#fff" ><path fill-rule="evenodd" clip-rule="evenodd" d="M9.293 6L4.146.854l.708-.708L10 5.293a1 1 0 010 1.414l-5.146 5.147-.708-.707L9.293 6z" fill="currentColor"></path></svg>
+                                    </div>
+                                </div>
+                                
+                                <div class="menu-item">
+                                    <div className='item-center'>
+                                        <div class="menu-icon">
+                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 32C114.6 32 0 125.1 0 240c0 47.6 19.9 91.2 52.9 126.3C38 405.7 7 439.1 6.5 439.5c-6.6 7-8.4 17.2-4.6 26S14.4 480 24 480c61.5 0 110-25.7 139.1-46.3C192 442.8 223.2 448 256 448c141.4 0 256-93.1 256-208S397.4 32 256 32zm0 368c-26.7 0-53.1-4.1-78.4-12.1l-22.7-7.2-19.5 13.8c-14.3 10.1-33.9 21.4-57.5 29 7.3-12.1 14.4-25.7 19.9-40.2l10.6-28.1-20.6-21.8C69.7 314.1 48 282.2 48 240c0-88.2 93.3-160 208-160s208 71.8 208 160-93.3 160-208 160z"></path></svg>
+                                        </div>
+                                        <div class="menu-name">Comment</div>
+                                    </div>
+                                </div>
+                                <div onClick={(e)=>download(e)} class="menu-item">
+                                    <div className='item-center'>
+                                        <div class="menu-icon">
+                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M505.7 661a8 8 0 0 0 12.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg>
+                                        </div>
+                                        <div class="menu-name">
+                                            Download
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="menu-item">
+                                    <div className='item-center'>
+                                        <div class="menu-icon">
+                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"></path><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"></path></svg>
+                                        </div>
+                                        <div class="menu-name">Copy link</div>
+                                    </div>
+                                </div>
+                                <div class="menu-item">
+                                    <div className='item-center'>
+                                        <div class="menu-icon">
+                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><g><path fill="none" d="M0 0h24v24H0z"></path><path d="M13 14h-2a8.999 8.999 0 0 0-7.968 4.81A10.136 10.136 0 0 1 3 18C3 12.477 7.477 8 13 8V3l10 8-10 8v-5z"></path></g></svg>
+                                        </div>
+                                        <div class="menu-name">Share</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>)}
+                    </div>
+                </div>
+            </Link>
+            <div className="playlist-name">{item.name}</div>
+            <div className="playlist-upload">{item.user_name}</div>
+        </div>
+    )
+}
+
 const Individual=()=>{
+    const user=useSelector(state => state.auth.user)
     const dispatch = useDispatch()
     const [choice,setChoice]=useState('song')
     const [option,setOption]=useState('liked')
@@ -193,11 +287,16 @@ const Individual=()=>{
     const {playlists,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
     useEffect(() => {
         ( async ()=>{
+            if(valid){
             const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers)
                 const data=res.data.map(item=>{
-                return({...item,checked:false,url:'http://localhost:8000'+item.url,image_cover:'http://localhost:8000'+item.image_cover})
+                return({...item,checked:false,image_cover:'http://localhost:8000'+item.image_cover})
             })
             setSongs(data) 
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
         })()
     }, [option])
     const count=songs.length
@@ -220,7 +319,7 @@ const Individual=()=>{
        
         dispatch(updatesongs([...addsong,...datasongs]))
         if(addsong.length>0){
-        dispatch(setsong({currentIndex:currentIndex+addsong.length}))
+        dispatch(setsong({change:true,currentIndex:currentIndex+addsong.length}))
         }
     }
    
@@ -229,7 +328,7 @@ const Individual=()=>{
     },[songs])
 
     return(
-        <div className="body-wrapper">
+        user&&(<div className="body-wrapper">
             <div class="flex-center">
                 <h3 class="zing-chart-heading">Thư viện</h3>
                 <div class="zing-chart-play-icon">
@@ -254,20 +353,10 @@ const Individual=()=>{
                     </div>
                     <div>
                         <div className="row">
-                            
                             {playlists.map(item=>
-                                <div style={{width:'25%'}} className="playlist">
-                                    <div className="playlist-image-wrapper">
-                                        <div className="playlist-image" style={{backgroundImage:`url(https://mp3-react-vinhbuihd.vercel.app/images/want-listen-1.jpg)`,width:'100%',paddingTop:'100%',backgroundSize:'cover'}}></div>
-                                        <div class="card-list-image-hover">
-                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" class="card-list-icon small" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.8 264.4 264.4 0 0 0-84-55.5A265.34 265.34 0 0 0 679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 0 0-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z"></path></svg>
-                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" class="card-list-icon big" height="32px" width="32px" xmlns="http://www.w3.org/2000/svg"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path></svg>
-                                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" class="card-list-icon small" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
-                                        </div>
-                                    </div>
-                                    <div className="playlist-name">{item.name}</div>
-                                    <div className="playlist-upload">{item.user_name}</div>
-                                </div>
+                               <Playlist
+                               item={item}
+                               /> 
                             )}
                         </div>
                     </div>
@@ -344,7 +433,7 @@ const Individual=()=>{
                     </div>
                 </div>
             </div>
-        </div>
+        </div>)
     )
 }
 export default Individual

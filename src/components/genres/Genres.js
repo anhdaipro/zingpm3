@@ -36,7 +36,7 @@ const Genres=()=>{
         ( async ()=>{
             const res = await axios.get(`${genresURL}`,headers)
                 const data=res.data.map(item=>{
-                return({...item,checked:false,url:'http://localhost:8000'+item.url,image_cover:'http://localhost:8000'+item.image_cover})
+                return({...item,checked:false,image_cover:'http://localhost:8000'+item.image_cover})
             })
             setGenres(data) 
         })()

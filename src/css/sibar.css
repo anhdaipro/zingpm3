@@ -9,6 +9,24 @@
     transition: ease .5s;
     box-shadow: 0 2px 5px #0000004d;   
 }
+@media screen and (max-width: 1133px){
+.sideNav {
+    position: fixed;
+    background-color: var(--sidebar-popup-bg);
+    width: 70px;
+    padding-bottom: 55px;
+    transition: width .3s ease-out;
+}
+.sideNav .navigation-item-title{
+    display:none
+}
+.main-container{
+margin-left:70px !important
+}
+.sideNav .sibar-add-playlist,.sideNav .sidebar__library-center{
+    display:none !important
+}
+}
 .sibar-content{
     height: calc(100vh - 90px);
     display: flex;

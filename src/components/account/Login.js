@@ -7,7 +7,7 @@ import { loginURL } from "../../urls"
 import axios from 'axios'
 import styled from 'styled-components'
 import LoginGoogle from "./LoginGoogle"
-import LoginFacebook from "./LoginFacebook"
+
 import LoginInstagram from "./LoginInstagram"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
@@ -148,7 +148,7 @@ const Login=()=>{
                     </Dotcontent>
                     <div className="flex-center mb-16">
                         <LoginGoogle/>
-                        <LoginFacebook/>
+                        
                         <LoginInstagram/>
                     </div>
                     <div className="item-center">

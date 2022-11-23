@@ -39,6 +39,7 @@ position:absolute;
     border-top:10px solid ${props=>props.border}; 
 }
 `
+
 const GradientChart = (props) => {
     const {labels,songs,top1,top2,top3,listvalues}=props
     const max=top1.length>0?Math.max.apply(Math, top1):5
@@ -224,7 +225,6 @@ const GradientChart = (props) => {
     const options=useMemo(()=>{return{
         events: ['mousemove', 'click'],
         onHover: (event,activeEls, chartElement) => {
-           
             if(chartElement._active.length>0){
                 const left = (chartElement._active[0].element.x);
                 const top = chartElement._active[0].element.y
@@ -238,6 +238,8 @@ const GradientChart = (props) => {
                 }
             }
             event.native.target.style.cursor = activeEls[0] ? 'pointer' : 'default';
+            
+            
         },
         
         hover: {
@@ -249,6 +251,7 @@ const GradientChart = (props) => {
                 
                 legend: {
                 display: false,
+                
             },
             tooltip:{
                 enabled:false,

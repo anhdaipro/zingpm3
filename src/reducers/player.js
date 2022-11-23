@@ -12,6 +12,7 @@ let initialState = {
     show:false,
     data:null,
     playlists:[],
+    showoption:'',
     action:'',
     showaction:false,
     showpost:false,

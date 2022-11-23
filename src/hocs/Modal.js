@@ -8,6 +8,8 @@ import Timepicker from "../components/modal/Timepicker"
 import DeleteTimer from "../components/modal/Deletetimer"
 import Continuteplayer from "../components/modal/Continuteplayer"
 import Addplaylist from "../components/modal/Addplaylist"
+import { FormProfile } from "../components/Individual/Profile"
+import Commentsong from "../components/modal/Commentsong"
 const Modal=()=>{
     const show = useSelector(state => state.player.show)
     const action=useSelector(state => state.player.action)
@@ -47,8 +49,8 @@ const Modal=()=>{
                         <p class="lyric-song">{data.data.lyrics}</p>:
                         <div className='emty-lyric'>Lyric đang được cập nhật</div>}</>:
                         <textarea placeholder="Nhập lời bài hát vào đây" spellCheck={false} onChange={e=>setLyrics(e.target.value)} value={lyrics} style={{width:'100%',height:'100%'}}></textarea>}
-                    </div>:action=='addplaylist'?
-                    <Addplaylist/>:action=='timeplayer'?
+                    </div>:action=='editprofile'?<FormProfile/>:action=='addplaylist'?
+                    <Addplaylist/>:action==='showcomment'?<Commentsong/>:action=='timeplayer'?
                     <Timepicker/>:action=='continueplayer'?<Continuteplayer/>:<DeleteTimer/>}
                 </div>
                 {action=='editlyrics' &&(

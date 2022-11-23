@@ -60,7 +60,6 @@ height:16px;
 }
 `
 const Song=(props)=>{
-   
     const player=useSelector(state => state.player)
     const {songs,currentIndex,play}=player
     const dispatch = useDispatch()
@@ -91,7 +90,7 @@ const Song=(props)=>{
     const setplay= async (e)=>{
         e.stopPropagation()
         if(currentIndex!==index){
-            dispatch(setsong({change:true,currentIndex:index,view:false,play:true})) 
+            dispatch(setsong({change:true,currentIndex:index,view:false,play:true,showoption:''})) 
         }
         else{
             dispatch(setsong({change:true,play:!play}))

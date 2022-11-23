@@ -34,7 +34,7 @@ const Sibar=()=>{
     return(
         <div class="sideNav tablet">
             <div className="sibar-content">
-            <NavLink  to="/"><div class="logo"></div></NavLink>
+            <button className="" to="/"><div class="logo"></div></button>
             <div class="navigation">
                 <NavLink onClick={e=>checkuser(e)} title="Cá nhân" class="navigation-item" to="/mymusic">
                 {({ isActive }) => (
@@ -141,10 +141,7 @@ const Sibar=()=>{
                 </div>
                 <div>
                     <div className="sidebar__list">
-                        <div>dđ</div>
-                        <div>dđ</div>
-                        <div>dđ</div>
-                        <div>dđ</div>
+                       
                     </div>
                 </div>
             </div>

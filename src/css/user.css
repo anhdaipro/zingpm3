@@ -178,7 +178,7 @@ display: flex;
     transition-delay: 0s;
 }
 .playlist-image-wrapper:hover .container-discover__slider-item-img{
-transform: scale(110%);
+transform: scale(1.1);
 }
 .playlist-name{
 font-weight: 500;

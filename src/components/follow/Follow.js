@@ -2,7 +2,7 @@ import {useState,useEffect, useRef, useCallback} from "react"
 import { useSelector,useDispatch } from "react-redux"
 import Actionsong from "../home/Actionsong"
 import  { Songinfo,PlaySong } from "../Song"
-import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, listcommentURL } from "../../urls"
+import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, listcommentURL, originURL } from "../../urls"
 import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"
@@ -71,7 +71,7 @@ const Follow=()=>{
         ( async () =>{
             const res = await axios.get(listartistURL,headers)
             const data=res.data.map(item=>{
-                return({...item,image:'http://localhost:8000'+item.image})
+                return({...item,image:originURL+item.image})
             })
             setArtists(data)
             const res1=await axios.get(listpostURL,headers)
@@ -183,7 +183,7 @@ const Follow=()=>{
                                 <div className="card-header feed-header">
                                     <div className="media mb-8">
                                         <div  className="media-left">
-                                            <div style={{backgroundImage:`url(http://localhost:8000${item.artist.image})`}} className="avatar"></div>
+                                            <div style={{backgroundImage:`url(${originURL}${item.artist.image})`}} className="avatar"></div>
                                         </div>
                                         <div className="media-content">
                                             <h3 className="flex">
@@ -200,7 +200,7 @@ const Follow=()=>{
                                 </div>
                                 <div onClick={()=>showcomment(item)} className="container mar-b-15 feed-content">
                                     {item.files.map(file=>
-                                    <div key={`file+${file.id}`} style={{backgroundImage:`url(http://localhost:8000${file.media_preview||file.media})`}} className="feed-image"></div>
+                                    <div key={`file+${file.id}`} style={{backgroundImage:`url(${originURL}${file.media_preview||file.media})`}} className="feed-image"></div>
                                     )}
                                 </div>
                                 <div class="feed-footer flex-center">

@@ -22,6 +22,8 @@ import Artist from './components/follow/Artist'
 import Top100 from './components/Top100'
 import Newsongs from './components/Newsongs'
 import PlaylistDetail from './components/Individual/PlaylistDetail'
+import Profile from './components/Individual/Profile'
+import Search from './components/home/Search'
 const App=()=>{ 
   return(
     <Provider store={store}>
@@ -29,7 +31,7 @@ const App=()=>{
         <Layout>
           <Routes>                     
                 <Route exact path="/zingchart" element={<Homepage/>}/>
-               
+                <Route exact path="/tim-kiem/:choice" element={<Search/>}/> 
                 <Route exact path="/mymusic" element={<Individual/>}/> 
                 <Route exact path="/follow" element={<Follow/>}/> 
                 <Route exact path="/" element={<Discover/>}/> 
@@ -38,6 +40,7 @@ const App=()=>{
                 <Route exact path="/:slug/:id" element={<PlaylistDetail/>}/>    
                 <Route exact path="/:slug" element={<Artist/>}/>    
                 <Route exact path="/top100" element={<Top100/>}/>    
+                <Route exact path="/user/:username" element={<Profile/>}/>  
                 <Route exact path="/moi-phat-hanh" element={<Newsongs/>}/>       
           </Routes>
         </Layout>

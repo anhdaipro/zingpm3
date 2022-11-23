@@ -80,11 +80,11 @@ const PlaylistDetail=()=>{
             <div className="zm-section channel-section song-animate-section">
                 <h3 class="zm-section-title title is-2">Bài hát nổi bật</h3>
                 <div className="content">
-                    <div className="flex-center">
+                    <div className="flex">
                         <div className="songs-animate-container"> 
                             <div className="song-slider">
                                 <div onClick={()=>dispatch(setsong({play:!play}))} className="zm-card-image">
-                                    <div class={`box1 ${play?'animated infinite rotate-full boder-50':''}`}>
+                                    <div class={`box1 ${play?'animated infinite rotate-full boder-50':'scale-image'}`}>
                                         <img class="" src={songs[0].image_cover} alt="" />
                                     </div>
                                     <div class="zm-actions-container">

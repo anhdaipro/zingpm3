@@ -43,7 +43,7 @@ const authReducer=(state = initialState, action)=>{
         case UPDATE_PROFILE_SUCCESS:
             return{
                 ...state,
-                user:payload
+                user:{...state.user,...payload}
             }
         case REQUEST_LOGIN:{
             return{

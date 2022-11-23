@@ -388,13 +388,18 @@ background-color:#513778
     right: 0;
     left: 0;
     bottom: 0;
-    z-index: 12;
+    z-index: 120;
     height: 90px;
     background: #130c1c;
     display: flex;
     border-top: 1px solid #ffffff1a;
     align-items: center;
     cursor: pointer;
+}
+.lyric-button-group .icon-button{
+  font-size: 20px;
+  width:40px;
+  height:40px
 }
   .container-discover__slider {
     display: flex;
@@ -421,6 +426,7 @@ background-color:#513778
   width: 40px;
   display:flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   height: 40px;
   border-radius: 50%;
@@ -476,6 +482,7 @@ align-items: center;
 .song-name{
   font-size: 14px;
   line-height: 22px;
+  font-weight: 600;
   overflow: hidden;
   color:#fff
 }
@@ -518,7 +525,7 @@ padding:10px 16px
 .song-count-like{
   color: #a0a0a0;
   font-size: 12px;
-  line-height: 16px;
+  line-height: 17px;
   font-weight: 500;
 }
 .song-icon-views{
@@ -530,7 +537,7 @@ padding:10px 16px
 .song-count-views{
   color: #a0a0a0;
   font-size: 12px;
-  line-height: 16px;
+  line-height: 17px;
   font-weight: 500;
 }
 .actions .action-item {
@@ -608,7 +615,13 @@ margin-left: 4px;
   position: relative;
   margin: -15px;
 }
-
+.fs-nowplaying{
+  transition: linear .45s;
+  transform: translateY(100%);
+}
+.fs-nowplaying.show{
+  transform: translateY(0);
+}
 .container-discover__slider-item {
   background-size: cover;
   border-radius: 5px;

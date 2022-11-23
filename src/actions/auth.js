@@ -26,7 +26,7 @@ import {
 } from './types';
 
 import axios from 'axios';
-import { listThreadlURL, loginURL,registerURL,userinfoURL,userprofileURL} from '../urls';
+import { listThreadlURL, loginURL,originURL,registerURL,userinfoURL,userprofileURL} from '../urls';
 import { isVietnamesePhoneNumber,validatEemail } from '../constants';
 
 
@@ -204,7 +204,7 @@ export const checkAuthenticated = () => async dispatch => {
     try {
         const res = await axios.get(userinfoURL,{ 'headers': { Authorization:`JWT ${localStorage.token}` }})
         dispatch({
-            payload: res.data,
+            payload: {...res.data,avatar:originURL+res.data.avatar},
             type: AUTHENTICATED_SUCCESS
         });     
     } 
@@ -299,24 +299,11 @@ export const logout = () => dispatch => {
         type: LOGOUT
     });
 };
-export const updateprofile =(username,name,file,profile_info,picture) =>async dispatch=>{
-    let form=new FormData()
-    form.append('username',username)
-    form.append('name',name)
-    form.append('file',file)
-    form.append('profile_info',profile_info)
-    try {
-        await axios.post(`https://daiviet.herokuapp.com/api/v3/${username}/profile`, form,headers);
-
-        dispatch({
-            type: UPDATE_PROFILE_SUCCESS,
-            payload:{username,name,profile_info,picture}
-        });
-    } catch (err) {
-        dispatch({
-            type: UPDATE_PROFILE_FAIL
-        });
-    }
+export const updateprofile =(data) =>{
+    return{
+        type: UPDATE_PROFILE_SUCCESS,
+        payload:data
+    };
 }
  export const create_thread =(user_id,profile_id)=> async dispatch=>{
     try {

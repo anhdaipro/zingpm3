@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import  { PlaySong,Songinfo } from "../Song"
 import Song from "./Song"
 const now=dayjs()
-    const hournow=now.get('hour')%2==0?now.get('hour'):now.get('hour')-1
+    const hournow=now.get('hour')-1
     const hourday= Array(hournow).fill().map((_,i)=>{
         return dayjs().set('hour',i+1).format("DD-MM-YYYY HH")
     })

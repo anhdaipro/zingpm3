@@ -174,16 +174,24 @@ cursor: pointer;
 background-color: #f1d203;
 }
 .sideNav.tablet .logo {
-    background: url(https://sona7ns.github.io/zingmp3.vn/assets/img/sidebar-icon/logo/logo-dark.svg) no-repeat;
+    background: url(https://sona7ns.github.io/zingmp3.vn/assets/img/sidebar-icon/logo/logo-dark.svg) 50%/contain no-repeat;
     margin-top: 16px;
-    display:block;
-    width: 240px;
-    height: 70px;
+    margin-left: 24px;
+    width: 120px;
+    height: 40px;
    
-    background-size: 50%;
-    background-repeat: no-repeat;
-    background-position-x: 28px;
-    background-position-y: 50%;
+   
+}
+@media screen and (max-width:1024px){
+    .sideNav.tablet .logo {
+        width: 45px;
+        display:inline-block;
+        height: 45px;
+        margin-left: 0;
+        background-size: contain;
+        background-image: url(https://zjs.zmdcdn.me/zmp3-desktop/releases/v1.7.65/static/media/icon_zing_mp3_60.f6b51045.svg);
+           
+        }
 }
 .btn-clock{
     margin-right: 0;

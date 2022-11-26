@@ -632,7 +632,7 @@ const MV=()=>{
                                                                  
                                     }} 
                                     
-                                     ref={videoRef} preload="auto" src={'https://upload.dragonballwiki.net/anime/db1986vietsub1080p/dbep1.mp4'} muted={muted}></video>
+                                     ref={videoRef} preload="auto" src={originURL+mv.mv.file} muted={muted}></video>
                                     <div className="zpl-settings-menu">
                                         <div className="zpl-panel">
                                             <div className="panel-scroll-wrapper">

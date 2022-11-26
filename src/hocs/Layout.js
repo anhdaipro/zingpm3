@@ -13,12 +13,13 @@ import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import InfoArtist from '../components/modal/InfoArtist';
 import DetailFeed from '../components/modal/DetailFeed';
+import MV from '../components/home/MV';
 
 const Layout = ({children}) => {
     const player=useSelector(state=>state.player)
     const dispatch = useDispatch()
     const dotref=useRef()
-    const {showinfo,songs,showpost}=player
+    const {showinfo,songs,showpost,showvideo}=player
     const requestlogin=useSelector(state=>state.auth.requestlogin)
     
     const CloseButton=({ closeToast })=>(  
@@ -51,7 +52,8 @@ const Layout = ({children}) => {
             <Player/>)}
             <Songs/>
             {showpost&&(<DetailFeed/>)}
-            
+            {showvideo &&(
+            <MV/>)}
             <ToastContainer 
                 hideProgressBar={true}
                 autoClose={3000}

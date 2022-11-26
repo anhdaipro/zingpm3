@@ -21,14 +21,12 @@ const listimages=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider-discover/3.jpg',url:''},
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/mv/2.webp',url:''},
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider-discover/4.jpg',url:''},
-    
-    
-    
-    
-    
-    
 ]
-
+const listitems=[
+    {name:"Tất cả",value:'all'},
+    {name:"Việt Nam",value:'vpop'},
+    {name:"Quốc tế",value:'usuk'},
+]
 const now=dayjs()
     const hournow=now.get('hour')%2==0?now.get('hour'):now.get('hour')-1
     const hourday= Array(hournow).fill().map((_,i)=>{
@@ -69,17 +67,15 @@ const Song=(props)=>{
 const Discover=()=>{
     const [artists,setArtists]=useState([])
     const [topsongs,setTopSongs]=useState([])
-    const [listnewsong,setListnewsong]=useState([])
     const  slideRef1=useRef()
     const [labels,setLabels]=useState([])
     const [top1,setTop1]=useState([])
     const [top2,setTop2]=useState([])
     const [top3,setTop3]=useState([])
+    const [choice,setChoice]=useState('all')
     const player=useSelector(state => state.player)
-    const {showplaylist,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
-    const datasongs = useSelector(state => state.player.songs)
-    const dispatch = useDispatch()
-    
+   
+   
     useEffect(() => {
         ( async ()=>{
             
@@ -174,16 +170,18 @@ const Discover=()=>{
                     <div className="zm-section-title title">Mới Phát Hành</div>
                     <div className="item-space">
                         <div class="genre-select">
-                            <button class="zm-btn active button" tabindex="0">Việt Nam</button>
-                            <button class="zm-btn button" tabindex="0">Quốc tế</button>
+                            {listitems.map(item=>
+                            <button key={item.value} onClick={()=>setChoice(item.value)} className={`zm-btn ${choice===item.value &&'active'} button`} >{item.name}</button>
+                            )}
+                            
                         </div>
-                        <a class="discovery-btn" href="/new-release/song?filter=vpop">Tất cả 
+                        <Link class="discovery-btn" to={`/new-release/song?filter=${choice}`}>Tất cả 
                             <i class="icon ic-go-right"></i>
-                        </a>
+                        </Link>
                     </div>
                    
                     <Listnewsong
-                        
+                        choice={choice}
                     />
                 </div>
                 <div className="container rt-chart-home">

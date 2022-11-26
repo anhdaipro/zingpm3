@@ -388,7 +388,7 @@ background-color:#513778
     right: 0;
     left: 0;
     bottom: 0;
-    z-index: 120;
+    z-index: 10;
     height: 90px;
     background: #130c1c;
     display: flex;

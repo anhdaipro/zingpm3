@@ -11,6 +11,8 @@ import axios from "axios"
 import { headers,valid } from "../../actions/auth"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
+import Songs from "../Songs"
+import { Song } from "./Individual"
 const listimage=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/1.webp'},
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/2.webp'},
@@ -22,40 +24,6 @@ const listimage=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/8.webp'},
 ]
 
-const Song=(props)=>{
-   
-    const {song,index}=props
-    const songref=useRef()
-    const dotref=useRef()
-    const player=useSelector(state=>state.player)
-    const datasongs=useSelector(state=>state.player.songs)
-    const {play,currentIndex}=player
-    const dispatch = useDispatch()
-    const dropref=useRef()
-
-    
-
-    
-    return(
-        <div  ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
-            <PlaySong song={song}/>      
-            <div className="card-info flex-col">
-                <Songinfo
-                song={song}
-                />
-                
-            </div>
-            <Actionsong
-                song={song}
-                className={`icon-button`}
-                top={40}
-                right={40}
-                transformY={index>1?50:10}
-            />
-            
-        </div>
-    )
-}
 const PlaylistDetail=()=>{
     
     const {id}=useParams()
@@ -75,6 +43,9 @@ const PlaylistDetail=()=>{
         })()
         
     }, [])
+    const setsongs=useCallback((data)=>{
+        setSongs(data)
+    },[songs])
     return (
         playlist &&(<div className="body-wrapper">
             <div className="zm-section channel-section song-animate-section">
@@ -109,11 +80,13 @@ const PlaylistDetail=()=>{
                         <div className="list flex-1">
                             <div className="option-all__songs pl-20">
                                 {songs.length>0?
-                                <ul className="option-all__songs-list songs-list">
+                                <ul className="option-all__songs-list songs-list table-body">
                                     {songs.map((song,index)=>
                                         <Song
                                             song={song}
-                                            index={index}
+                                            songs={songs}
+                                            setsongs={data=>setsongs(data)}
+                                            
                                         />
                                         )}
                                 </ul>:

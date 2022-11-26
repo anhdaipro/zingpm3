@@ -42,12 +42,7 @@ background:${props=>props.active?'#9b4de0':'transparent'};
     border:1px solid #9b4de0;
 }
 `
-const Listitem=styled.div`
-margin-bottom: 32px;
-border-bottom: 1px solid #ffffff1a;
-width: 100%;
-position: relative;
-`
+
 const Bottomtab=styled.div`
 bottom:0;
 left:0;
@@ -55,6 +50,62 @@ width:100%;
 position:absolute;
 height:2px;
 background-color:#9b4de0
+`
+const SearchWrapper=styled.div`
+position:relative;
+.section{
+    margin-top:24px;
+};
+.title{
+    margin-bottom:16px
+};
+.artists-content .list{
+display:flex;
+margin:0 -8px
+};
+.artists-content .list .item{
+    width:25%;
+    padding:8px;
+    .info{
+        max-width:100%
+    };
+    .subtitle{
+        text-align:center
+    }
+    .item-media{
+        position:relative;
+        border-radius:50%;
+        cursor:pointer;
+        overflow:hidden;
+        .media_cover{
+            transition:transform 0.7s ease
+        };
+        &:hover .media_cover{
+            transform:scale(1.1);
+            
+        };
+        &:hover .image-hover{
+            display:flex;
+
+            
+        };
+        .image-hover{
+            position:absolute;
+            top:0;
+            display:none;
+            background:#00000080;
+            left:0;
+            bottom:0;
+            rigth:0;
+            width:100%
+        }
+    }
+    
+}
+
+`
+const Listitem=styled.div`
+display:flex;
 `
 const Artist=(props)=>{
     const {item,artists,setartists}=props
@@ -69,18 +120,20 @@ const Artist=(props)=>{
         setartists(dataupdate)
     }
     return(
-        <div style={{width:'25%'}}>
-            <div>
-                <img src={originURL+item.image}/>
-                <div></div>
-            </div>
-            <div>
-                <div>
-                    <h3>{item.name}</h3>
-                    <div>{item.count_follow}</div>
+        <div className="item">
+            <div className="item-media">
+                <div className="media_cover" style={{backgroundImage: `url(${originURL+item.image})`}}/>
+                <div className="image-hover item-center">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
                 </div>
-                <div>
-                    <button onClick={()=>setfollow('followed',!item.followed)}>{item.followed?"Xem thêm":"Quan tâm"}</button>
+            </div>
+            <div className="mt-16 info-artist center">
+                <div className="info">
+                    <h3 className="item-name">{item.name}</h3>
+                    <div className="subtitle">{item.number_followers} quan tâm</div>
+                </div>
+                <div className="item-center mt-16">
+                    <button className="btn btn-second btn-m" onClick={()=>setfollow('followed',!item.followed)}>{item.followed?"Xem thêm":"Quan tâm"}</button>
                 </div>
             </div>
         </div>
@@ -105,9 +158,13 @@ const Search=()=>{
         ( async () =>{
             const res= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers)
             const  data=res.data
-            setSongs(data.songs)
-            setArtists(data.artists)
-            setPlaylists(data.playlists)
+            
+            setSongs(current=>data.songs)
+            console.log(data.songs)
+            
+            setArtists(current=>data.artists)
+            setPlaylists(current=>data.playlists)
+            
         })()
         
     }, [params,choice])
@@ -120,6 +177,7 @@ const Search=()=>{
     const setartists=useCallback((data)=>{
         setArtists(data)
     },[artists])
+    console.log(songs)
     return(
         <div className="body-wrapper">
             <div>
@@ -133,10 +191,10 @@ const Search=()=>{
                     )}
                 </Listitem>
             </div>
-            <div className="search-wrapper">
-                <div>
+            <SearchWrapper>
+                <div className="standings-content section">
                     <div className="title">Nổi bật</div>
-                    <div className="list-search">
+                    <div className="list">
                         {songs.length>0&&(
                             <div>
                                 <div>
@@ -150,7 +208,7 @@ const Search=()=>{
                                 </div>
                             </div>
                         )}
-                        {artists.length>0&&(
+                        {artists.length>0&& (
                             <div>
                                 <div>
                                     <div></div>
@@ -179,9 +237,9 @@ const Search=()=>{
                     </div>
                 </div>
                 {songs.length>0 &&(
-                <div className="list-seach">
-                    <div> Bài hát</div>
-                    <div>
+                <div className='songs-content section'>
+                    <div className="title"> Bài hát</div>
+                    <div className="list">
                         {groups.map((item,index)=>
                             <div key={index} className="column mar-b-0 is-fullhd-4 is-widescreen-4 is-desktop-4 is-touch-6 is-tablet-6">
                                 <div className="list">
@@ -198,19 +256,20 @@ const Search=()=>{
                         )}
                     </div>
                 </div>)}
-                <div>
-                    <div>Playlist</div>
-                    <div>
+                {playlists.length>0&&(
+                <div className="playlists-content section">
+                    <div className="title">Playlist</div>
+                    <div className="list">
                         {playlists.map(item=>
                             <Playlist
                             item={item}
                             />
                         )}
                     </div>
-                </div>
-                <div>
-                    <div>Nghệ sĩ</div>
-                    <div className="flex">
+                </div>)}
+                {artists.length >0 &&( <div className="artists-content section">
+                    <div className="title">Nghệ sĩ</div>
+                    <div className="list">
                         {artists.map(item=>
                             <Artist
                             item={item}
@@ -219,8 +278,8 @@ const Search=()=>{
                             />
                         )}
                     </div>
-                </div>
-            </div>
+                </div>)}
+            </SearchWrapper>
         </div>
     )
 }

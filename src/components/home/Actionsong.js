@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux"
 import { valid,headers } from '../../actions/auth';
 import { listcommentURL, listplaylistURL,playlistURL,songURL } from '../../urls';
 import {ToastContainer, toast } from'react-toastify';
+import fileDownload from 'js-file-download';
 import 'react-toastify/dist/ReactToastify.css';
 const Actionsong=(props)=>{
     const {song,className,left,right,top,transformY,setsongs,songs}=props
@@ -33,15 +34,22 @@ const Actionsong=(props)=>{
 
     const download=(e)=>{
         e.preventDefault()
-        fetch(song.url)
-        .then(response => response.blob())
-        .then(blob => {
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = song.name;
-            link.click();
-        })
-        .catch(console.error); 
+        const url=song.url
+            axios({
+              url,
+              method: 'GET',
+              responseType: 'blob',
+            }).then((response) => {
+              const urlObject = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = urlObject;
+              link.setAttribute('download', 'recording.mp3');
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+          
+       
     }
     const setshowaction=()=>{
         dispatch(showmodal(true))

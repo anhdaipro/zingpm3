@@ -361,12 +361,29 @@ background-color:#3a3344 ;
 }
 .table-body .playlist-item .item-info{
     flex:2;
+    max-width: 50%;
 }
 .table-body .playlist-item .item-info .item-left{
     padding-left: 10px;
+    width: 100%;
+}
+.media_cover{
+    background-size: cover;
+    width: 100%;
+    padding-top: 100%;
 }
 .playlist-item .playlist-position.top-2 {
     -webkit-text-stroke: 1px #50e3c2;
+}
+.zm-carousel__container {
+    display: flex;
+    z-index: 3;
+    width: 100%;
+}
+@media screen and (max-width: 1200px){
+.video-body .queue-player, .video-body .video-player {
+    width: 100% !important;
+}
 }
 .playlist-item .playlist-position.top-3 {
     -webkit-text-stroke: 1px #e35050;
@@ -948,5 +965,208 @@ img, video {
     height: 100%;
     position: relative;
     margin-bottom: 20px;
+}
+.zm-video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 101;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+}
+#video-scroll{
+    position: absolute;
+    inset: 0px;
+    overflow: hidden scroll;
+    margin-right: -6px;
+    margin-bottom: 0px;
+}
+.video-wrapper {
+    height: 100%;
+}
+.video-blur-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+}
+.video-blur-bg .video-blur-image {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.video-container {
+    position: relative;
+    min-height: 100vh;
+    padding-top: 85px;
+    background-color: rgba(0,0,0,.5);
+}
+.video-header {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 20px;
+}
+.video-body {
+    position: relative;
+    color: #fff;
+    margin: 0 auto;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 95vw;
+}
+.z--player {
+    height: 343px;
+    width: 610px;
+    user-select: none;
+    transition: transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+    transition: opacity 0.1s cubic-bezier(0, 0, 0.2, 1);
+    position: relative;
+    font-size: 10px;
+    font-family: sans-serif;
+    line-height: 1.5;
+    padding: 0;
+    font-weight: normal;
+    box-sizing: border-box;
+    outline: none;
+    background-color: #000;
+}
+.video-body .z--player {
+    padding-bottom: 56.25%;
+    overflow: hidden;
+    width:100%;
+    height:0;
+    border-radius: 4px;
+}
+
+.zm-video-modal .controls {
+    padding: 13px 8px;
+    left: 1.2em;
+    width: calc(100% - 2.4em);
+}
+.zm-video-modal .z--player .controls .progress-bar {
+    bottom: 5em;
+}
+.z--player .controls .progress-bar {
+    position: absolute;
+    bottom: 3.2em;
+    width: 100%;
+    height: 2em;
+    cursor: pointer;
+}
+.z--player .controls .progress-bar .bar {
+    -webkit-transition: height 0.2s,transform 0.2s cubic-bezier(0, 0, 0.2, 1),top 0.2s;
+    -moz-transition: height 0.2s,transform 0.2s cubic-bezier(0, 0, 0.2, 1),top 0.2s;
+    transition: height 0.2s,transform 0.2s cubic-bezier(0, 0, 0.2, 1),top 0.2s;
+    height: 0.3em;
+    top: 0.9em;
+}
+.z--player .controls .--z--bar-bg {
+    background-color: #666;
+}
+
+.z--player .controls .--z--bar-bg {
+    width: 100%;
+    background-color: rgba(255,255,255,0.5);
+}
+.z--player .controls .bar {
+    -webkit-border-radius: 0.15em;
+    -moz-border-radius: .15em;
+    border-radius: 0.15em;
+    cursor: pointer;
+    height: 0.3em;
+    position: absolute;
+    display: inline-block;
+    top: 1.4em;
+    left: 0;
+}
+.z--player .controls .--z--bar-fill-load {
+    background-color: #c2c2c2;
+}
+.controls .--z--bar-fill-recent {
+    background-color: #721799;
+}
+.z--player .controls .bar .bullet {
+    transition: all 0.2s,width 0s;
+    height: 0;
+    width: 0;
+    top: 0;
+}
+
+.z--player .controls .bullet {
+    background-color: #f7f7f7;
+    box-shadow: 0 0 1px #f7f7f7;
+}
+.z--player .ad_runners_ui_ad_mark_container {
+    transition: height 0.2s,transform 0.2s cubic-bezier(0, 0, 0.2, 1),top 0.2s;
+    position: absolute;
+    height: 0.3em !important;
+    top: 0.9em;
+}
+.ad_runners_ui_ad_mark_container {
+    display: flex !important;
+    width: 100%;
+    height: 100%;
+}
+.z--player .controls .--z--bar-fill-recent .bullet {
+    height: 1.4em;
+    width: 1.4em;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #f7f7f7;
+    box-shadow: 0 0 1px #f7f7f7;
+    position: absolute;
+    top: -0.6em;
+    right: -0.6em;
+}
+.z--player .control-left {
+    display: flex;
+    flex-grow: 1;
+}
+.zm-video-modal .z--player .control-right {
+    margin-right: 0;
+}
+
+.z--player .control-right {
+    
+    display: flex;
+    align-items: center;
+    margin-right: 1em;
+}
+.z--player video {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+.controls {
+    transition: opacity 0.3s ease-out;
+    display: box;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 2em;
+    width: calc(100% - 2em * 2);
+    text-shadow: 0 0 2px #000;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    padding: 0.5em 0;
+}
+.controls-wrapper {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 6em;
+    background-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
 }
 

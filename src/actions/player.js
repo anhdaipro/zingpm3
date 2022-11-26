@@ -1,4 +1,4 @@
-import { ACTION_USER, PLAYER, SHOW_ACTION, SHOW_MODAL, SHOW_PLAYLIST, TIME_STOP_PLAYER, UPDATE_SONGS,UPDATE_PLAYLISTS, SHOW_INFO_ARTIST, SHOW_POST, UPDATE_POSTS } from './types';
+import { ACTION_USER, PLAYER, SHOW_ACTION, SHOW_MODAL, SHOW_PLAYLIST, TIME_STOP_PLAYER, UPDATE_SONGS,UPDATE_PLAYLISTS, SHOW_INFO_ARTIST, SHOW_POST, UPDATE_POSTS, SHOW_VIDEO } from './types';
 
 import axios from 'axios';
 import { listThreadlURL, loginURL,registerURL} from '../urls';
@@ -55,6 +55,12 @@ export const updateposts=(data)=>{
     return{
         payload:data,
         type:UPDATE_POSTS
+    }
+}
+export const setshowvideo=(data)=>{
+    return{
+        payload:data,
+        type:SHOW_VIDEO
     }
 }
 export const setshowpost=(data)=>{

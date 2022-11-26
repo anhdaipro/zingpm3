@@ -15,6 +15,7 @@ export const newplaylistURL=`${api}/v1/playlist/new`
 export const lyricsongURL=`${api}/v1/lyric`
 export const videosongURL=`${api}/v1/video`
 export const listsongURL=`${api}/v1/songs`
+export const listmvURL=`${api}/v1/listmv`
 export const streamingURL=`${api}/v1/streaming`
 export const listcommentURL=`${api}/v1/comments`
 export const songURL=`${api}/v1/song`

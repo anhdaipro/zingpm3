@@ -53,18 +53,19 @@ const Listnewsong=(props)=>{
     const [listnewsong,setListnewsong]=useState([])
     const datasongs=useSelector(state => state.player.songs)
     const dispatch = useDispatch()
+    const {choice}=props
     const newsongs=useMemo(()=>{
         return partition(listnewsong,4)
     },[listnewsong])
     useEffect(()=>{
         ( async ()=>{
-            const res=await axios.get(`${newsongURL}?limit=true`,headers)
-        setListnewsong(res.data.map(item=>{
+            const res=await axios.get(`${newsongURL}?limit=true&filter=${choice}`,headers)
+            setListnewsong(res.data.map(item=>{
             return({...item,image_cover:'http://localhost:8000'+item.image_cover})
         }))
         })()
         
-    },[])
+    },[choice])
 
     return(
         <div className="columns is-multiline">

@@ -166,6 +166,23 @@
     flex-direction: row;
 }
 }
+
+.zm-carousel {
+    display: flex;
+    margin: 0 -15px;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
+.zm-carousel, .zm-carousel-wrapper {
+    position: relative;
+}
+@media screen and (max-width: 1024px){
+.zm-carousel {
+    margin: 0 -12px;
+}
+}
 @media (min-width: 740px) {
     .row {
         margin-left: -8px;

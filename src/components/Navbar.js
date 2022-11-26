@@ -5,13 +5,53 @@ import { logout, setrequestlogin,valid } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
+import { originURL } from '../urls';
 let jsmediatags = window.jsmediatags;
 const token=localStorage.getItem('token')
+
 const Navbar=()=>{
     const dispatch = useDispatch()
+    
     const inputref=useRef()
+    const inputref1=useRef()
     const user=useSelector(state=>state.auth.user)
+    const uploadfile=async (e)=>{
+        try{
+            [].forEach.call(e.target.files, function(file) {
+                console.log(file)
+                var url = (window.URL || window.webkitURL).createObjectURL(file);
+                const video=document.createElement('video')
+                video.src=url
+                video.addEventListener('loadeddata', e =>{
+                    var rand = Math.round(Math.random() * video.duration * 1000) + 1;
+                    video.currentTime = rand / 1000;
+                })
+                video.addEventListener('seeked',e=>{
+                    let canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                    let image = canvas.toDataURL("image/png");
+                    let file_preview = dataURLtoFile(image,'dbc9a-rg53.png');
+                    let form=new FormData()
+                    form.append('file',file)
+                    form.append('file_preview',file_preview)
+                    form.append('duration',video.duration)
+                    axios.post('http://127.0.0.1:8000/api/v1/upload/video',form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+                    .then(res=>{
+                        console.log(res.data)
+                    })
+                })
+                
+                video.preload = 'metadata';
+            })
+        }
+        catch(e){
+            console.log(e)
+        }
+    }
     const previewFile= async (e)=>{
+        try{
         [].forEach.call(e.target.files, function(file) {
             console.log(file)
             var url = (window.URL || window.webkitURL).createObjectURL(file);
@@ -33,7 +73,7 @@ const Navbar=()=>{
                   }
                   form.append('file',file)
                   form.append('name',title)
-                  form.append('albulm',album)
+                  form.append('album',album)
                   form.append('artist_name',artist)
                   form.append('viewer','1')
                   form.append('singer',user.singer)
@@ -58,6 +98,11 @@ const Navbar=()=>{
               
         }) 
     }
+    catch(e){
+        console.log(e)
+    }
+    }
+    
     
     return (
         <div className="header">
@@ -85,6 +130,17 @@ const Navbar=()=>{
                         }}  class="_header-icon_1fdcg_34" aria-label="Tải lên">
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                         <input ref={inputref} multiple={true} onChange={(e)=>previewFile(e)} type="file" accept="audio/*"/>
+                    </div>
+                    <div onClick={()=>{
+                        if(valid){
+                        inputref1.current.click()
+                        }
+                        else{
+                            dispatch(setrequestlogin(true))
+                        }
+                        }}  class="_header-icon_1fdcg_34" aria-label="Tải lên">
+                        <svg stroke="currentColor" fill="none" width="1em" height="1em" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M22.1571 13.8359L21.9247 12.3786C21.4686 9.51917 18.9876 7.3335 16 7.3335C12.6863 7.3335 10 10.0197 9.99996 13.3334L10.0011 15.2304L8.11578 15.3398C6.19293 15.4513 4.66663 17.0482 4.66663 19.0002C4.66663 21.0252 6.30825 22.6668 8.33329 22.6668H15.3333V17.0813L14.1785 18.236C13.9182 18.4964 13.4961 18.4964 13.2357 18.236L12.7643 17.7646C12.504 17.5043 12.504 17.0822 12.7643 16.8218L15.862 13.7242C16.1223 13.4638 16.5444 13.4638 16.8048 13.7242L19.9024 16.8218C20.1628 17.0822 20.1628 17.5043 19.9024 17.7646L19.431 18.236C19.1706 18.4964 18.7485 18.4964 18.4882 18.236L17.3333 17.0811V22.6668H23C25.3932 22.6668 27.3333 20.7267 27.3333 18.3335C27.3333 16.151 25.7179 14.3423 23.6181 14.0437L22.1571 13.8359ZM8.33329 24.6668H15.3333H17.3333H23C26.4978 24.6668 29.3333 21.8313 29.3333 18.3335C29.3333 15.1411 26.9714 12.5005 23.8997 12.0636C23.2913 8.24881 19.9861 5.3335 16 5.3335C11.5817 5.3335 7.99996 8.91522 7.99996 13.3335L7.99996 13.3431C5.0255 13.5157 2.66663 15.9824 2.66663 19.0002C2.66663 22.1298 5.20368 24.6668 8.33329 24.6668Z"></path></svg>
+                        <input ref={inputref1} multiple={true} onChange={(e)=>uploadfile(e)} type="file" accept="video/*,.mkv"/>
                     </div>
                     <div class="_header-icon_1fdcg_34 _header-theme_1fdcg_48" aria-label="Chủ đề">
                         <svg height="1em" width="1em" stroke="currentColor" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 246.989 246.989" enableBackground="new 0 0 246.989 246.989" xmlSpace="preserve">

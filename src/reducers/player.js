@@ -1,5 +1,5 @@
 import {
-    ACTION_USER,SHOW_ACTION,
+    ACTION_USER,SHOW_ACTION,SHOW_VIDEO,
     PLAYER, SHOW_MODAL, UPDATE_SONGS,SHOW_PLAYLIST, TIME_STOP_PLAYER, UPDATE_PLAYLISTS, SHOW_INFO_ARTIST, SHOW_POST, UPDATE_POSTS
 
 } from '../actions/types';
@@ -22,6 +22,7 @@ let initialState = {
     showinfo:false,
     comments:[],
     posts:[],
+    showvideo:false,
     songs:[]
 };
 
@@ -35,6 +36,10 @@ const playerReducer=(state = initialState, action)=>{
                 ...payload
             }
         }
+        case SHOW_VIDEO:
+            return {
+                ...state,...payload
+            }
         case UPDATE_POSTS:
             return{
                 ...state,posts:payload

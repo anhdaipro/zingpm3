@@ -61,24 +61,24 @@ position:absolute;
 height:2px;
 background-color:#9b4de0
 `
-const Song=(props)=>{
+export const Song=(props)=>{
     const dispatch = useDispatch()
-    const {song,index,setsongs,songs,count}=props
+    const {song,setsongs,songs,checkitem}=props
     const datasongs=useSelector(state => state.player.songs)
     const player=useSelector(state => state.player)
     const checked=songs.find(item=>item.checked)
-    const {playlists,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo,view}=player
+    const {playlists,currentIndex,play,view}=player
     const [showaction,setShowaction]=useState(false)
     const songref=useRef()
     const setliked= async (name,value)=>{
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers)
-        const data=datasongs.map((item,index)=>{
+        const data=datasongs.map((item)=>{
             if(song.id==item.id){
                 return({...item,[name]:value})
             }
             return({...item})
         })
-        const songupdate=songs.map((item,index)=>{
+        const songupdate=songs.map((item)=>{
             if(item.id==song.id){
                 return({...item,[name]:value})
             }
@@ -92,11 +92,8 @@ const Song=(props)=>{
         });
         dispatch(updatesongs(data))
     }
-    const dropref=useRef()
     
-    console.log(count)
     
-
     const setitem=(itemchoice,name,value)=>{
         const data=songs.map(item=>{
             if(item.id==itemchoice.id){
@@ -107,27 +104,12 @@ const Song=(props)=>{
         setsongs(data)
     }
     const check_exist=datasongs.every(item=>item.id!=song.id)
-    const setshowlyric= async ()=>{
-        if(!song.sentences){
-            const res = await axios.get(`${lyricsongURL}?id=${song.id}`,headers)
-            const data=check_exist?[{...song,...res.data},...datasongs]:datasongs.map(item=>{
-                if(item.id===song.id){
-                    return({...item,...res.data})
-                }
-                return({...item,})
-            })
-            const dataupdate={songs:data,showoption:'lyric',showplaylist:false,change:true,play:true,view:check_exist?false:view,currentIndex:check_exist?0:datasongs[currentIndex].id==song.id?currentIndex:datasongs.findIndex(item=>item.id==song.id)}
-            dispatch(setsong(dataupdate))
-        }
-        else{
-            dispatch(setsong({showoption:'lyric',showplaylist:false,play:true}))
-        }
-    } 
+    
     return (
-        <div onMouseLeave={()=>setShowaction(false)} onMouseEnter={()=>setShowaction(true)} ref={songref} key={index} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ||song.checked ? "active" : ""}`}>
+        <div onMouseLeave={()=>setShowaction(false)} onMouseEnter={()=>setShowaction(true)} ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ||song.checked ? "active" : ""}`}>
             <div className="item-info flex-center">
                 <div className="item-left flex-center">
-                    <div>
+                    {checkitem &&(<div>
                         {!showaction && !checked ?
                             <div className="icon-music mr-8">
                                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"></path><path fill-rule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"></path><path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"></path></svg>
@@ -142,7 +124,7 @@ const Song=(props)=>{
                                 </span> 
                             </label>
                         }     
-                    </div>
+                    </div>)}
                     <PlaySong song={song}/>     
                     <div className="card-info">
                         <Songinfo
@@ -183,11 +165,10 @@ const Song=(props)=>{
 }
 
 Song.PropType={
-    song:PropType.object,
-    index:PropType.number,
-    setsongs:PropType.func,
-    songs:PropType.array,
-    count:PropType.number
+    song:PropType.object.isRequired,
+    setsongs:PropType.func.isRequired,
+    songs:PropType.array.isRequired,
+    checkitem:PropType.bool
 }
 export const Playlist=(props)=>{
     const dispatch = useDispatch()
@@ -226,7 +207,7 @@ export const Playlist=(props)=>{
     const dropref=useRef()
     return(
         <div style={{width:'25%'}} key={item.id} className="slider-item">
-            <Link to={`/${item.slug}/${item.id}`}>
+            <Link to={`/playlist/${item.slug}/${item.id}`}>
                 <div className="playlist-image-wrapper">
                     <div class="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`http://localhost:8000${item.images[0]}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
                     <div class="card-list-image-hover">
@@ -443,12 +424,11 @@ const Individual=()=>{
                             </div>
                         </div>
                         <div className="table-body">
-                            {songs.map((song,index)=>
+                            {songs.map((song)=>
                                 <Song
                                 song={song}
                                 songs={songs}
-                                index={index}
-                                count={count}
+                                checkitem={true}
                                 setsongs={data=>setsongs(data)}
                                 />
                             )}

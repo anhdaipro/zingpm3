@@ -135,6 +135,7 @@ input, button, textarea, select ,.textarea{
     border:none;
     outline:none
 }
+
 input[type='file']{
   display: none;
 }
@@ -256,6 +257,22 @@ background-color: #493961;
 }
 .btn-second:hover{
  background-color:var(--primary-color); 
+}
+.btn-m{
+  height:32px
+}
+.zm-tooltip-btn{
+  background-color:#43423e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  color:#fff;
+  height:40px;
+  border-radius:50%
+}
+.zm-tooltip-btn:hover{
+  background-color:#363532;
 }
 .btn-l{
   padding:8px;

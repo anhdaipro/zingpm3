@@ -80,9 +80,7 @@ const Discover=()=>{
         ( async ()=>{
             
             const res1 = await axios.get(zingchartURL,headers)
-            setTopSongs(res1.data.topsongs.map(item=>{
-                return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-            }))
+            setTopSongs(res1.data.topsongs)
             
             const data= res1.data.dashboard.map(item=>{
               return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
@@ -117,9 +115,7 @@ const Discover=()=>{
             setTop2(top2)
             setTop3(top3)
             const res2 = await axios.get(listartistURL,headers)
-            const data2=res2.data.map(item=>{
-                return({...item,image:'http://localhost:8000'+item.image})
-            })
+            const data2=res2.data
             setArtists(data2)
         })()
     }, [])

@@ -40,9 +40,7 @@ const Homepage=()=>{
         ( async ()=>{
             const res = await axios.get(zingchartURL,headers)
             console.log(res.data)
-            setSongs(res.data.topsongs.map(item=>{
-                return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-            }))
+            setSongs(res.data.topsongs)
             const data= res.data.dashboard.map(item=>{
               return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
             })

@@ -72,9 +72,7 @@ const Newrelease=()=>{
     useEffect(()=>{
         ( async ()=>{
             const res=await axios.get(`${newsongURL}?choice=${choice}&filter=${params.get('filter')}`,headers)
-        setSongs(res.data.map(item=>{
-            return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-        }))
+        setSongs(res.data)
         })()
         
     },[params,choice])

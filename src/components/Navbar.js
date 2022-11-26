@@ -5,7 +5,6 @@ import { logout, setrequestlogin,valid } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
-import { originURL } from '../urls';
 let jsmediatags = window.jsmediatags;
 const token=localStorage.getItem('token')
 
@@ -84,7 +83,7 @@ const Navbar=()=>{
                     form.append('lyrics',lyrics.lyrics)
                   }
                   form.append('duration',audio.duration)
-                  console.log(form)
+                  
                   axios.post('http://127.0.0.1:8000/api/v1/uploadsong',form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
                   .then(res=>{
                     console.log(res.data)

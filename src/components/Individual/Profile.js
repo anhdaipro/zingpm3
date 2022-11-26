@@ -4,7 +4,7 @@ import { useSelector,useDispatch } from "react-redux"
 import styled from "styled-components"
 import { headers, updateprofile,token } from "../../actions/auth"
 import { showmodal,actionuser } from "../../actions/player"
-import { originURL, profileURL } from "../../urls"
+import {  profileURL } from "../../urls"
 const Fullcontent=styled.div`
     width:100%;
     height:100%
@@ -177,7 +177,7 @@ const Profile=()=>{
     useEffect(() => {
         ( async ()=>{
             const res =await axios.get(profileURL,headers)
-            dispatch(updateprofile({...res.data,avatar:originURL+res.data.avatar}))
+            dispatch(updateprofile({...res.data}))
         })()
         
     }, [dispatch])

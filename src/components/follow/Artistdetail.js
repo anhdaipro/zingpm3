@@ -5,7 +5,7 @@ import { newsongURL } from "../../urls"
 import axios from "axios"
 const Artistdetail=()=>{
     const {choice}=useNavigate()
-    console.log('ss')
+    
     useEffect(()=>{
         ( async () =>{
            const res= await axios.get(newsongURL,headers)

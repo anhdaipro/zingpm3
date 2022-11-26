@@ -79,7 +79,7 @@ const Detailgenre=()=>{
             const data=res.data  
             setGenre(data)
             const genre_songs=data.songs.map(item=>{
-                return({...item,checked:false,image_cover:'http://localhost:8000'+item.image_cover})
+                return({...item,checked:false})
             })
             setSongs(genre_songs) 
             dispatch(setsong({change:true,play:false}))

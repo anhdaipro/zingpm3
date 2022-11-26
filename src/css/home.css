@@ -380,6 +380,15 @@ background-color:#3a3344 ;
     z-index: 3;
     width: 100%;
 }
+@media screen and (min-width: 1200px){
+.video-queue {
+    background-color: hsla(0,0%,100%,.10196078431372549);
+    overflow: hidden;
+    height: calc(53.4375vw - 196.875px);
+    width: auto;
+    margin-top: 0;
+}
+}
 @media screen and (max-width: 1200px){
 .video-body .queue-player, .video-body .video-player {
     width: 100% !important;
@@ -888,6 +897,13 @@ cursor:pointer
     50% {opacity: 0.5;}
     100% {opacity: 1;}
   }
+@keyframes zp-bezel-fadeout{
+    0%{opacity: 1;}
+    25%{opacity: 0.85;transform: scale(1.2);}
+    50%{opacity: 0.55;transform: scale(1.4);}
+    75%{opacity: 0.35;transform: scale(1.6);}
+    100% {opacity: 0;transform: scale(1.5)}
+}
 .fs-media-list .zm-card-content .action-btn .icon {
     font-size: 20px;
     padding: 10px;

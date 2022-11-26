@@ -3,7 +3,7 @@ import { useState,useEffect,useRef, useCallback } from "react"
 import { useSelector ,useDispatch} from "react-redux"
 import { headers } from "../../actions/auth"
 import { updateposts,setshowpost } from "../../actions/player"
-import { commentURL,listcommentURL,artistURL, originURL, postURL } from "../../urls"
+import { commentURL,listcommentURL,artistURL, postURL } from "../../urls"
 import dayjs from "dayjs"
 import styled from "styled-components"
 import { timeago } from "../../constants"
@@ -117,7 +117,7 @@ export const Comment=(props)=>{
         <div key={item.id}>
             <Stylecomment className="flex">
                 <div className="mr-8">
-                    <div className='avatar' style={{backgroundImage:`url(${originURL}${item.user.avatar})`}}></div>
+                    <div className='avatar' style={{backgroundImage:`url(${item.user.avatar})`}}></div>
                 </div>
                 <div className="media-content">
                     <div className="flex">
@@ -168,7 +168,7 @@ Comment.prototype={
 const DetailFeed=()=>{
     const dispatch = useDispatch()
     const player=useSelector(state=>state.player)
-    console.log(player)
+    
     const {data,comments,posts,count,showpost}=player
     const [item,setItem]=useState()
     const [listcomment,setListcomment]=useState(()=>comments)
@@ -180,7 +180,7 @@ const DetailFeed=()=>{
             setItem(data)
         }
     },[showpost,data])
-    console.log(item)
+    
     const additem= async (e)=>{
         try{
             if(e.target.scrollTop==e.target.scrollHeight-e.target.offsetHeight &&loading && listcomment.length<count){
@@ -228,14 +228,14 @@ const DetailFeed=()=>{
                 
                 <FeedLeft className="flex-1 mr-16">
                     {item.files.map(file=>
-                        <div key={`file+${file.id}`} style={{backgroundImage:`url(${originURL}${file.media_preview||file.media})`}} className="feed-image"></div>
+                        <div key={`file+${file.id}`} style={{backgroundImage:`url(${file.media_preview||file.media})`}} className="feed-image"></div>
                     )}
                 </FeedLeft>
                 <FeedRigtht ref={parentRef} onScroll={(e)=>additem(e)}>
                     <div className="card-header feed-header">
                         <div className="media mb-8">
                             <div className="media-left">
-                                <div style={{backgroundImage:`url(${originURL}${item.artist.image})`}} className="avatar"></div>
+                                <div style={{backgroundImage:`url(${item.artist.image})`}} className="avatar"></div>
                             </div>
                             <div className="media-content">
                                 <h3 className="flex">

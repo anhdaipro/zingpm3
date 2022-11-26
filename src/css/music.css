@@ -342,8 +342,8 @@ right:10px
 .btn-list-play.active{
   background-color: #9b4de0; 
 }
-.song-player-button.active{
-color:#9b4de0
+.song-player-button.active,.mv-player-button.active{
+color:#9b4de0 !important
 }
 .detail-song{
   z-index:1000;

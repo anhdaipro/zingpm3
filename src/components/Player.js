@@ -107,14 +107,14 @@ const Player=()=>{
         const currentTime=time.seconds+time.minutes*60
         return duration?currentTime/duration:0
     },[time.seconds,time.minutes])
-    const url=songs[currentIndex].url?songs[currentIndex].url:localStorage.getItem('url')
+    const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
     const song=change?songs[currentIndex]:songs[parseInt(localStorage.getItem('index'))]
     useEffect(()=>{
         ( async ()=>{ 
             const res = await axios.get(`${streamingURL}/${song.id}`)
             const datasongs=songs.map(item=>{
                 if(item.id===songs[currentIndex].id){
-                    return({...res.data,...item,url:'http://localhost:8000'+res.data.url})
+                    return({...res.data,...item})
                 }
                 return({...item})
             })
@@ -223,13 +223,12 @@ const Player=()=>{
         const times=percent*duration
         const minutes=Math.floor(times/60)
         const seconds=Math.floor(times-minutes*60)
-        console.log(minutes)
-        console.log(seconds)
+       
         audioref.current.removeEventListener('timeupdate',updatetime)
         dispatch(setsong({change:true,time:{seconds:seconds,minutes:minutes}}))
-        console.log(audioref.current.currentTime); 
+       
         audioref.current.currentTime=times
-        console.log(times)
+       
     }
     const volumeref=useRef()
     
@@ -291,7 +290,7 @@ const Player=()=>{
             if(dragvolume){
                 audioref.current.currentTime=time.seconds+time.minutes*60
                 setDragvolume(false)
-                console.log(audioref.current.currentTime)
+                
             }
 
         }
@@ -628,7 +627,7 @@ const Player=()=>{
                                     <div className="song-player-button">
                                         <svg onClick={()=>{
                                             dispatch(setsong({change:true,play:!play}))
-                                            console.log(audioref.current.currentTime)
+                                            
                                            
                                             }} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>

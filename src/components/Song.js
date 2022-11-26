@@ -53,7 +53,7 @@ const Songinfo=({song})=>{
         const data=res.data
         const rects=artistRef.current.getBoundingClientRect();
         const {left,right,top,width}=rects
-        dispatch(showinfoArtist({showinfo:true,data:{...data,image:'http://localhost:8000'+data.image},left:left>700?null:left,top:top,right:left<700?null:widthscreem-left-width}))
+        dispatch(showinfoArtist({showinfo:true,data:data,left:left>700?null:left,top:top,right:left<700?null:widthscreem-left-width}))
       }
     }
     catch(e){
@@ -79,7 +79,9 @@ const PlaySong=({song})=>{
   const player=useSelector(state => state.player)
   const datasongs=useSelector(state => state.player.songs)
   const {play,currentIndex}=player
-  const check_exist=datasongs.every(item=>item.id!=song.id)
+
+  
+  
   const setplaysong= async (e)=>{
     e.stopPropagation()
     if(datasongs.every(item=>item.id!=song.id)){

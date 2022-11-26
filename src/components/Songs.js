@@ -140,16 +140,14 @@ const Songs=()=>{
     useEffect(() => {
         ( async ()=>{
             if(songs.length==0){
-                console.log(localStorage.getItem('songs'))
+                
                 if(localStorage.getItem('songs')){
                     dispatch(updatesongs(JSON.parse(localStorage.getItem('songs'))))
                 }
                 else{
                 const res = await axios.get(listsongURL,headers)
-                const data=res.data.map(item=>{
-                    return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-                })
-                dispatch(setsong({songs:data,change:true}))
+                
+                dispatch(setsong({songs:res.data,change:true}))
             }
             }
         })()

@@ -26,7 +26,7 @@ import {
 } from './types';
 
 import axios from 'axios';
-import { listThreadlURL, loginURL,originURL,registerURL,userinfoURL,userprofileURL} from '../urls';
+import { listThreadlURL, loginURL,userinfoURL,userprofileURL} from '../urls';
 import { isVietnamesePhoneNumber,validatEemail } from '../constants';
 
 
@@ -63,7 +63,7 @@ export const googleAuthenticate = (state, code) => async dispatch => {
 
 export const googleLogin = (accessToken) => async dispatch => {
     try {
-        console.log(accessToken)
+        
         const res=await axios.post('https://daiviet.herokuapp.com/api-auth/convert-token', {
 			token: accessToken,
             backend: "google-oauth2",
@@ -204,7 +204,7 @@ export const checkAuthenticated = () => async dispatch => {
     try {
         const res = await axios.get(userinfoURL,{ 'headers': { Authorization:`JWT ${localStorage.token}` }})
         dispatch({
-            payload: {...res.data,avatar:originURL+res.data.avatar},
+            payload: {...res.data},
             type: AUTHENTICATED_SUCCESS
         });     
     } 

@@ -209,7 +209,7 @@ export const Playlist=(props)=>{
         <div style={{width:'25%'}} key={item.id} className="slider-item">
             <Link to={`/playlist/${item.slug}/${item.id}`}>
                 <div className="playlist-image-wrapper">
-                    <div class="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`http://localhost:8000${item.images[0]}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
+                    <div class="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`${item.images[0]}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
                     <div class="card-list-image-hover">
                         <button className="icon-button">
                         {user.id==item.user?
@@ -295,7 +295,7 @@ const Individual=()=>{
             if(valid){
             const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers)
                 const data=res.data.map(item=>{
-                return({...item,checked:false,image_cover:'http://localhost:8000'+item.image_cover})
+                return({...item,checked:false,})
             })
             setSongs(data) 
         }

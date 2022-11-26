@@ -169,9 +169,6 @@
 
 .zm-carousel {
     display: flex;
-    margin: 0 -15px;
-    -webkit-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     overflow: hidden;
 }

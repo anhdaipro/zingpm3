@@ -35,11 +35,9 @@ const PlaylistDetail=()=>{
     useEffect(() => {
         ( async () =>{
             const res = await axios.get(`${playlistURL}/${id}`,headers)
-            const datasongs=res.data.songs.map(item=>{
-                return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-            })
+            const datasongs=res.data.songs
             setSongs(datasongs)
-            setPlaylist({...res.data,image:'http://localhost:8000'+res.data.image})
+            setPlaylist({...res.data})
         })()
         
     }, [])

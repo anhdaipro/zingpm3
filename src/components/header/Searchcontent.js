@@ -51,9 +51,7 @@ const Searchcontent=()=>{
                 const res = await axios.get(`${searchURL}?keyword=${value}`,headers)
                 const data=res.data
                 setArtists(data.artists)
-                setSongs(data.songs.map(item=>{
-                    return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-                }))
+                setSongs(data.songs)
                 }
             }
             catch(e){

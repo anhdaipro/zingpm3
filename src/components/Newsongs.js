@@ -17,9 +17,7 @@ const Newsongs=()=>{
     useEffect(()=>{
         ( async ()=>{
             const res=await axios.get(`${newsongURL}`,headers)
-        setListnewsong(res.data.map(item=>{
-            return({...item,image_cover:'http://localhost:8000'+item.image_cover})
-        }))
+        setListnewsong(res.data)
         })()
         
     },[])

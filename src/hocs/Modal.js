@@ -27,7 +27,7 @@ const Modal=()=>{
         
     }, [show,data,action])
     
-    console.log(action)
+    
     const editlyric= async ()=>{
         if(lyrics){
            const res= await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({action:'update',lyrics:lyrics}),headers)

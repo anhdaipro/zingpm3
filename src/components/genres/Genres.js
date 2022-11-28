@@ -44,7 +44,7 @@ const Genres=()=>{
     return(
         <div className="body-wrapper">
             <div>
-                {genres}
+                {genres.length>0&&(
                 <div className="container-discover-slider" style={{position:'relative'}}>
                     <Slide autoplay transitionDuration={500} easing='ease' slidesToScroll={1} slidesToShow={4} arrows={false}>
                         {genres.map(item=>
@@ -54,7 +54,7 @@ const Genres=()=>{
                         )}
                     </Slide>
                     
-                </div>
+                </div>)}
             </div>
         </div>
     )

@@ -1,10 +1,11 @@
 import {useState,useRef,useEffect} from 'react'
 import axios from "axios"
-import { dataURLtoFile } from '../constants';
+import { dataURLtoFile, generateString } from '../constants';
 import { logout, setrequestlogin,valid } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
+import { uploadsongURL,uploadmvURL } from '../urls';
 let jsmediatags = window.jsmediatags;
 const token=localStorage.getItem('token')
 
@@ -36,7 +37,7 @@ const Navbar=()=>{
                     form.append('file',file)
                     form.append('file_preview',file_preview)
                     form.append('duration',video.duration)
-                    axios.post('http://127.0.0.1:8000/api/v1/upload/video',form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+                    axios.post(uploadmvURL,form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
                     .then(res=>{
                         console.log(res.data)
                     })
@@ -68,7 +69,9 @@ const Navbar=()=>{
                           base64String += String.fromCharCode(picture.data[i]);
                       }
                       const dataUrl = "data:" + picture.format + ";base64," +window.btoa(base64String);
-                      form.append('image_cover',dataURLtoFile(dataUrl,'dbc9a-rg53.png'))
+                      form.append('media_cover',dataURLtoFile(dataUrl,title))
+                      form.append('image',dataURLtoFile(dataUrl,title))
+                      console.log(dataURLtoFile(dataUrl,title))
                   }
                   form.append('file',file)
                   form.append('name',title)
@@ -84,7 +87,7 @@ const Navbar=()=>{
                   }
                   form.append('duration',audio.duration)
                   
-                  axios.post('http://127.0.0.1:8000/api/v1/uploadsong',form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+                  axios.post(uploadsongURL,form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
                   .then(res=>{
                     console.log(res.data)
                   })

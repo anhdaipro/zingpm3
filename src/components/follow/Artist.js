@@ -2,7 +2,7 @@
 import { useParams } from "react-router"
 import {useState,useEffect, useRef, useCallback} from "react"
 import { useSelector,useDispatch } from "react-redux"
-import {  artistURL, originURL } from "../../urls"
+import {  artistURL } from "../../urls"
 import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"

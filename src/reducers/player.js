@@ -21,7 +21,9 @@ let initialState = {
     showplaylist:false,
     showinfo:false,
     comments:[],
+    loading:false,
     posts:[],
+    duration:0,
     showvideo:false,
     songs:[]
 };

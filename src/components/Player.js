@@ -91,14 +91,14 @@ const listitems=[
 ]
 const Player=()=>{
     const player= useSelector(state => state.player)
-    const {songs,play,view,time_stop_player,currentIndex,time,change,showoption}=player
+    const {songs,play,view,time_stop_player,currentIndex,time,change,showoption,loading,duration}=player
     const [muted,setMuted]=useState(false)
     const showsongs=useSelector(state => state.player.showplaylist)
     const [state,setState]=useState({ramdom:false,repeat:false,onerepeat:false})
     const [volume,setVolume]=useState(1)
     const {repeat,ramdom,onerepeat}=state
     const [dragvolume,setDragvolume]=useState(false)
-    const [duration,setDuration]=useState(0)
+    
     
     const [drag,setDrag]=useState({time:false,volume:false})
     const dispatch=useDispatch()
@@ -111,6 +111,8 @@ const Player=()=>{
     const song=change?songs[currentIndex]:songs[parseInt(localStorage.getItem('index'))]
     useEffect(()=>{
         ( async ()=>{ 
+            if(!song.file){
+            dispatch((setsong({loading:false})))
             const res = await axios.get(`${streamingURL}/${song.id}`)
             const datasongs=songs.map(item=>{
                 if(item.id===songs[currentIndex].id){
@@ -118,7 +120,11 @@ const Player=()=>{
                 }
                 return({...item})
             })
-            dispatch(setsong({change:true,songs:datasongs,time:{seconds:0,minutes:0}})) 
+            dispatch(setsong({change:true,play:true,loading:true,songs:datasongs,time:{seconds:0,minutes:0}})) 
+        }
+        else{
+            dispatch(setsong({change:true,play:true,loading:true,}))
+        }
     })()
     },[song.id,dispatch])
 
@@ -625,14 +631,67 @@ const Player=()=>{
                                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
                                     </div>
                                     <div className="song-player-button">
+                                        {loading && duration==0?<svg xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink"  width="40px" height="40px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                        
+                                        <g transform="rotate(0 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(30 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(60 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(90 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(120 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(150 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(180 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(210 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(240 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(270 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(300 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g><g transform="rotate(330 50 50)">
+                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+                                        </rect>
+                                        </g>
+                                        </svg>:
                                         <svg onClick={()=>{
                                             dispatch(setsong({change:true,play:!play}))
                                             
                                            
                                             }} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
-                                            {play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
-                                        </svg>
+                                            {
+                                            play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
+                                        </svg>}
                                     </div>
                                     <div onClick={forward} className="song-player-button">
                                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
@@ -730,15 +789,12 @@ const Player=()=>{
                         
                     }}
                                  
-                    onLoadStart={()=>setDuration(0)}
+                    onLoadStart={()=>dispatch(setsong({duration:0}))}
                     onLoadedData={(e)=>{
-                        if (audioref.current.readyState >= 3) {
-                            setDuration(audioref.current.duration) 
-                          }
-                          else{
-                            setDuration(0)
-                          }                         
-                    }} 
+                            dispatch(setsong({duration:audioref.current.duration}))
+                           
+                                                
+                    } }
                     ref={audioref} loop={onerepeat||repeat?true:false}  src={url}/>
                     
                 </div>

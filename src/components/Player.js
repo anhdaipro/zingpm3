@@ -734,7 +734,7 @@ const Player=()=>{
                         
                     }}
                     onTimeUpdate={()=>{
-                        console.log(duration)
+                        
                         if(!drag.time && duration){
                             dispatch(setsong({change:true,time:{seconds:audioref.current.currentTime % 60,minutes:Math.floor((audioref.current.currentTime) / 60) % 60}}))
                         }  

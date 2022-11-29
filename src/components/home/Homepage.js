@@ -64,7 +64,7 @@ const Homepage=()=>{
                 }
                 return 0
             })
-            const datatop3=data.filter(item=>item.song==res.data.topsongs[2].id)
+            const datatop3=res.data.topsongs.length>2?data.filter(item=>item.song==res.data.topsongs[2].id):[]
             const top3=hours.map((item,i)=>{
                 if(datatop3.find(itemchoice=>itemchoice.day==item)){
                     return datatop3.find(itemchoice=>itemchoice.day==item).count

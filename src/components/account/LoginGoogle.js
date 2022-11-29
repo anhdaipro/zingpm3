@@ -61,6 +61,7 @@ const LoginGoogle=(props)=>{
             clientId="874868987927-hudvamdogth0ei4hctcp5gja538tggkf.apps.googleusercontent.com"
             buttonText="Google"
             onSuccess={responseGoogle}
+            
             onFailure={responseGoogle}
             cookiePolicy={'single_host_origin'}
             render={renderProps => (

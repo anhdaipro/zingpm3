@@ -97,7 +97,7 @@ const Song=(props)=>{
             dispatch(setsong({change:true,play:!play}))
         }
     }
-
+    
     return(
         <div  ref={songref} key={index} class={`song ${showaction && song_id==songid?'show':''} #2a2139 ${currentIndex === index ? "active" : ""}`}>
             <div onClick={(e)=>setplay(e)}  className="thumb" style={{position:'relative'}}>
@@ -186,7 +186,7 @@ const Song=(props)=>{
 }
 const Songs=()=>{
     const player=useSelector(state => state.player)
-    const {songs,showplaylist,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
+    const {songs,showplaylist,currentIndex,play, time_stop_player}=player
     const dispatch = useDispatch()
     
     useEffect(() => {

@@ -48,7 +48,8 @@ const App=()=>{
                 </Route>    
                 <Route  path="playlist/:slug/:id" element={<PlaylistDetail/>}/>   
                 <Route exact path="top100" element={<Top100/>}/>    
-                <Route exact path="user/:username" element={<Profile/>}/>  
+                <Route  path="user/:username" element={<Profile/>}/> 
+                
                 <Route exact path="moi-phat-hanh" element={<Newsongs/>}/>       
           </Routes>
         </Layout>

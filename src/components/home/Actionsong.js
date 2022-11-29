@@ -226,7 +226,7 @@ const Actionsong=(props)=>{
     const datasongs=useSelector(state=>state.player.songs)
     const dispatch = useDispatch()
     const [state,setState]=useState({width:document.documentElement.clientWidth})
-    console.log(songid)
+    
     useEffect(()=>{
         const setwidth=()=>{
             setState({...state,width:document.documentElement.clientWidth})

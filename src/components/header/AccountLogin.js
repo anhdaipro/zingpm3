@@ -9,7 +9,7 @@ const AccountLogin=()=>{
     const [show,setShow]=useState(false)
     const user=useSelector(state=>state.auth.user)
     const navigate = useNavigate();
-    console.log(user)
+  
     useEffect(()=>{
         const handleClick=(event)=>{
             const {target}=event

@@ -34,13 +34,12 @@ const Layout = ({children}) => {
         (async ()=>{
             if(localStorage.token){
                 dispatch(checkAuthenticated())
-                console.log('đ')
             }
         })() 
        
     }, [localStorage.token]);
     
-    console.log(requestlogin)
+    
     return (
         <div className="wrapper main">  
             <Sibar/>

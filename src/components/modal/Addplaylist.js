@@ -1,6 +1,6 @@
 
 import { useSelector,useDispatch } from "react-redux"
-import { showmodal } from "../../actions/player"
+import { showmodal, updateplaylists } from "../../actions/player"
 import { useState,useEffect,useRef,useMemo } from "react"
 import { songURL,newplaylistURL } from "../../urls"
 import { slugify } from "../../constants"
@@ -31,12 +31,17 @@ const Addplaylist=()=>{
     const [ramdomplay,setRamdomplay]=useState(true)
     const [publics,setPublic]=useState(true)
     const [keyword,setKeyword]=useState('')
+    const player=useSelector(state=>state.player)
+    const user=useSelector(state=>state.auth.user)
+    const {playlists}=player
     const dispatch = useDispatch()
     const addplaylist= async () =>{
         try{
             if(valid){
-            const rss= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay,slug:slugify(keyword)}),headers)
+            const res= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay,slug:slugify(keyword)}),headers)
             dispatch(showmodal(false))
+            const playlistupdate=[...playlists,{...res.data,user:user.id,user_name:user.name,images:[]}]
+            dispatch(updateplaylists(playlistupdate))
             toast.success(<span>Tạo playlist  "{keyword}" thành công</span>,{ 
                 position: toast.POSITION.BOTTOM_LEFT,
                 className:'toast-message'

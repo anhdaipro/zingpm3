@@ -24,7 +24,6 @@ let initialState = {
     loading:false,
     posts:[],
     duration:0,
-    showvideo:false,
     songs:[]
 };
 
@@ -38,10 +37,7 @@ const playerReducer=(state = initialState, action)=>{
                 ...payload
             }
         }
-        case SHOW_VIDEO:
-            return {
-                ...state,...payload
-            }
+        
         case UPDATE_POSTS:
             return{
                 ...state,posts:payload

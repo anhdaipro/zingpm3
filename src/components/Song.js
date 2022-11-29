@@ -23,11 +23,11 @@ const Showlyric=({song})=>{
           }
           return({...item,})
         })
-        const dataupdate={songs:data,showoption:'lyric',showplaylist:false,change:true,play:true,view:check_exist?false:view,currentIndex:check_exist?0:songs[currentIndex].id==song.id?currentIndex:songs.findIndex(item=>item.id==song.id)}
+        const dataupdate={songs:data,showoption:'lyric',play:true,showplaylist:false,change:true,view:check_exist?false:view,currentIndex:check_exist?0:songs[currentIndex].id==song.id?currentIndex:songs.findIndex(item=>item.id==song.id)}
         dispatch(setsong(dataupdate))
       }
       else{
-        dispatch(setsong({showoption:'lyric',showplaylist:false,play:true}))
+        dispatch(setsong({showoption:'lyric',showplaylist:false,change:true,play:true}))
       }
     }
     catch(e){
@@ -78,7 +78,7 @@ const PlaySong=({song})=>{
   const dispatch = useDispatch()
   const player=useSelector(state => state.player)
   const datasongs=useSelector(state => state.player.songs)
-  const {play,currentIndex,loading,duration}=player
+  const {play,currentIndex,loading,duration,change}=player
 
   
   
@@ -86,14 +86,14 @@ const PlaySong=({song})=>{
     e.stopPropagation()
     if(datasongs.every(item=>item.id!=song.id)){
       const addsong=[song,...datasongs]
-      dispatch(setsong({change:true,duration:0,songs:addsong,play:false,loading:false,currentIndex:0,view:false,showoption:''}))  
+      dispatch(setsong({change:true,duration:0,songs:addsong,play:true,currentIndex:0,view:false,showoption:''}))  
     }
     else{
       if(datasongs[currentIndex].id==song.id){
         dispatch(setsong({change:true,play:!play,showoption:'',loading:true}))
       }
       else{
-        dispatch(setsong({showoption:'',duration:0,play:false,loading:true,change:true,currentIndex:datasongs.findIndex(item=>item.id==song.id)}))
+        dispatch(setsong({showoption:'',duration:0,play:true,loading:true,change:true,currentIndex:datasongs.findIndex(item=>item.id==song.id)}))
       }
     }
   }
@@ -102,8 +102,9 @@ const PlaySong=({song})=>{
       <div style={{backgroundImage: `url('${song.image_cover}')`,width:'100%',height:'100%',backgroundSize:'cover'}}></div>
         <div style={{display:'flex',justifyContent:'center'}} class="item-center song-item-image-overlay">
             {datasongs.length>0 && song.id === datasongs[currentIndex].id?
-              play && loading && duration>0?<img src="https://mp3-react-vinhbuihd.vercel.app/images/icon-playing.gif" style={{width: '20px', height: '20px'}}/>:
-              loading && duration==0?
+              duration>0?play?<img src="https://mp3-react-vinhbuihd.vercel.app/images/icon-playing.gif" style={{width: '20px', height: '20px'}}/>:
+              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
+              :
               <svg xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink"  width="40px" height="40px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">                     
               <g transform="rotate(0 50 50)">
               <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
@@ -155,8 +156,6 @@ const PlaySong=({song})=>{
               </rect>
               </g>
               </svg>:
-              
-              <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>:
               <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
             }
         </div>

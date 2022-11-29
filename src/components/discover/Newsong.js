@@ -18,15 +18,15 @@ const Song=(props)=>{
     const dropref=useRef()
     
     const player=useSelector(state => state.player)
-    const {currentIndex,play,showinfo,infoRef,keepinfo}=player
+    const {currentIndex,play,showaction}=player
     
     const datasongs=useSelector(state => state.player.songs)
     const dispatch = useDispatch()
     
-    
+    const songchoice=useSelector(state=>state.player.song)
     return(
         <div className="list-item hide-right media-item hide-right full-left">
-        <div  ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
+        <div  ref={songref} key={song.id} class={`playlist-item ${showaction && songchoice.id==song.id?'show':''} ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <PlaySong song={song}/>        
             <div className="card-info flex-col">
                 <Songinfo
@@ -37,9 +37,7 @@ const Song=(props)=>{
             <Actionsong
                 song={song}
                 className={`icon-button`}
-                top={40}
-                right={40}
-                transformY={index>1?50:10}
+                
             />
             
             </div>

@@ -173,7 +173,7 @@ display:block
   justify-content: center;
   line-height: 20px;
   opacity: 0;
-  z-index: 1000;
+  z-index: 10;
   position: absolute;
   text-align: center;
   top: 50%;
@@ -189,7 +189,9 @@ display:block
 .stardust-carousel__arrow--next {
   right: 12px;
 }
-
+.playlist-item.show,.song.show{
+  background-color: #2a2139;
+}
 .slider-item{
   padding:0 12px 12px 12px ;
   cursor: pointer;
@@ -420,18 +422,30 @@ background-color:#513778
   white-space: nowrap;
   transition: ease 1000ms;
 }
+.song-player-control{
+  padding-bottom: 4px;
+}
 .song-player-button{
-  font-size:24px;
+  font-size:28px;
   background-color: transparent;
-  width: 40px;
+  width: 36px;
   display:flex;
   align-items: center;
   cursor: pointer;
   justify-content: center;
-  height: 40px;
+  height: 36px;
   border-radius: 50%;
   color:#fff;
   fill: #fff;
+}
+.song-player-button.play-icon{
+  font-size:32px
+}
+.song-player-button:not(:last-child){
+  margin-right: 4px;
+}
+.song-player-button:hover.play-icon{
+background-color: transparent;
 }
 .song-content{
   flex:1;

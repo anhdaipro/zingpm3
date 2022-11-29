@@ -124,7 +124,7 @@ const Sibar=()=>{
                             </div>
                     )}
                     </NavLink>
-                    <NavLink title="MV" class="navigation-item" to="/mv">
+                    <NavLink title="MV" class="navigation-item" to="/the-loai-video/viet-nam">
                     {({ isActive }) => (
                         <div className={`navigation-item ${isActive?'active':''}`}>
                             <div class="navigation-item-icon">

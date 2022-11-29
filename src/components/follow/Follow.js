@@ -1,14 +1,15 @@
-import {useState,useEffect, useRef, useCallback} from "react"
+import {useState,useEffect, useRef, useCallback,useId} from "react"
 import { useSelector,useDispatch } from "react-redux"
 import Actionsong from "../home/Actionsong"
 import  { Songinfo,PlaySong } from "../Song"
 import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, listcommentURL, } from "../../urls"
-import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
+import {setsong, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"
 import { headers, setrequestlogin,valid } from "../../actions/auth"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
+import { timeago } from "../../constants"
 const listimage=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/1.webp'},
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/2.webp'},
@@ -20,32 +21,27 @@ const listimage=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/8.webp'},
 ]
 
-const Song=(props)=>{
-    
+export const Song=(props)=>{
     const {song,index}=props
     const songref=useRef()
     const dotref=useRef()
     const player=useSelector(state=>state.player)
     const datasongs=useSelector(state=>state.player.songs)
-    const {play,currentIndex}=player
-    const dispatch = useDispatch()
-    const dropref=useRef()
-
-    
+    const {song_id,currentIndex,showaction}=player
+    const songid=useId()
     return(
-        <div  ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
+        <div  ref={songref} key={song.id} id={songid} class={`playlist-item  ${showaction && song_id==songid?'show':''} ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <PlaySong song={song}/>      
             <div className="card-info flex-col">
                 <Songinfo
                 song={song}
                 />
+                {song.created_at &&(<p className="song-date">{timeago(song.created_at)} ago</p>)}
             </div>
             <Actionsong
                 song={song}
+                songid={songid}
                 className={`icon-button`}
-                top={40}
-                right={40}
-                transformY={index>1?50:10}
             />
         </div>
     )
@@ -198,7 +194,7 @@ const Follow=()=>{
                                 </div>
                                 <div onClick={()=>showcomment(item)} className="container mar-b-15 feed-content">
                                     {item.files.map(file=>
-                                    <div key={`file+${file.id}`} style={{backgroundImage:`url(${file.media_preview||file.media})`}} className="feed-image"></div>
+                                    <div key={`file+${file.id}`} style={{backgroundImage:`url(${file.file_preview?file.file_preview:file.file})`}} className="feed-image"></div>
                                     )}
                                 </div>
                                 <div class="feed-footer flex-center">

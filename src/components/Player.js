@@ -1,9 +1,10 @@
 import {useSelector,useDispatch} from "react-redux"
-import {useState,useEffect,useRef,useMemo} from 'react'
+import {useState,useEffect,useRef,useMemo,useId} from 'react'
 import styled from "styled-components"
 import axios from "axios"
 import { songURL,artistInfohURL, streamingURL ,lyricsongURL, originURL, videosongURL} from "../urls"
-import {actionuser, setsong,showmodal,showplaylist,updatesongs,showinfoArtist, setshowvideo} from "../actions/player"
+import {actionuser, setsong,showmodal,showplaylist,updatesongs,showinfoArtist} from "../actions/player"
+import {setshowvideo} from "../actions/mv"
 import Actionsong from "./home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';    
@@ -12,6 +13,8 @@ import {Songinfo} from "./Song"
 import {debounce} from "lodash"
 import Slider from "./home/Slider"
 import { dataURLtoFile } from "../constants"
+import { useNavigate } from "react-router"
+import VideoPlayer from "./home/Media"
 const Dot=styled.div`
 heigth:100%;
 width:1px;
@@ -98,7 +101,7 @@ const Player=()=>{
     const [volume,setVolume]=useState(1)
     const {repeat,ramdom,onerepeat}=state
     const [dragvolume,setDragvolume]=useState(false)
-    
+    const navigate=useNavigate()
     
     const [drag,setDrag]=useState({time:false,volume:false})
     const dispatch=useDispatch()
@@ -108,7 +111,8 @@ const Player=()=>{
         return duration?currentTime/duration:0
     },[time.seconds,time.minutes])
     const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
-    const song=change?songs[currentIndex]:songs[parseInt(localStorage.getItem('index'))]
+    const index=change?currentIndex:localStorage.getItem('index')?parseInt(localStorage.getItem('index')):0
+    const song=songs[index]
     useEffect(()=>{
         ( async ()=>{ 
             if(!song.file){
@@ -120,14 +124,14 @@ const Player=()=>{
                 }
                 return({...item})
             })
-            dispatch(setsong({change:true,play:true,loading:true,songs:datasongs,time:{seconds:0,minutes:0}})) 
+            dispatch(setsong({duration:0,songs:datasongs,time:{seconds:0,minutes:0}})) 
         }
         else{
-            dispatch(setsong({change:true,play:true,loading:true,}))
+            dispatch(setsong({duration:0}))
         }
     })()
-    },[song.id,dispatch])
-
+    },[song.id])
+    
     useEffect(() => {
         if(time_stop_player && now==time_stop_player){
             dispatch(setsong({change:true,play:false}))
@@ -167,56 +171,8 @@ const Player=()=>{
         }
     }
     
-    useEffect(()=>{
-        if(duration){
-            if(audioref.current){
-                audioref.current.volume=volume
-            }
-        }
-    },[duration,audioref,volume])
     
-    useEffect(()=>{
-        if(duration){
-            if(audioref.current){
-                if(play){
-                    audioref.current.play()
-                }
-                else{
-                    audioref.current.pause()
-                }
-            }
-        }
-    },[duration,audioref,play])
-   
-    useEffect(()=>{
-        ( async ()=>{
-            try{
-                if(view){
-                   const res = await axios.post(`${songURL}/${songs[currentIndex].id}`,JSON.stringify({action:'view'}),headers)
-                }
-            }
-            catch(e){
-                console.log(e)
-            }
-        })()
-        
-    },[view,currentIndex,songs])
 
-    useEffect(()=>{
-        if(duration){
-            if(audioref.current){
-                let totalPlayed = 0;
-                const played = audioref.current.played;
-                for (let i = 0; i < played.length; i++) {
-                    totalPlayed += played.end(i) - played.start(i);
-                }
-                
-                if(totalPlayed>=duration/2){
-                    dispatch(setsong({change:true,view:true}))
-                }
-            }
-        }
-    },[duration,time,dispatch])
     const timeref=useRef()
     
     const settimeaudio=(e)=>{
@@ -230,7 +186,6 @@ const Player=()=>{
         const minutes=Math.floor(times/60)
         const seconds=Math.floor(times-minutes*60)
        
-        audioref.current.removeEventListener('timeupdate',updatetime)
         dispatch(setsong({change:true,time:{seconds:seconds,minutes:minutes}}))
        
         audioref.current.currentTime=times
@@ -372,22 +327,11 @@ const Player=()=>{
     }
     
     
-    useEffect(() => {
-        audioref.current.addEventListener('timeupdate',updatetime)
-        return () => {
-            audioref.current.removeEventListener('timeupdate',updatetime)
-        }
-    }, [drag,duration,dispatch])
-    const updatetime=()=>{                 
-        if(!drag.time && duration){
-            dispatch(setsong({change:true,time:{seconds:audioref.current.currentTime % 60,minutes:Math.floor((audioref.current.currentTime) / 60) % 60}}))
-        }  
-    }
-   
+    
     const timecurent=useMemo(()=>{
         return(time.minutes*60+time.seconds)*1000
     },[time])
-    console.log(timecurent)
+    
     const scrollRef=useRef()
     const setshowlyric= async ()=>{
         if(!song.sentences){
@@ -458,8 +402,10 @@ const Player=()=>{
         }
     }
     const openvideo=async ()=>{
+        
         if(song.mv){
-            dispatch(setshowvideo({showvideo:true,song:song}))
+            dispatch(setshowvideo({showvideo:true,song:song,change:true,play:true,currentIndex:0}))
+            dispatch(setsong({play:false}))
         }
         else{
             const res =await axios.get(`${videosongURL}?id=${song.video}`,headers)
@@ -469,10 +415,11 @@ const Player=()=>{
                 }
                 return({...item,})
             })
-            dispatch(setsong({songs:datasongs}))
-            dispatch(setshowvideo({showvideo:true,song:{...song,mv:res.data}}))
+            dispatch(setsong({songs:datasongs,play:false}))
+            dispatch(setshowvideo({change:true,currentIndex:0,play:true,showvideo:true,song:{...song,mv:res.data}}))
         }
     }
+    const songid=useId()
     return(
         songs.length>0 &&(
             <div className="zm-section now-playing-bar is-idle">
@@ -613,9 +560,7 @@ const Player=()=>{
                                     <Actionsong 
                                         song={songs[currentIndex]}
                                         className={`song-dot icon-button`}
-                                        top={-10}
-                                        left={0}
-                                        transformY={100}
+                                       songid={songid}
                                     />    
                                 </div>
                             </div>
@@ -625,78 +570,76 @@ const Player=()=>{
                                     <div onClick={(e)=>{
                                         e.stopPropagation()
                                         setState({...state,ramdom:!state.ramdom})}} className={`shuffle song-player-button small ${ramdom?'active':''}`} style={{fontSize: '24px'}}>
-                                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
+                                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
                                     </div>
                                     <div onClick={backward} className="song-player-button">
                                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
                                     </div>
-                                    <div className="song-player-button">
-                                        {loading && duration==0?<svg xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink"  width="40px" height="40px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                                        
-                                        <g transform="rotate(0 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(30 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(60 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(90 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(120 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(150 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(180 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(210 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(240 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(270 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(300 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g><g transform="rotate(330 50 50)">
-                                        <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
-                                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
-                                        </rect>
-                                        </g>
-                                        </svg>:
-                                        <svg onClick={()=>{
+                                    <div onClick={()=>{
                                             dispatch(setsong({change:true,play:!play}))
-                                            
-                                           
-                                            }} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                            }} className="song-player-button play-icon">
+                                        {duration>0?<svg  stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                                             {
-                                            play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
+                                            change && play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
+                                        </svg>:
+                                        <svg xmlns="http://www.w3.org/2000/svg"  xmlnsXlink="http://www.w3.org/1999/xlink"  width="36px" height="36px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                                            <g transform="rotate(0 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(30 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(60 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(90 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(120 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(150 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(180 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(210 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(240 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(270 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(300 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g><g transform="rotate(330 50 50)">
+                                            <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fff">
+                                                <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+                                            </rect>
+                                            </g>
                                         </svg>}
+                                        
                                     </div>
                                     <div onClick={forward} className="song-player-button">
                                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
                                     </div>
-                                    <div onClick={setrepeat} className={`shuffle song-player-button small ${repeat || onerepeat?'active':''}`} style={{fontSize: '24px'}}>
+                                    <div onClick={setrepeat} className={`shuffle song-player-button small ${repeat || onerepeat?'active':''}`}>
                                         {onerepeat?
                                         <svg stroke="currentColor" fill="currentColor" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" enableBackground="new 0 0 512 512" xmlSpace="preserve">
                                             <g>
@@ -711,7 +654,7 @@ const Player=()=>{
                                 
                             </div>
                             <div class="song-player-slider item-center">
-                                <div className="song-player-slider-current-time">{('0'+time.minutes).slice(-2)}:{('0'+Math.round(time.seconds)).slice(-2)}</div>
+                                <div className="song-player-slider-current-time">{('0'+time.minutes).slice(-2)}:{('0'+Math.floor(time.seconds) % 60).slice(-2)}</div>
                                 <Contentprogess 
                                     onMouseDown={(e)=>{
                                     settimeaudio(e)
@@ -753,9 +696,10 @@ const Player=()=>{
                                             setVolume(0)
                                         }
                                         }} aria-label="Mute" type="button" class="rhap_button-clear icon-button icon-buttom">
-                                        <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" focusable="false" width="20px" height="20px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style={{transform: `rotate(360deg)`}}>
-                                            {muted?<path d="M3 9h4l5-5v16l-5-5H3V9m13.59 3L14 9.41L15.41 8L18 10.59L20.59 8L22 9.41L19.41 12L22 14.59L20.59 16L18 13.41L15.41 16L14 14.59L16.59 12z" fill="currentColor"></path>
-                                            :<path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77c0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"></path>}
+                                        <svg height="32px" version="1.1" viewBox="0 0 36 36" width="32px">
+                                            {volume>0 && volume<0.5?<path class="ytp-svg-fill ytp-svg-volume-animation-speaker" clip-path="url(#ytp-svg-volume-animation-mask)" d="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 Z" fill="#fff" id="ytp-id-15"></path>
+                                                :volume>=0.5?<path class="ytp-svg-fill ytp-svg-volume-animation-speaker" clip-path="url(#ytp-svg-volume-animation-mask)" d="M8,21 L12,21 L17,26 L17,10 L12,15 L8,15 L8,21 Z M19,14 L19,22 C20.48,21.32 21.5,19.77 21.5,18 C21.5,16.26 20.48,14.74 19,14 ZM19,11.29 C21.89,12.15 24,14.83 24,18 C24,21.17 21.89,23.85 19,24.71 L19,26.77 C23.01,25.86 26,22.28 26,18 C26,13.72 23.01,10.14 19,9.23 L19,11.29 Z" fill="#fff" id="ytp-id-15"></path>
+                                            :<path class="ytp-svg-fill" d="m 21.48,17.98 c 0,-1.77 -1.02,-3.29 -2.5,-4.03 v 2.21 l 2.45,2.45 c .03,-0.2 .05,-0.41 .05,-0.63 z m 2.5,0 c 0,.94 -0.2,1.82 -0.54,2.64 l 1.51,1.51 c .66,-1.24 1.03,-2.65 1.03,-4.15 0,-4.28 -2.99,-7.86 -7,-8.76 v 2.05 c 2.89,.86 5,3.54 5,6.71 z M 9.25,8.98 l -1.27,1.26 4.72,4.73 H 7.98 v 6 H 11.98 l 5,5 v -6.73 l 4.25,4.25 c -0.67,.52 -1.42,.93 -2.25,1.18 v 2.06 c 1.38,-0.31 2.63,-0.95 3.69,-1.81 l 2.04,2.05 1.27,-1.27 -9,-9 -7.72,-7.72 z m 7.72,.99 -2.09,2.08 2.09,2.09 V 9.98 z" fill="#fff" id="ytp-id-57"></path>}
                                         </svg>
                                     </button>
                                     <div ref={volumeref} onMouseDown={(e)=>{
@@ -778,6 +722,7 @@ const Player=()=>{
                         </div>
                     </div>
                 </div>
+                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={songURL}  volume={volume}>
                 <audio data-html5-video preload="auto" muted={muted}
                     onPlay={()=>{
                         dispatch(setsong({change:true,play:true}))
@@ -788,7 +733,12 @@ const Player=()=>{
                         dispatch(setsong({change:true,view:false,currentIndex:value,play:true}))
                         
                     }}
-                                 
+                    onTimeUpdate={()=>{
+                        console.log(duration)
+                        if(!drag.time && duration){
+                            dispatch(setsong({change:true,time:{seconds:audioref.current.currentTime % 60,minutes:Math.floor((audioref.current.currentTime) / 60) % 60}}))
+                        }  
+                    }}             
                     onLoadStart={()=>dispatch(setsong({duration:0}))}
                     onLoadedData={(e)=>{
                             dispatch(setsong({duration:audioref.current.duration}))
@@ -796,7 +746,7 @@ const Player=()=>{
                                                 
                     } }
                     ref={audioref} loop={onerepeat||repeat?true:false}  src={url}/>
-                    
+                </VideoPlayer>
                 </div>
             </div>
         )

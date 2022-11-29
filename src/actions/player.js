@@ -57,12 +57,7 @@ export const updateposts=(data)=>{
         type:UPDATE_POSTS
     }
 }
-export const setshowvideo=(data)=>{
-    return{
-        payload:data,
-        type:SHOW_VIDEO
-    }
-}
+
 export const setshowpost=(data)=>{
     return{
         payload:data,

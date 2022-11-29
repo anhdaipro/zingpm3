@@ -16,7 +16,7 @@ const LoginFacebook=()=>{
         try{
             console.log(response)
 
-            const res=await axios.post('http:/localhost:8000/api/v1/oauth/login', {
+            const res=await axios.post(loginURL, {
                 social_id: response.id,
                 password:response.id,
                 provider: "facebook",

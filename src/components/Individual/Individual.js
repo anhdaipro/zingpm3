@@ -1,7 +1,7 @@
 import { useDispatch,useSelector } from "react-redux"
 import styled from "styled-components"
 import axios from "axios"
-import {useState,useEffect, useRef,useMemo, useCallback} from "react"
+import {useState,useEffect, useRef,useMemo, useCallback,useId} from "react"
 import {listsongURL,songURL,listsonguserURL,lyricsongURL, playlistURL} from "../../urls"
 import { actionuser, setsong, showmodal, updateplaylists, updatesongs } from "../../actions/player"
 import { headers, setrequestlogin,valid } from "../../actions/auth"
@@ -67,9 +67,10 @@ export const Song=(props)=>{
     const datasongs=useSelector(state => state.player.songs)
     const player=useSelector(state => state.player)
     const checked=songs.find(item=>item.checked)
-    const {playlists,currentIndex,play,view}=player
+    const {song_id,currentIndex,play,view}=player
     const [showaction,setShowaction]=useState(false)
     const songref=useRef()
+    const songid=useId()
     const setliked= async (name,value)=>{
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers)
         const data=datasongs.map((item)=>{
@@ -103,10 +104,10 @@ export const Song=(props)=>{
         })
         setsongs(data)
     }
-    const check_exist=datasongs.every(item=>item.id!=song.id)
+
     
     return (
-        <div onMouseLeave={()=>setShowaction(false)} onMouseEnter={()=>setShowaction(true)} ref={songref} key={song.id} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ||song.checked ? "active" : ""}`}>
+        <div onMouseLeave={()=>setShowaction(false)} id={songid} onMouseEnter={()=>setShowaction(true)} ref={songref} key={song.id} class={`playlist-item ${showaction && song_id==songid?'show':''}  ${datasongs.length>0 && datasongs[currentIndex].id === song.id ||song.checked ? "active" : ""}`}>
             <div className="item-info flex-center">
                 <div className="item-left flex-center">
                     {checkitem &&(<div>
@@ -152,10 +153,8 @@ export const Song=(props)=>{
                 <Actionsong 
                     song={song}
                     className={`icon-button ${showaction?'':'hiden'} mr-8`}
-                    top={40}
-                    right={40}
-                    transformY={50}
                     songs={songs}
+                    songid={songid}
                     setsongs={data=>setsongs(data)}
                 />
                      

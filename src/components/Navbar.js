@@ -1,6 +1,6 @@
 import {useState,useRef,useEffect} from 'react'
 import axios from "axios"
-import { dataURLtoFile, generateString } from '../constants';
+import { dataURLtoFile, generateString, slugify } from '../constants';
 import { logout, setrequestlogin,valid } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
@@ -75,6 +75,7 @@ const Navbar=()=>{
                   }
                   form.append('file',file)
                   form.append('name',title)
+                  form.append('slug',slugify(title))
                   form.append('album',album)
                   form.append('artist_name',artist)
                   form.append('viewer','1')

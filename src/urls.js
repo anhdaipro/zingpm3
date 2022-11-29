@@ -1,5 +1,6 @@
 export const api='https://zingmp3.up.railway.app/api'
-export const originURL='http://localhost:8000'
+export const originURL='https://zingmp3.up.railway.app'
+export const LoginsocialURL=`${api}/v1/oauth/login`
 export const verifyemailURL=`${api}/v3/verify/email`
 export const verifyphoneURL=`${api}/v3/verify/phone`
 export const sendOTPemailURL=`${api}/v3/send-otp/email`

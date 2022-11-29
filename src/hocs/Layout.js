@@ -3,7 +3,7 @@ import { connect,useSelector,useDispatch } from 'react-redux';
 import { checkAuthenticated,login,expiry} from '../actions/auth';
 import { actionuser, showmodal,setsong } from '../actions/player';
 import Login from '../components/account/Login';
-import Actionsong from '../components/home/Actionsong';
+import Actionsong,{Listaction} from '../components/home/Actionsong';
 import Navbar from '../components/Navbar';
 import Player from '../components/Player';
 import Sibar from '../components/Sibar';
@@ -19,7 +19,9 @@ const Layout = ({children}) => {
     const player=useSelector(state=>state.player)
     const dispatch = useDispatch()
     const dotref=useRef()
-    const {showinfo,songs,showpost,showvideo}=player
+    const mvplayer=useSelector(state=>state.mvplayer)
+    const {showvideo}=mvplayer
+    const {showinfo,songs,showpost,showaction}=player
     const requestlogin=useSelector(state=>state.auth.requestlogin)
     
     const CloseButton=({ closeToast })=>(  
@@ -51,6 +53,7 @@ const Layout = ({children}) => {
             {songs.length>0&&(
             <Player/>)}
             <Songs/>
+            {showaction &&(<Listaction/>)}
             {showpost&&(<DetailFeed/>)}
             {showvideo &&(
             <MV/>)}

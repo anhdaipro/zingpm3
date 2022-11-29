@@ -228,7 +228,13 @@ name:"Tiktok",coin:5},
 export const partition=(array, n)=>{
   return array.length ? [array.splice(0, n)].concat(partition(array, n)) : [];
 }
-export const  slugify=(content) =>{
-	return content.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+export const  slugify=(str) =>{
+	str = str.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ')
+           .toLowerCase();  
+  // trim spaces at start and end of string
+  str = str.replace(/^\s+|\s+$/gm,'');
+  // replace space with dash/hyphen
+  str = str.replace(/\s+/g, '-'); 
+  return str
 }
 

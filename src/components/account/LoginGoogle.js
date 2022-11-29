@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import {useNavigate,Link} from "react-router-dom"
 import { connect,useDispatch,useSelector } from 'react-redux';
 import { GoogleLogin } from 'react-google-login';
-import { loginURL } from "../../urls"
+import { LoginsocialURL, loginURL } from "../../urls"
 import axios from 'axios';
 import { gapi } from "gapi-script";
 import { LOGIN_FAIL, LOGIN_SUCCESS } from '../../actions/types';
@@ -24,7 +24,7 @@ const LoginGoogle=(props)=>{
         try{
             console.log(res)
             const {profileObj,googleId}=res
-            const response=await axios.post('http://localhost:8000/api/v1/oauth/login', {
+            const response=await axios.post(LoginsocialURL, {
                 name:profileObj.name,
                 email:profileObj.email,
                 username:generateString(12),

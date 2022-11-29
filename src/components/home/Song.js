@@ -1,7 +1,7 @@
 
 import GradientChart from "./GradientChart"
 import {songURL, zingchartURL,artistInfohURL} from "../../urls"
-import {useState,useEffect, useCallback,useRef} from "react"
+import {useState,useEffect, useCallback,useRef, useId} from "react"
 import axios from "axios"
 import { setsong,actionuser,updatesongs,showinfoArtist } from "../../actions/player"
 import { headers, setrequestlogin,valid } from "../../actions/auth"
@@ -13,15 +13,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import  { PlaySong,Showlyric,Songinfo } from "../Song"
 
 const Song=(props)=>{
-   
     const datasongs=useSelector(state => state.player.songs)
     const dispatch = useDispatch()
     const player=useSelector(state => state.player)
-    const {showplaylist,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
-    const [showaction,setShowaction]=useState(false)
+    const {currentIndex, showaction,song_id}=player
+    const [show,setShow]=useState(false)
     const {song,index,setsongs,songs}=props
     const songref=useRef()
-    const dotref=useRef()
+    const songid=useId()
     const setliked= async (name,value)=>{
         if(valid){
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers)
@@ -52,8 +51,7 @@ const Song=(props)=>{
 
     
     return(
-        <div style={{position:'relateive'}}>
-        <div onMouseLeave={()=>setShowaction(false)} onMouseEnter={()=>setShowaction(true)} ref={songref} key={index} class={`playlist-item ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
+        <div onMouseLeave={()=>setShow(false)} id={songid} onMouseEnter={()=>setShow(true)} ref={songref} key={index} class={`playlist-item ${showaction && song_id==songid?'show':''}  ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <div className={`playlist-position top-${index+1}`}>{index+1}</div>
             <div class="playlist-line">
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M904 476H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"></path></svg>
@@ -66,7 +64,7 @@ const Song=(props)=>{
             </div>
             
             
-            <div className={`${showaction?'':'hiden'} flex-center`}>
+            <div className={`${show?'':'hiden'} flex-center`}>
                 {song.hasLyric&&(
                     <Showlyric
                     song={song}
@@ -81,22 +79,20 @@ const Song=(props)=>{
                 
                 <Actionsong
                     className={`icon-button btn-more-action`}
-                    top={40}
-                    right={40}
-                    transformY={100}
                     song={song}  
+                    songid={songid}
                     songs={songs}
                     setsongs={data=>setsongs(data)}
                 /> 
             </div>
             
-            <div className={`duration ${showaction?'hiden':''} mr-16`}>
+            <div className={`duration ${show?'hiden':''} mr-16`}>
                 <p className="author">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</p>
             </div>
             
         </div>
                 
-        </div>
+        
     )
 }
 export default Song

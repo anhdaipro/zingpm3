@@ -1,4 +1,4 @@
-import {useState,useEffect,useMemo, useRef} from "react"
+import {useState,useEffect,useMemo, useRef, useId} from "react"
 import {Slide} from "react-slideshow-image"
 import 'react-slideshow-image/dist/styles.css'
 import { listartistURL,zingchartURL,newsongURL,songURL,artistInfohURL } from "../../urls"
@@ -43,10 +43,11 @@ const Song=(props)=>{
     const {song,index}=props
     const dispatch = useDispatch()
     const player=useSelector(state => state.player)
-    const {showplaylist,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
+    const {currentIndex,song_id}=player
     const datasongs = useSelector(state => state.player.songs)
+    const songid=useId()
     return(
-        <div key={index} class={`playlist-item mb-8 ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
+        <div key={index} id={songid} class={`playlist-item mb-8 ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <div className={`playlist-position top-${index+1}`}>{index+1}</div>
             <div class="playlist-line">
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M904 476H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"></path></svg>
@@ -56,6 +57,7 @@ const Song=(props)=>{
                 <Songinfo
                 song={song}
                 />
+                
             </div>
             <div className={`flex-center`}>
                 42%

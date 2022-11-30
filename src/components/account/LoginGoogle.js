@@ -41,6 +41,7 @@ const LoginGoogle=(props)=>{
             })    
             const token = response.data.access;
             localStorage.setItem('token',token);
+            localStorage.setItem("expirationDate", response.data.access_expires);
             const search = window.location.search;
             const params = new URLSearchParams(search);
             if(params.get('next')!=null){

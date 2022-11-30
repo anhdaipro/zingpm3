@@ -1,4 +1,4 @@
-import Actionsong from "../home/Actionsong"
+
 import {useState,useEffect,useMemo, useRef} from "react"
 import {useSelector,useDispatch} from "react-redux"
 import 'react-slideshow-image/dist/styles.css'
@@ -6,44 +6,7 @@ import { listartistURL,songURL,newsongURL } from "../../urls"
 import { partition, timeago } from "../../constants"
 import axios from "axios"
 import { headers } from "../../actions/auth"
-import {setsong,updatesongs,showinfoArtist } from "../../actions/player"
-import dayjs from "dayjs"
-import { Songinfo, PlaySong } from "../Song"
-
-const Song=(props)=>{
-   
-    const {song,index}=props
-    const songref=useRef()
-    const dotref=useRef()
-    const dropref=useRef()
-    
-    const player=useSelector(state => state.player)
-    const {currentIndex,play,showaction}=player
-    
-    const datasongs=useSelector(state => state.player.songs)
-    const dispatch = useDispatch()
-    
-    const songchoice=useSelector(state=>state.player.song)
-    return(
-        <div className="list-item hide-right media-item hide-right full-left">
-        <div  ref={songref} key={song.id} class={`playlist-item ${showaction && songchoice.id==song.id?'show':''} ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
-            <PlaySong song={song}/>        
-            <div className="card-info flex-col">
-                <Songinfo
-                song={song}
-                />
-                <p className="song-date">{timeago(song.created_at)} ago</p>
-            </div>
-            <Actionsong
-                song={song}
-                className={`icon-button`}
-                
-            />
-            
-            </div>
-        </div>
-    )
-}
+import { Song } from "../follow/Follow"
 
 const Listnewsong=(props)=>{
     const player=useSelector(state => state.player)
@@ -73,6 +36,7 @@ const Listnewsong=(props)=>{
                         <Song
                         index={index}
                         song={song}
+                        key={song.id}
                         />
                     )}
                     </div>

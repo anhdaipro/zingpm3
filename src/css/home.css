@@ -3,12 +3,13 @@
     height: calc(100vh - var(--music-control-height));
     overflow-y: auto;
     flex:1;
-    
+    overflow-x: hidden;
     background-color: #170f23;
 }
 .body-wrapper{
 padding: 70px 60px;
 color:#fff;
+margin-right: -4px;
 }
 .no-content.container {
     width: 100%;
@@ -62,9 +63,8 @@ color:#fff;
   
 .animated {
     animation-name: spin;
-    -webkit-animation-duration: 12s;
     animation-duration: 12s;
-    -webkit-animation-iteration-count: infinite;
+    
    
     animation-timing-function: linear;
   }
@@ -112,10 +112,8 @@ color:#fff;
       animation-iteration-count: infinite;
     }
   
-  
-  .box1 {
-     
-     overflow: hidden;
+.box1 { 
+    overflow: hidden;
      width: 200px;
     height: 200px;
      transform: rotate(0deg);
@@ -575,11 +573,7 @@ cursor:pointer
 }
 
 .columns {
-    display: -moz-flex;
     display: flex;
-    -webkit-box-lines: multiple;
-    -moz-box-lines: multiple;
-    box-lines: multiple;
     flex-wrap: wrap;
     position: relative;
     margin: 0 -15px;
@@ -657,7 +651,7 @@ padding-top: 100%;
 
 .feed-wrapper{
     flex-basis: 50%;
-    -webkit-box-flex: 0;
+   
     flex-grow: 0;
     max-width: 50%;
 }
@@ -1177,7 +1171,6 @@ img, video {
 }
 .controls {
     transition: opacity 0.3s ease-out;
-    display: box;
     display: flex;
     position: absolute;
     bottom: 0;

@@ -1,6 +1,5 @@
 import { useDispatch,useSelector } from "react-redux"
 import { setrequestlogin,logout } from "../../actions/auth"
-import axios from "axios"
 import {useState,useRef,useEffect} from 'react'
 import { useNavigate } from "react-router-dom";
 const AccountLogin=()=>{
@@ -42,39 +41,39 @@ const AccountLogin=()=>{
                 
             </div>
             {show &&(
-            <div class="menu menu-settings setting-header header-dropdown">
-                <ul class="menu-list">
-                    <li class="header-player-setting">
+            <div className="menu menu-settings setting-header header-dropdown">
+                <ul className="menu-list">
+                    <li className="header-player-setting">
                         <a target="_blank" href="https://zingmp3.vn/vip?utm_source=desktop&amp;utm_campaign=VIP&amp;utm_medium=%s">
-                            <button class="zm-btn button" tabindex="0">
+                            <button className="zm-btn button" tabindex="0">
                                 
                                 <span>Nâng cấp VIP</span>
                             </button>
                         </a>
                     </li>
-                    <li class="header-player-setting">
+                    <li className="header-player-setting">
                         <a target="_blank" href="https://zingmp3.vn/vip/buyCode?utm_source=desktop&amp;utm_campaign=VIP&amp;utm_medium=avatar-buycode">
-                            <button class="zm-btn button" tabindex="0">
+                            <button className="zm-btn button" tabindex="0">
                                 <span>Mua code VIP</span>
                             </button>
                         </a>
                     </li>
-                    <li class="header-player-setting">
+                    <li className="header-player-setting">
                         <a>
                             <button onClick={()=>{
                                 navigate(`/user/${user.username}`)
                                 setShow(false)
-                                }} class="zm-btn button" tabindex="0">
+                                }} className="zm-btn button" tabindex="0">
                                 <span>Profile</span>
                             </button>
                         </a>
                     </li>
-                    <li class="header-player-setting logout-header">
+                    <li className="header-player-setting logout-header">
                         <a>
                             <button onClick={()=>{
                                 dispatch(logout())
                                 window.location.href='/'
-                                }} class="zm-btn button" tabindex="0">
+                                }} className="zm-btn button" tabindex="0">
                                 <span>Đăng xuất</span>
                             </button>
                         </a>

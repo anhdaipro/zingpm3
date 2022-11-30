@@ -2,16 +2,12 @@ import {useState,useEffect,useMemo, useRef, useId} from "react"
 import {Slide} from "react-slideshow-image"
 import 'react-slideshow-image/dist/styles.css'
 import { listartistURL,zingchartURL,newsongURL,songURL,artistInfohURL } from "../../urls"
-import { partition } from "../../constants"
 import axios from "axios"
 import { headers } from "../../actions/auth"
 import dayjs from "dayjs"
 import {useDispatch,useSelector} from "react-redux"
-import {ToastContainer, toast } from'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
 import Listnewsong from "./Newsong"
 import GradientChart from "../home/GradientChart"
-import {setsong,updatesongs,showinfoArtist } from "../../actions/player"
 import { Link } from "react-router-dom"
 import  {Songinfo, PlaySong } from "../Song"
 import TopSong from "./TopSong"
@@ -47,10 +43,10 @@ const Song=(props)=>{
     const datasongs = useSelector(state => state.player.songs)
     const songid=useId()
     return(
-        <div key={index} id={songid} class={`playlist-item mb-8 ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
+        <div key={index} id={songid} className={`playlist-item mb-8 ${datasongs.length>0 && datasongs[currentIndex].id === song.id ? "active" : ""}`}>
             <div className={`playlist-position top-${index+1}`}>{index+1}</div>
-            <div class="playlist-line">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M904 476H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"></path></svg>
+            <div className="playlist-line">
+                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M904 476H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z"></path></svg>
             </div>
             <PlaySong song={song}/>        
             <div className="card-info">
@@ -150,31 +146,31 @@ const Discover=()=>{
                         {listimages.map((item,index)=>{
                             const className=sliderIndex==index?'container-discover__slider-item-first':(index==sliderIndex+1)||(index==0&&sliderIndex==listimages.length-1)?'container-discover__slider-item-second':(index == sliderIndex + 2)||(index==1&&sliderIndex==listimages.length-1)||(index==0&&sliderIndex==listimages.length-2)?'container-discover__slider-item-third':index==sliderIndex+3||(index==0&&sliderIndex==listimages.length-3) ||(index==1&&sliderIndex==listimages.length-2)||(index==2&&sliderIndex==listimages.length-1)?'container-discover__slider-item-four':"container-discover__slider-item-five"
                             return(
-                            <div  key={item.image} class={`container-discover__slider-item ${className}`}>
-                                <img src={item.image} alt="anh" class="container-discover__slider-item-img"/>
+                            <div  key={item.image} className={`container-discover__slider-item ${className}`}>
+                                <img src={item.image} alt="anh" className="container-discover__slider-item-img"/>
                             </div>
                             )}
                         )}
                     </div>
-                    <div onClick={()=>setsliderIndex(sliderIndex==0?listimages.length-1:sliderIndex-1)} class="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--prev">
-                    <svg enable-background="new 0 0 13 20" viewBox="0 0 13 20" role="img" class="stardust-icon stardust-icon-arrow-left-bold"><path stroke="none" d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z"></path></svg>
+                    <div onClick={()=>setsliderIndex(sliderIndex==0?listimages.length-1:sliderIndex-1)} className="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--prev">
+                    <svg enableBackground="new 0 0 13 20" viewBox="0 0 13 20" role="img" className="stardust-icon stardust-icon-arrow-left-bold"><path stroke="none" d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z"></path></svg>
                     </div>
                     
-                    <div onClick={()=>setsliderIndex(sliderIndex==listimages.length-1?0:sliderIndex+1)} class="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--next">
-                        <svg enable-background="new 0 0 13 21" viewBox="0 0 13 21" role="img" class="stardust-icon stardust-icon-arrow-right-bold"><path stroke="none" d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z"></path></svg>
+                    <div onClick={()=>setsliderIndex(sliderIndex==listimages.length-1?0:sliderIndex+1)} className="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--next">
+                        <svg enableBackground="new 0 0 13 21" viewBox="0 0 13 21" role="img" className="stardust-icon stardust-icon-arrow-right-bold"><path stroke="none" d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z"></path></svg>
                     </div>
                 </div>
                 <div className="option-all__margin_top zm-new-release-section">
                     <div className="zm-section-title title">Mới Phát Hành</div>
                     <div className="item-space">
-                        <div class="genre-select">
+                        <div className="genre-select">
                             {listitems.map(item=>
                             <button key={item.value} onClick={()=>setChoice(item.value)} className={`zm-btn ${choice===item.value &&'active'} button`} >{item.name}</button>
                             )}
                             
                         </div>
-                        <Link class="discovery-btn" to={`/new-release/song?filter=${choice}`}>Tất cả 
-                            <i class="icon ic-go-right"></i>
+                        <Link className="discovery-btn" to={`/new-release/song?filter=${choice}`}>Tất cả 
+                            <i className="icon ic-go-right"></i>
                         </Link>
                     </div>
                    
@@ -183,14 +179,14 @@ const Discover=()=>{
                     />
                 </div>
                 <div className="container rt-chart-home">
-                <div class="bg-blur"></div>
-                <div class="bg-alpha"></div>
-                    <div class="section-header">
+                <div className="bg-blur"></div>
+                <div className="bg-alpha"></div>
+                    <div className="section-header">
                         <Link to="/zingchart">
                             #zingchart
                         </Link>
-                        <div class="zing-chart-play-icon">
-                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
+                        <div className="zing-chart-play-icon">
+                            <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
                         </div>
                     </div>
                     <div className="flex">
@@ -199,6 +195,7 @@ const Discover=()=>{
                                 <Song
                                 song={song}
                                 index={index}
+                                key={song.id}
                                 />
                             )}
                         </div>
@@ -222,21 +219,21 @@ const Discover=()=>{
                         <Slide infinite={true} ref={slideRef1} autoplay transitionDuration={500} easing='ease' slidesToScroll={1} slidesToShow={4} arrows={false}>
                             {artists.map(item=>
                             <div key={item.id} className="slider-item">
-                                <div class="container-discover__slider-item-img" style={{backgroundImage:`url(${item.image})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
+                                <div className="container-discover__slider-item-img" style={{backgroundImage:`url(${item.image})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
                             </div>
                             )}
                         </Slide>)}
-                        <div onClick={()=>slideRef1.current.goBack()} class="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--prev">
-                            <svg enable-background="new 0 0 13 20" viewBox="0 0 13 20" role="img" class="stardust-icon stardust-icon-arrow-left-bold"><path stroke="none" d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z"></path></svg>
+                        <div onClick={()=>slideRef1.current.goBack()} className="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--prev">
+                            <svg enableBackground="new 0 0 13 20" viewBox="0 0 13 20" role="img" className="stardust-icon stardust-icon-arrow-left-bold"><path stroke="none" d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z"></path></svg>
                         </div>
                         
-                        <div onClick={()=>slideRef1.current.goNext()} class="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--next">
-                            <svg enable-background="new 0 0 13 21" viewBox="0 0 13 21" role="img" class="stardust-icon stardust-icon-arrow-right-bold"><path stroke="none" d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z"></path></svg>
+                        <div onClick={()=>slideRef1.current.goNext()} className="stardust-carousel__arrow stardust-carousel__arrow--type-1 stardust-carousel__arrow--next">
+                            <svg enableBackground="new 0 0 13 21" viewBox="0 0 13 21" role="img" className="stardust-icon stardust-icon-arrow-right-bold"><path stroke="none" d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z"></path></svg>
                         </div>
                     </div>
                 </div>
                 <div className='option-all__margin_top'>
-                    <h3 class="zm-section-title title is-2">Top 100<a class="discovery-btn" href="/top100">Tất cả <i class="icon ic-go-right"></i></a></h3>
+                    <h3 className="zm-section-title title is-2">Top 100<a className="discovery-btn" href="/top100">Tất cả <i className="icon ic-go-right"></i></a></h3>
                     <TopSong/>
                 </div>
             </div>

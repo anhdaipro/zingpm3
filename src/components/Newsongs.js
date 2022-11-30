@@ -1,15 +1,9 @@
-import {useSelector,useDispatch} from "react-redux"
+
 import {useState,useEffect,useRef,useMemo,useCallback} from 'react'
-import styled from "styled-components"
 import axios from "axios"
 import { songURL,artistInfohURL,newsongURL } from "../urls"
-import {actionuser, setsong,showmodal,showplaylist,updatesongs,showinfoArtist} from "../actions/player"
-import Actionsong from "./home/Actionsong" 
 import { headers } from "../actions/auth"
-
-import { Songinfo, PlaySong } from "./Song"
 import Song from "./home/Song"
-
 
 const Newsongs=()=>{
     const [listnewsong,setListnewsong]=useState([])
@@ -25,7 +19,7 @@ const Newsongs=()=>{
         (data) => {
             setListnewsong(data)
         },
-        [listnewsong],
+        [],
     )
     return(
         <div className="body-wrapper">
@@ -33,6 +27,7 @@ const Newsongs=()=>{
                 <Song
                     song={song}
                     songs={listnewsong}
+                    key={song.id}
                     index={index}
                     setsongs={data=>setsongs(data)}
                 />

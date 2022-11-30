@@ -1,12 +1,12 @@
 
 import { useSelector,useDispatch } from "react-redux"
 import { showmodal, updateplaylists } from "../../actions/player"
-import { useState,useEffect,useRef,useMemo } from "react"
+import { useState} from "react"
 import { songURL,newplaylistURL } from "../../urls"
 import { slugify } from "../../constants"
 import axios from "axios"
 import styled from "styled-components"
-import {ToastContainer, toast } from'react-toastify';
+import { toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { headers, setrequestlogin,valid } from "../../actions/auth"
 const StyleSwitch=styled.div`
@@ -64,9 +64,9 @@ const Addplaylist=()=>{
     return(
             <div>
                 <button onClick={()=>dispatch(showmodal(false))} className="close-btn type-1">
-                    <svg viewBox="0 0 16 16" stroke="#EE4D2D" class="home-popup__close-button">
-                    <path stroke-linecap="round" d="M1.1,1.1L15.2,15.2"></path>
-                    <path stroke-linecap="round" d="M15,1L0.9,15.1"></path>
+                    <svg viewBox="0 0 16 16" stroke="#EE4D2D" className="home-popup__close-button">
+                    <path strokeLinecap="round" d="M1.1,1.1L15.2,15.2"></path>
+                    <path strokeLinecap="round" d="M15,1L0.9,15.1"></path>
                     </svg>
                 </button>
                 <div className="content-input">

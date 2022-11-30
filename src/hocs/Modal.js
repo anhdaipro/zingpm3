@@ -46,7 +46,7 @@ const Modal=()=>{
                     <div className="lyric-content">
                         {!edit?<>
                         {data.data.lyrics?
-                        <p class="lyric-song">{data.data.lyrics}</p>:
+                        <p className="lyric-song">{data.data.lyrics}</p>:
                         <div className='emty-lyric'>Lyric đang được cập nhật</div>}</>:
                         <textarea placeholder="Nhập lời bài hát vào đây" spellCheck={false} onChange={e=>setLyrics(e.target.value)} value={lyrics} style={{width:'100%',height:'100%'}}></textarea>}
                     </div>:action=='editprofile'?<FormProfile/>:action=='addplaylist'?

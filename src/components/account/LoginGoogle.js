@@ -65,11 +65,11 @@ const LoginGoogle=(props)=>{
             onFailure={responseGoogle}
             cookiePolicy={'single_host_origin'}
             render={renderProps => (
-                <button onClick={renderProps.onClick} disabled={renderProps.disabled} class="flex-1 social-box flex-center">
+                <button onClick={renderProps.onClick} disabled={renderProps.disabled} className="flex-1 social-box flex-center">
                     <div className="social-image-wrapper item-center">
-                        <div class="social-image social-white-background social-white-google-png"></div>
+                        <div className="social-image social-white-background social-white-google-png"></div>
                     </div>
-                    <div class="">Google</div>
+                    <div className="">Google</div>
                 </button>
             )}
         />

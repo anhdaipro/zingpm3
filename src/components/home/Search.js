@@ -120,11 +120,11 @@ const Artist=(props)=>{
         setartists(dataupdate)
     }
     return(
-        <div className="item">
+        <div  className="item">
             <div className="item-media">
                 <div className="media_cover" style={{backgroundImage: `url(${item.image})`}}/>
                 <div className="image-hover item-center">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
                 </div>
             </div>
             <div className="mt-16 info-artist center">
@@ -173,10 +173,10 @@ const Search=()=>{
     },[songs])
     const setsongs=useCallback((data)=>{
         setSongs(data)
-    },[songs])
+    },[])
     const setartists=useCallback((data)=>{
         setArtists(data)
-    },[artists])
+    },[])
     console.log(songs)
     return(
         <div className="body-wrapper">
@@ -249,6 +249,7 @@ const Search=()=>{
                                     songs={songs}
                                     setsongs={data=>setsongs(data)}
                                     song={song}
+                                    key={item.id}
                                     />
                                 )}
                                 </div>
@@ -262,7 +263,8 @@ const Search=()=>{
                     <div className="list">
                         {playlists.map(item=>
                             <Playlist
-                            item={item}
+                                item={item}
+                                key={item.id}
                             />
                         )}
                     </div>
@@ -273,6 +275,7 @@ const Search=()=>{
                         {artists.map(item=>
                             <Artist
                             item={item}
+                            key={item.id}
                             artists={artists}
                             setartists={data=>setartists(data)}
                             />

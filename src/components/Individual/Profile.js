@@ -141,15 +141,15 @@ export const FormProfile=()=>{
             <div className="flex-center mb-16">
                 <Avatarcontent>
                     <AvatarProfile className="content-avatar">
-                        <div class="avatar">
-                            <img aria-hidden="false" draggable="false" loading="eager" src={avatar} alt="Phạm Đại" class="mMx2LUixlnN_Fu45JpFB CmkY1Ag0tJDfnFXbGgju _EShSNaBK1wUIaZQFJJQ ta4ePOlmGXjBYPTd90lh Yn2Ei5QZn19gria6LjZj" sizes="(min-width: 1280px) 232px, 192px"/>
+                        <div className="avatar">
+                            <img aria-hidden="false" draggable="false" loading="eager" src={avatar} alt="Phạm Đại" className="mMx2LUixlnN_Fu45JpFB CmkY1Ag0tJDfnFXbGgju _EShSNaBK1wUIaZQFJJQ ta4ePOlmGXjBYPTd90lh Yn2Ei5QZn19gria6LjZj" sizes="(min-width: 1280px) 232px, 192px"/>
                         </div>
                         <Actionprofile>
                             <Fullcontent>
                                 <BtnAction onClick={()=>inputRef.current.click()} data-testid="edit-image-button" className="item-center" aria-haspopup="true" type="button">
-                                    <div class="center">
-                                        <svg role="img" height="48" width="48" aria-hidden="true" viewBox="0 0 24 24" class="Svg-ytk21e-0 eqtHWV"><path d="M17.318 1.975a3.329 3.329 0 114.707 4.707L8.451 20.256c-.49.49-1.082.867-1.735 1.103L2.34 22.94a1 1 0 01-1.28-1.28l1.581-4.376a4.726 4.726 0 011.103-1.735L17.318 1.975zm3.293 1.414a1.329 1.329 0 00-1.88 0L5.159 16.963c-.283.283-.5.624-.636 1l-.857 2.372 2.371-.857a2.726 2.726 0 001.001-.636L20.611 5.268a1.329 1.329 0 000-1.879z"></path></svg>
-                                        <span class="mt-8 jN7ZUHc7IxpwvWsjb4jo">Choose photo</span>
+                                    <div className="center">
+                                        <svg role="img" height="48" width="48" aria-hidden="true" viewBox="0 0 24 24" className="Svg-ytk21e-0 eqtHWV"><path d="M17.318 1.975a3.329 3.329 0 114.707 4.707L8.451 20.256c-.49.49-1.082.867-1.735 1.103L2.34 22.94a1 1 0 01-1.28-1.28l1.581-4.376a4.726 4.726 0 011.103-1.735L17.318 1.975zm3.293 1.414a1.329 1.329 0 00-1.88 0L5.159 16.963c-.283.283-.5.624-.636 1l-.857 2.372 2.371-.857a2.726 2.726 0 001.001-.636L20.611 5.268a1.329 1.329 0 000-1.879z"></path></svg>
+                                        <span className="mt-8 jN7ZUHc7IxpwvWsjb4jo">Choose photo</span>
                                     </div>
                                 </BtnAction>
                             </Fullcontent>
@@ -196,15 +196,15 @@ const Profile=()=>{
                 
                 <Avatarcontent>
                     <AvatarProfile className="content-avatar">
-                        <div class="avatar">
-                            <img src={user.avatar} alt="Phạm Đại" class="mMx2LUixlnN_Fu45JpFB CmkY1Ag0tJDfnFXbGgju _EShSNaBK1wUIaZQFJJQ ta4ePOlmGXjBYPTd90lh Yn2Ei5QZn19gria6LjZj" sizes="(min-width: 1280px) 232px, 192px"/>
+                        <div className="avatar">
+                            <img src={user.avatar} alt="Phạm Đại" className="mMx2LUixlnN_Fu45JpFB CmkY1Ag0tJDfnFXbGgju _EShSNaBK1wUIaZQFJJQ ta4ePOlmGXjBYPTd90lh Yn2Ei5QZn19gria6LjZj" sizes="(min-width: 1280px) 232px, 192px"/>
                         </div>
                         <Actionprofile>
                             <Fullcontent>
                                 <BtnAction onClick={()=>editprofile(true)} data-testid="edit-image-button" className="item-center" aria-haspopup="true" type="button">
-                                    <div class="center">
-                                        <svg role="img" height="48" width="48" aria-hidden="true" viewBox="0 0 24 24" class="Svg-ytk21e-0 eqtHWV"><path d="M17.318 1.975a3.329 3.329 0 114.707 4.707L8.451 20.256c-.49.49-1.082.867-1.735 1.103L2.34 22.94a1 1 0 01-1.28-1.28l1.581-4.376a4.726 4.726 0 011.103-1.735L17.318 1.975zm3.293 1.414a1.329 1.329 0 00-1.88 0L5.159 16.963c-.283.283-.5.624-.636 1l-.857 2.372 2.371-.857a2.726 2.726 0 001.001-.636L20.611 5.268a1.329 1.329 0 000-1.879z"></path></svg>
-                                        <span class="mt-8">Choose photo</span>
+                                    <div className="center">
+                                        <svg role="img" height="48" width="48" aria-hidden="true" viewBox="0 0 24 24" className="Svg-ytk21e-0 eqtHWV"><path d="M17.318 1.975a3.329 3.329 0 114.707 4.707L8.451 20.256c-.49.49-1.082.867-1.735 1.103L2.34 22.94a1 1 0 01-1.28-1.28l1.581-4.376a4.726 4.726 0 011.103-1.735L17.318 1.975zm3.293 1.414a1.329 1.329 0 00-1.88 0L5.159 16.963c-.283.283-.5.624-.636 1l-.857 2.372 2.371-.857a2.726 2.726 0 001.001-.636L20.611 5.268a1.329 1.329 0 000-1.879z"></path></svg>
+                                        <span className="mt-8">Choose photo</span>
                                     </div>
                                 </BtnAction>
                             </Fullcontent>
@@ -212,11 +212,11 @@ const Profile=()=>{
                     </AvatarProfile>
                 </Avatarcontent>
                 <Infoprofile>
-                    <h2 class="profile-title">Profile</h2>
-                    <span dir="auto" class="rEN7ncpaUeSGL9z0NGQR" draggable="false">
+                    <h2 className="profile-title">Profile</h2>
+                    <span dir="auto" className="rEN7ncpaUeSGL9z0NGQR" draggable="false">
                         <button onClick={()=>editprofile(false)} title="Edit details">
-                            <span class="o4KVKZmeHsoRZ2Ltl078">
-                                <h1 dir="auto" class="profile-name" >{user.name}</h1>
+                            <span className="o4KVKZmeHsoRZ2Ltl078">
+                                <h1 dir="auto" className="profile-name" >{user.name}</h1>
                             </span>
                         </button>
                     </span>

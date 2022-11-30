@@ -58,11 +58,11 @@ const LoginFacebook=()=>{
             fields="name,email,picture"
             callback={responseFb}
             render={renderProps => (
-            <button onClick={renderProps.onClick} class="flex-1 social-box flex-center">
-                <div class="social-image-wrapper item-center">
-                    <div class="social-image social-white-background social-white-fb-blue-png"></div>
+            <button onClick={renderProps.onClick} className="flex-1 social-box flex-center">
+                <div className="social-image-wrapper item-center">
+                    <div className="social-image social-white-background social-white-fb-blue-png"></div>
                 </div>
-                <div class="">Facebook</div>
+                <div className="">Facebook</div>
             </button>
             )}
         />  

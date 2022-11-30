@@ -3,8 +3,6 @@ import { useParams } from "react-router"
 import {useState,useEffect, useRef, useCallback} from "react"
 import { useSelector,useDispatch } from "react-redux"
 import {  artistURL } from "../../urls"
-import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
-import { Slide } from "react-slideshow-image"
 import axios from "axios"
 import styled from 'styled-components'
 import { headers,valid } from "../../actions/auth"
@@ -89,7 +87,7 @@ const Video=(props)=>{
             <div className="item-media">
                 <div className="media_cover" style={{backgroundImage: `url(${item.image_cover})`}}/>
                 <div className="image-hover item-center">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg"><path d="M17 17h-1.559l-9.7-10.673A1 1 0 0 0 5.001 6H2v2h2.559l4.09 4.5-4.09 4.501H2v2h3.001a1 1 0 0 0 .74-.327L10 13.987l4.259 4.686a1 1 0 0 0 .74.327H17v3l5-4-5-4v3z"></path><path d="M15.441 8H17v3l5-3.938L17 3v3h-2.001a1 1 0 0 0-.74.327l-3.368 3.707 1.48 1.346L15.441 8z"></path></svg>
                 </div>
             </div>
             <div className="mt-16 info-artist center">
@@ -123,7 +121,7 @@ const Artist=()=>{
     }, [sliderIndex])
     const setsongs=useCallback((data)=>{
         setSongs(data)
-    },[songs])
+    },[])
     useEffect(() => {
         ( async () =>{
             const url=choice?`${artistURL}/${slugartist}?choice=${choice}`:`${artistURL}/${slugartist}`
@@ -140,27 +138,27 @@ const Artist=()=>{
     }, [slugartist,choice])
     return (
         <div className="body-wrapper">
-            <nav class="zm-navbar is-oval zm-navbar-wrap">
-                <div class="zm-narbar-container">
-                    <ul class="zm-navbar-menu">
+            <nav className="zm-navbar is-oval zm-navbar-wrap">
+                <div className="zm-narbar-container">
+                    <ul className="zm-navbar-menu">
                         {items.map(item=>
                         <li key={item.value} className={`zm-navbar-item ${choice==item.url?'is-active':''}`}>
-                            <div class="navbar-link">
-                                <Link class="" to={`${item.url?`${item.url}`:''}`}>{item.name}</Link>
+                            <div className="navbar-link">
+                                <Link className="" to={`${item.url?`${item.url}`:''}`}>{item.name}</Link>
                             </div>
                         </li>)}
                     </ul>
                 </div>
             </nav>
             <div className="zm-section channel-section song-animate-section">
-                <h3 class="zm-section-title title is-2">Bài hát nổi bật</h3>
+                <h3 className="zm-section-title title is-2">Bài hát nổi bật</h3>
                 <Artistcontent className="content">
                     <div className="flex">
                         {!choice?
                         <div className="songs-animate-container"> 
                             <div className="option-all__song-slider">
                                 {songs.slice(0,10).map((item,index)=>
-                                    <img key={item.id} src={item.image_cover} alt="anh slider" class={`option-all__song-slider-img ${index == sliderIndex?'option-all__song-slider-img-first':index == sliderIndex+1||(sliderIndex==listimage.length-1 && index==0)?'option-all__song-slider-img-second':'option-all__song-slider-img-third'}`}/>
+                                    <img key={item.id} src={item.image_cover} alt="anh slider" className={`option-all__song-slider-img ${index == sliderIndex?'option-all__song-slider-img-first':index == sliderIndex+1||(sliderIndex==listimage.length-1 && index==0)?'option-all__song-slider-img-second':'option-all__song-slider-img-third'}`}/>
                                 )}
                             </div>
                         </div>:''}
@@ -173,6 +171,7 @@ const Artist=()=>{
                                             song={song}
                                             setsongs={data=>setsongs(data)}
                                             songs={songs}
+                                            key={song.id}
                                         />
                                         )}
                                 </ul>:choice=='album'?
@@ -180,12 +179,14 @@ const Artist=()=>{
                                     {playlists.map(item=>
                                     <Playlist
                                         item={item}
+                                        key={item.id}
                                     /> 
                                     )}
                                 </div>:<div className="columns is-multiline">
                                     {songs.map(item=>
                                     <Video
                                         item={item}
+                                        key={item.id}
                                     />
                                     )}
                                 </div>}

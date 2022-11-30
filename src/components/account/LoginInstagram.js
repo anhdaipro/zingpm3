@@ -7,7 +7,7 @@ const LoginInstagram=()=>{
     <InstagramLogin
       clientId="851393199388551"
       buttonText=" Login with Instagram "
-      cssClass="InstagramLogin"
+      cssclassName="InstagramLogin"
       onSuccess={responseInstagram}
       onFailure={responseInstagram}
     />

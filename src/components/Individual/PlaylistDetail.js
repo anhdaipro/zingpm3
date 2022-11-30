@@ -2,16 +2,11 @@
 import { useParams } from "react-router"
 import {useState,useEffect, useRef, useCallback} from "react"
 import { useSelector,useDispatch } from "react-redux"
-import Actionsong from "../home/Actionsong"
-import  { Songinfo,PlaySong } from "../Song"
-import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, listcommentURL, playlistURL } from "../../urls"
-import {setsong,updatesongs,showinfoArtist, setshowpost, updateposts } from "../../actions/player"
-import { Slide } from "react-slideshow-image"
+import {  playlistURL } from "../../urls"
+import {setsong, } from "../../actions/player"
 import axios from "axios"
 import { headers,valid } from "../../actions/auth"
-import dayjs from "dayjs"
 import { Link } from "react-router-dom"
-import Songs from "../Songs"
 import { Song } from "./Individual"
 const listimage=[
     {image:'https://sona7ns.github.io/zingmp3.vn/assets/img/slider/1.webp'},
@@ -40,33 +35,33 @@ const PlaylistDetail=()=>{
             setPlaylist({...res.data})
         })()
         
-    }, [])
+    }, [id])
     const setsongs=useCallback((data)=>{
         setSongs(data)
-    },[songs])
+    },[])
     return (
         playlist &&(<div className="body-wrapper">
             <div className="zm-section channel-section song-animate-section">
-                <h3 class="zm-section-title title is-2">Bài hát nổi bật</h3>
+                <h3 className="zm-section-title title is-2">Bài hát nổi bật</h3>
                 <div className="content">
                     <div className="flex">
                         <div className="songs-animate-container"> 
                             <div className="song-slider">
                                 <div onClick={()=>dispatch(setsong({play:!play}))} className="zm-card-image">
-                                    <div class={`box1 ${play?'animated infinite rotate-full boder-50':'scale-image'}`}>
-                                        <img class="" src={songs[0].image_cover} alt="" />
+                                    <div className={`box1 ${play?'animated infinite rotate-full boder-50':'scale-image'}`}>
+                                        <img className="" src={songs[0].image_cover} alt="" />
                                     </div>
-                                    <div class="zm-actions-container">
-                                        <div class="zm-box zm-actions playlist-actions">
-                                            <button class="zm-btn zm-tooltip-btn animation-like is-hidden active is-hover-circle button" tabindex="0">
-                                                <i class="icon ic-like"></i>
-                                                <i class="icon ic-like-full"></i>
+                                    <div className="zm-actions-container">
+                                        <div className="zm-box zm-actions playlist-actions">
+                                            <button className="zm-btn zm-tooltip-btn animation-like is-hidden active is-hover-circle button" tabindex="0">
+                                                <i className="icon ic-like"></i>
+                                                <i className="icon ic-like-full"></i>
                                             </button>
-                                            <button class="zm-btn action-play  button" tabindex="0">
-                                                <i class={`icon action-play ${play?'ic-gif-playing-white':'ic-svg-play-circle'} `}></i>
+                                            <button className="zm-btn action-play  button" tabindex="0">
+                                                <i className={`icon action-play ${play?'ic-gif-playing-white':'ic-svg-play-circle'} `}></i>
                                             </button>
-                                            <button class="zm-btn zm-tooltip-btn is-hidden is-hover-circle button" tabindex="0">
-                                                <i class="icon ic-more"></i>
+                                            <button className="zm-btn zm-tooltip-btn is-hidden is-hover-circle button" tabindex="0">
+                                                <i className="icon ic-more"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -83,17 +78,18 @@ const PlaylistDetail=()=>{
                                         <Song
                                             song={song}
                                             songs={songs}
+                                            key={song.id}
                                             setsongs={data=>setsongs(data)}
                                             
                                         />
                                         )}
                                 </ul>:
-                                <div class="container no-content mar-0">
-                                    <div class="no-content-box">
-                                        <i class="icon main-icon ic-svg-music-icon">
+                                <div className="container no-content mar-0">
+                                    <div className="no-content-box">
+                                        <i className="icon main-icon ic-svg-music-icon">
                                         
                                         </i>
-                                        <span class="no-content-text">Không có bài hát trong playlist của bạn</span>
+                                        <span className="no-content-text">Không có bài hát trong playlist của bạn</span>
                                     </div>
                                 </div>}
                             </div>

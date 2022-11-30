@@ -209,7 +209,9 @@ color: #ffffff80;
 }
 .card-list-icon{
     height: 24px;
-    width:24px
+    width:24px;
+    color:#fff;
+    font-size: 24px;
 }
 .card-list-icon.big{
     width:40px;

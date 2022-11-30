@@ -16,7 +16,7 @@ const Song=(props)=>{
     const {song}=props
     return(
         <div  style={{width:'25%',overflow:'hidden'}} className="flex-col p-4" key={song.id}>
-            <div class="song-image" style={{backgroundImage: `url(${song.image_cover})`}}></div>
+            <div className="song-image" style={{backgroundImage: `url(${song.image_cover})`}}></div>
             <div className="mt-8">
                 <h3 className="song-name">{song.name}</h3>
                 <div className="subtitle">{new Date(song.created_at).getFullYear()}</div>
@@ -61,6 +61,7 @@ const InfoArtist=()=>{
                         {data.songs.map(song=>
                             <Song
                                 song={song}
+                                key={song.id}
                             />
                         )}
                     </div>

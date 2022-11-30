@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react"
-import dayjs from "dayjs"
+
 import { useSelector,useDispatch } from "react-redux"
 import { playerstop, showmodal } from "../../actions/player"
-import styled from 'styled-components'
 const DeleteTimer=()=>{
     const dispatch = useDispatch()
     return(

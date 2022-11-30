@@ -9,7 +9,7 @@
     transition: ease .5s;
     box-shadow: 0 2px 5px #0000004d;   
 }
-@media screen and (max-width: 1133px){
+@media screen and (max-width: 1048px){
 .sideNav {
     position: fixed;
     background-color: var(--sidebar-popup-bg);
@@ -17,6 +17,11 @@
     padding-bottom: 55px;
     transition: width .3s ease-out;
 }
+.main-container::-webkit-scrollbar{
+width:4px
+}
+
+
 .sideNav .navigation-item-title{
     display:none
 }
@@ -182,7 +187,7 @@ background-color: #f1d203;
    
    
 }
-@media screen and (max-width:1024px){
+@media screen and (max-width:1048px){
     .sideNav.tablet .logo {
         width: 45px;
         display:inline-block;

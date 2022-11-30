@@ -8,7 +8,6 @@ import { actionuser, setsong, showmodal, updatesongs } from "../../actions/playe
 import { headers, setrequestlogin,valid } from "../../actions/auth"
 import { useParams } from "react-router"
 import {useSearchParams,useNavigate} from "react-router-dom"
-import dayjs from "dayjs"
 const listitems=[
     {name:"Tất cả",value:'all'},
     {name:"Việt Nam",value:'vpop'},
@@ -100,16 +99,16 @@ const Newrelease=()=>{
    
     const setsongs=useCallback((data)=>{
         setSongs(data)
-    },[songs])
+    },[])
     
     return(
         <div className="body-wrapper">
-            <div class="flex-center">
-                <h3 class="zing-chart-heading">
+            <div className="flex-center">
+                <h3 className="zing-chart-heading">
                     Mới phát hành
                 </h3>
-                <div class="zing-chart-play-icon">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
+                <div className="zing-chart-play-icon">
+                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>
                 </div>
             </div>
             <div>
@@ -122,7 +121,7 @@ const Newrelease=()=>{
                     )}
                 </Listitem>
                 <div className="zm-new-release-section">
-                    <div class="genre-select">
+                    <div className="genre-select">
                         {listitems.map(item=>
                             <button key={item.value} onClick={()=>setSearchParams({filter:item.value})} className={`zm-btn ${params.get('filter')===item.value &&'active'} button`} >{item.name}</button>
                         )}      
@@ -132,17 +131,17 @@ const Newrelease=()=>{
                             <div className="header-name">
                                 {checked?
                                 <div className='flex-center ml-8'>
-                                    <label class="checkbox">
-                                        <input onChange={setcheckall} checked={allchecked} type="checkbox" class="checkbox__input" /> 
-                                        <span class="checkbox__indicator">
-                                            <i class="icon">
+                                    <label className="checkbox">
+                                        <input onChange={setcheckall} checked={allchecked} type="checkbox" className="checkbox__input" /> 
+                                        <span className="checkbox__indicator">
+                                            <i className="icon">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.03033009,7.46966991 C3.73743687,7.1767767 3.26256313,7.1767767 2.96966991,7.46966991 C2.6767767,7.76256313 2.6767767,8.23743687 2.96966991,8.53033009 L6.32804531,11.8887055 C6.62093853,12.1815987 7.09581226,12.1815987 7.38870548,11.8887055 L13.2506629,6.02674809 C13.5435561,5.73385487 13.5435561,5.25898114 13.2506629,4.96608792 C12.9577697,4.6731947 12.4828959,4.6731947 12.1900027,4.96608792 L6.8583754,10.2977152 L4.03033009,7.46966991 Z"></path></svg>
                                             </i> 
                                         </span> 
                                     </label>
                                     <div onClick={addtoplaylist} className="box-item mr-8">Thêm vào danh sách phát</div>
                                     <div className="icon-1">
-                                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+                                        <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
                                     </div>
                                 </div>:
                                 <div className="header-name-title">Bài hát</div>}
@@ -157,6 +156,7 @@ const Newrelease=()=>{
                                 <Song
                                 song={song}
                                 songs={songs}
+                                key={song.id}
                                 checkitem
                                 setsongs={data=>setsongs(data)}
                                 />

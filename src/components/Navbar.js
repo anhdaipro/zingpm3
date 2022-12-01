@@ -1,20 +1,22 @@
-import {useState,useRef,useEffect} from 'react'
+import {useState,useRef,useEffect,useMemo} from 'react'
 import axios from "axios"
 import { dataURLtoFile, generateString, slugify } from '../constants';
-import { setrequestlogin,valid } from '../actions/auth';
+import { setrequestlogin,settheme,token } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
-import { uploadsongURL,uploadmvURL } from '../urls';
+import { uploadsongURL,uploadmvURL, refreshTokenURL } from '../urls';
+import dayjs from 'dayjs';
 let jsmediatags = window.jsmediatags;
-const token=localStorage.getItem('token')
 
+   
 const Navbar=()=>{
     const dispatch = useDispatch()
-    
+    const [now,setNow]=useState(new Date())
     const inputref=useRef()
     const inputref1=useRef()
     const user=useSelector(state=>state.auth.user)
+     
     const uploadfile=async (e)=>{
         try{
             [].forEach.call(e.target.files, function(file) {
@@ -34,10 +36,11 @@ const Navbar=()=>{
                     let image = canvas.toDataURL("image/png");
                     let file_preview = dataURLtoFile(image,'dbc9a-rg53.png');
                     let form=new FormData()
+                    form.append('name',file.name.slice(-12))
                     form.append('file',file)
                     form.append('file_preview',file_preview)
                     form.append('duration',video.duration)
-                    axios.post(uploadmvURL,form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+                    axios.post(uploadmvURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
                     .then(res=>{
                         console.log(res.data)
                     })
@@ -88,7 +91,7 @@ const Navbar=()=>{
                   }
                   form.append('duration',audio.duration)
                   
-                  axios.post(uploadsongURL,form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+                  axios.post(uploadsongURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
                   .then(res=>{
                     console.log(res.data)
                   })
@@ -121,10 +124,11 @@ const Navbar=()=>{
                 <Searchcontent/>
                 
                 <div className="header-right item-end flex-1">
-                    <div className="_header-icon_1fdcg_34 _header-theme_1fdcg_48" title="Chủ đề">
-                        <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M32 144l48 64 64-32-16 304c64 16 192 16 256 0l-16-304 64 32 48-64-112-96-48-16c-16 64-112 64-128 0l-48 16z"></path></svg></div>
+                    <div onClick={()=>dispatch(settheme({showtheme:true}))} className="_header-icon_1fdcg_34 _header-theme_1fdcg_48" title="Chủ đề">
+                        <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M32 144l48 64 64-32-16 304c64 16 192 16 256 0l-16-304 64 32 48-64-112-96-48-16c-16 64-112 64-128 0l-48 16z"></path></svg>
+                    </div>
                     <div onClick={()=>{
-                        if(valid){
+                        if(user){
                         inputref.current.click()
                         }
                         else{
@@ -135,7 +139,7 @@ const Navbar=()=>{
                         <input ref={inputref} multiple={true} onChange={(e)=>previewFile(e)} type="file" accept="audio/*"/>
                     </div>
                     <div onClick={()=>{
-                        if(valid){
+                        if(user){
                         inputref1.current.click()
                         }
                         else{

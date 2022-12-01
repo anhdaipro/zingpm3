@@ -19,7 +19,8 @@ import {
     UPDATE_NOTIFI_SUCCESS,
     COMMENT_NOTIFY,
     REQUEST_LOGIN,
-    SHOW_LOGIN
+    SHOW_LOGIN,
+    UPDATE_THEME
 
 } from '../actions/types';
 import { dataURLtoFile } from '../constants';
@@ -29,6 +30,9 @@ let initialState = {
     user: null,
     requestlogin:false,
     notify:null,
+    theme:null,
+    showtheme:false,
+    themepreview:null,
     listtag:[]
 };
 
@@ -44,6 +48,10 @@ const authReducer=(state = initialState, action)=>{
             return{
                 ...state,
                 user:{...state.user,...payload}
+            }
+        case UPDATE_THEME:
+            return{
+                ...state,...payload
             }
         case REQUEST_LOGIN:{
             return{

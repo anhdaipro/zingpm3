@@ -31,7 +31,7 @@ const Song=(props)=>{
     return(
         <div  ref={songref} className={`song ${showaction && song_id==songid?'show':''} ${currentIndex === index ? "active" : ""}`}>
             <div onClick={(e)=>setplay(e)}  className="thumb" style={{position:'relative'}}>
-                <div style={{backgroundImage: `url('${song.image_cover}')`,width:'100%',height:'100%',backgroundSize:'cover'}}></div>
+                <div style={{backgroundImage: `url(${song.image_cover})`,width:'100%',height:'100%',backgroundSize:'cover'}}></div>
                 <div style={{display:'flex',justifyContent:'center'}} className="item-center song-item-image-overlay">
                     {index === currentIndex?
                         duration>0?play?
@@ -126,7 +126,7 @@ const Songs=()=>{
                     dispatch(updatesongs(JSON.parse(localStorage.getItem('songs'))))
                 }
                 else{
-                const res = await axios.get(listsongURL,headers)
+                const res = await axios.get(listsongURL,headers())
                 
                 dispatch(setsong({songs:res.data}))
             }

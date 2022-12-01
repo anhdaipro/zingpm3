@@ -36,7 +36,8 @@ const InfoArtist=()=>{
     },[dispatch,showinfo])
    
     const setfollow=async()=>{
-      const res = await  axios.post(`${artistURL}${data.slug}`,JSON.stringify({action:'follow'}),headers)
+        
+        const res = await  axios.post(`${artistURL}${data.slug}`,JSON.stringify({action:'follow'}),headers())
         dispatch(showinfoArtist({data:{...data,followed:!data.followed}}))
     }
     return(

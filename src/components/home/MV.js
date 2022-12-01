@@ -16,7 +16,7 @@ export const Item=styled.div`
     min-width:200px;
     float: left;
     flex-shrink: 0;
-.item-content{
+    .item-content{
     display:flex;
     align-items:center;
     padding: 5px 10px;
@@ -283,7 +283,7 @@ const Contentprogess=styled.div`
 position:relative;
 flex:1;
 margin:0 8px;
-height:16px;
+height:20px;
 .--z--bar-fill-load{
     background-color: rgb(184, 184, 184);
     position: absolute;
@@ -433,7 +433,7 @@ const MV=()=>{
     
     useEffect(()=>{
         (async()=>{
-            const res = await axios.get(listmvURL,headers)
+            const res = await axios.get(listmvURL,headers())
             setListmv(res.data)
             
             const mvcurrent=res.data.find(item=>item.id==song.id)
@@ -460,7 +460,7 @@ const MV=()=>{
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
     const settimeshow=(e)=>{
-        
+        e.stopPropagation()
         setShowtime(true)
         const rects = timeref.current.getBoundingClientRect();
         const {left,width}=rects
@@ -470,8 +470,7 @@ const MV=()=>{
         setTimeshow(times)
     }
     const settimeaudio=(e)=>{
-        e.stopPropagation()
-        
+        e.stopPropagation() 
         const rects = timeref.current.getBoundingClientRect();
         const {left,width}=rects
         const clientX=e.clientX
@@ -480,6 +479,7 @@ const MV=()=>{
         const minutes=Math.floor(times/60)
         const seconds=Math.floor(times-minutes*60)
         videoRef.current.currentTime=times
+        console.log('dd')
         dispatch(setshowvideo({time:{seconds:seconds,minutes:minutes}}))
         
     }
@@ -510,8 +510,8 @@ const MV=()=>{
         }
         
         const settime=(e)=>{
-            
             if(drag.time){
+                console.log('dd')
                 const rects = timeref.current.getBoundingClientRect();
                 const clientX=e.clientX
                 const left =rects.left
@@ -537,7 +537,7 @@ const MV=()=>{
     useEffect(()=>{
         const setdrag=(e)=>{
             setDrag(prev=>{return{...prev,time:false,volume:false}})
-           
+            
         }
         document.addEventListener('mouseup',setdrag)
         return ()=>{
@@ -622,7 +622,7 @@ const MV=()=>{
         }
     }
     const setlikemv= async (value)=>{
-        const res= await axios.post(videosongURL,JSON.stringify({action:'like',id:mv.mv.id}),headers)
+        const res= await axios.post(videosongURL,JSON.stringify({action:'like',id:mv.mv.id}),headers())
         setListmv(current=>current.map(item=>{
             if(item.id==mv.id){
                 return({...item,mv:{...item.mv,liked:value}})
@@ -662,7 +662,7 @@ const MV=()=>{
                                                  </div>
                                             </div>
                                             <div className="media-right ml-16 item-center">
-                                                <button onClick={()=>setlikemv(!mv.mv.liked)} className="zm-btn zm-tooltip-btn mr-8 animation-like active is-hover-circle button" tabindex="0">
+                                                <button onClick={()=>setlikemv(!mv.mv.liked)} className="zm-btn zm-tooltip-btn mr-8 animation-like active is-hover-circle button" tabIndex="0">
                                                     <svg className={`${mv.mv.liked?'fill-heart':''}`} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg">
                                                         {mv.mv.liked?<path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.8 264.4 264.4 0 0 0-84-55.5A265.34 265.34 0 0 0 679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 0 0-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z"></path>
                                                         :<path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.8 264.4 264.4 0 0 0-84-55.5A265.34 265.34 0 0 0 679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 0 0-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z"></path>}
@@ -670,11 +670,11 @@ const MV=()=>{
                                                 </button>
                                                 <button onClick={()=>{
                                                     dispatch(setshowvideo({showvideo:false}))
-                                                    dispatch(setsong({play:true,view:false,change:true}))}} className="zm-btn zm-tooltip-btn mr-8 is-hover-circle button" tabindex="0">
+                                                    dispatch(setsong({play:true,view:false,change:true}))}} className="zm-btn zm-tooltip-btn mr-8 is-hover-circle button" tabIndex="0">
                                                     <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13c0-1.104 1.12-2 2.5-2s2.5.896 2.5 2zm9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2z"></path><path fillRule="evenodd" d="M14 11V2h1v9h-1zM6 3v10H5V3h1z"></path><path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4V2.905z"></path></svg>
                                                 </button>
                                                 <div className="header-more-menu">
-                                                    <button className="zm-btn zm-tooltip-btn is-hover-circle button" tabindex="0">
+                                                    <button className="zm-btn zm-tooltip-btn is-hover-circle button" tabIndex="0">
                                                         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
                                                     </button>
                                                 </div>
@@ -692,26 +692,15 @@ const MV=()=>{
                                         <div className="player-button-minimize">
                                             <button onClick={(event)=>{
                                                 event.stopPropagation()
-                                                setMiniplayer(false)}} className="zm-btn zm-tooltip-btn  is-hover-circle button" tabindex="0">
+                                                setMiniplayer(false)}} className="zm-btn zm-tooltip-btn  is-hover-circle button" tabIndex="0">
                                                 <svg height="16px" version="1.1" viewBox="0 0 24 24" width="16px"><g fill="none" fillRule="evenodd" stroke="none" strokeWidth="1"><g transform="translate(12.000000, 12.000000) scale(-1, 1) translate(-12.000000, -12.000000) "><path d="M19,19 L5,19 L5,5 L12,5 L12,3 L5,3 C3.89,3 3,3.9 3,5 L3,19 C3,20.1 3.89,21 5,21 L19,21 C20.1,21 21,20.1 21,19 L21,12 L19,12 L19,19 Z M14,3 L14,5 L17.59,5 L7.76,14.83 L9.17,16.24 L19,6.41 L19,10 L21,10 L21,3 L14,3 Z" fill="#fff" fillRule="nonzero"></path></g></g></svg>
                                             </button>
-                                            <button onClick={(e)=>dispatch(setshowvideo({showvideo:false}))} className="zm-btn zm-tooltip-btn is-hover-circle button" tabindex="0">
+                                            <button onClick={(e)=>dispatch(setshowvideo({showvideo:false}))} className="zm-btn zm-tooltip-btn is-hover-circle button" tabIndex="0">
                                                 <svg height="16px" viewBox="0 0 24 24" width="16px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"></path></svg>
                                             </button>
                                         </div>
                                         <div 
-                                        onDoubleClick={(e)=>{
-                                            e.preventDefault()
-                                            if(isVideoInFullscreen()){
-                                                closeFullscreen(e)
-                                            }
-                                            else{
-                                                openFullscreen(e)
-                                                }
-                                                
-                                            
-                                        }}
-                                        onClick={()=>{
+                                            onClick={()=>{
                                             dispatch(setshowvideo({play:!play}))
                                             setAmimation(true)
                                             if(timer){
@@ -721,9 +710,21 @@ const MV=()=>{
                                                 setAmimation(false)
                                             }, 700);
                                             
-                                            }} className={`z--player ${isVideoInFullscreen()?'player-full-screem':''}`} data-player="" tabindex="1">
+                                            }}
+                                            onDoubleClick={(e)=>{
+                                            e.preventDefault()
+                                            if(isVideoInFullscreen()){
+                                                closeFullscreen(e)
+                                            }
+                                            else{
+                                                openFullscreen(e)
+                                                }
+                                            }}
+                                             className={`z--player ${isVideoInFullscreen()?'player-full-screem':''}`} data-player="" tabIndex="1">
                                             <VideoPlayer setsong={setshowvideo} url={videosongURL} player={mvplayer} mediaElement={videoRef} volume={volume}>
-                                            <video playsinline 
+                                            <video
+                                            
+                                             playsinline 
                                                 onPlay={()=>{
                                                     dispatch(setshowvideo({play:true}))
                                                 }} 
@@ -758,7 +759,7 @@ const MV=()=>{
                                             }} 
                                             ref={videoRef} preload="auto" src={mv.mv.file} muted={muted}></video>
                                             </VideoPlayer>
-                                            <button className={percent>=percentload?'loading-video':'playpause-fadeout'} type="button" style={{display: `${percent>=percentload||animation?'flex':'none'}`}}>
+                                            <button className={percent>percentload?'loading-video':'playpause-fadeout'} type="button" style={{display: `${percent>=percentload||animation?'flex':'none'}`}}>
                                                 {percent>=percentload?
                                                 <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="40px" height="40px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                                                     <circle cx="50" cy="50" fill="none" stroke="#fff" strokeWidth="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
@@ -769,19 +770,19 @@ const MV=()=>{
                                                     {!play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
                                                 </svg>}
                                             </button>
-                                            <div className="controls-wrapper">
-                                                <div className="song-player-slider mb-8 item-center">
+                                            <div  className="controls-wrapper">
+                                                <div  className="song-player-slider mb-8 item-center">
                                                     <Contentprogess 
                                                         onMouseMove={(e)=>settimeshow(e)} 
                                                         onMouseLeave={()=>setShowtime(false)}
                                                         onMouseDown={(e)=>{
+                                                            
+                                                            
                                                             setDrag({...drag,time:true})
+                                                            settimeaudio(e)
                                                             
                                                         }} 
-                                                        onClick={(e)=>{
-                                                            
-                                                            settimeaudio(e)
-                                                        }}
+                                                        
                                                         ref={timeref}>
                                                         <SeekBarProgress className="progress"></SeekBarProgress>
                                                         <SeekBarCircle className="seekbarcircle" style={{left:`${percent}%`}}></SeekBarCircle>

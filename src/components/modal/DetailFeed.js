@@ -104,7 +104,7 @@ font-size: 13px;
 export const Comment=(props)=>{
     const {item,setcomments,comments,url}=props
     const setlikecomment= async (name)=>{
-        const res = await axios.post(`${commentURL}/${item.id}`,JSON.stringify({action:name}),headers)
+        const res = await axios.post(`${commentURL}/${item.id}`,JSON.stringify({action:name}),headers())
         const data=comments.map(comment=>{
             if(item.id===comment.id){
                 return({...comment,...res.data})
@@ -185,7 +185,7 @@ const DetailFeed=()=>{
         try{
             if(e.target.scrollTop==e.target.scrollHeight-e.target.offsetHeight &&loading && listcomment.length<count){
             setLoading(false)
-            const res= await axios.get(`${listcommentURL}?from_item=${listcomment.length}`,headers)
+            const res= await axios.get(`${listcommentURL}?from_item=${listcomment.length}`,headers())
             const list_items=[...listcomment,...res.data.comments]
             setListcomment(list_items)
             setLoading(true)      
@@ -197,7 +197,8 @@ const DetailFeed=()=>{
     }
     
     const setfollow= async (name,value)=>{
-        const res = await axios.post(`${artistURL}${item.artist.slug}`,JSON.stringify({action:'follow'}),headers)
+        
+        const res = await axios.post(`${artistURL}${item.artist.slug}`,JSON.stringify({action:'follow'}),headers())
         const dataposts=posts.map(post=>{
             if(item.artist.id===post.artist.id){
                 return({...post,artist:{...post.artist,[name]:value}})
@@ -212,7 +213,8 @@ const DetailFeed=()=>{
         setListcomment(data)
     },[])
     const submit= async () =>{
-        const res = await axios.post(`${postURL}/${data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers)
+        
+        const res = await axios.post(`${postURL}/${data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers())
         const commentupdate=[{...res.data},...listcomment]
         setKeyword('')
         setListcomment(commentupdate)

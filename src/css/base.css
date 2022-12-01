@@ -103,6 +103,10 @@ html *::-webkit-scrollbar {
   --background-white: #ffffff1a;
   --text-decs-color: #ffffff80;
   --border-primary: #ffffff1a;
+  --dark-alpha-10: rgba(0,0,0,0.1);
+    --dark-alpha-50: rgba(0,0,0,0.5);
+    --dark-alpha-70: rgba(0,0,0,0.7);
+    --dark-alpha-80: rgba(0,0,0,0.8);
   --modal: #432275;
 }
 body a {

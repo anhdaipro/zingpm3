@@ -11,6 +11,7 @@ import LoginGoogle from "./LoginGoogle"
 import LoginInstagram from "./LoginInstagram"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
+import dayjs from "dayjs"
 const Btnpass=styled.button`
 display:flex;
 width:20px;
@@ -68,9 +69,11 @@ const Login=()=>{
                 type: LOGIN_SUCCESS,
                 payload: res.data 
             });
-            localStorage.setItem("expirationDate", res.data.access_expires);
+            const expiri=dayjs().add(59,'minute')
+            localStorage.setItem("expirationDate",expiri);
             const token = res.data.access;
             localStorage.setItem('token',token);
+            
             dispatch(setrequestlogin(false))
             window.location.href="/"
         } 

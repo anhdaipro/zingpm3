@@ -71,7 +71,7 @@ const Detailgenre=()=>{
     const {playlists,currentIndex,play}=player
     useEffect(() => {
         ( async ()=>{
-            const res = await axios.get(`${genreURL}/${slug}`,headers)
+            const res = await axios.get(`${genreURL}/${slug}`,headers())
             const data=res.data  
             setGenre(data)
             const genre_songs=data.songs.map(item=>{

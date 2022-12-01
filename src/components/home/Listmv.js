@@ -7,7 +7,7 @@ import styled from "styled-components"
 import { listmvURL, songURL, videosongURL } from "../../urls"
 import axios from "axios"
 import PropTypes from 'prop-types';
-import { useParams } from "react-router"
+import { Navigate, useNavigate, useParams } from "react-router"
 export const Item=styled.div`
     position: relative;
     min-height: 1px;
@@ -119,14 +119,61 @@ padding:10px 20px;
     };
 }
 `
-
+const Navbartabs=styled.div`
+margin-bottom: 32px;
+border-bottom: 1px solid #ffffff1a;
+width: 100%;
+position: relative;
+display:flex;
+align-items:center;
+.title{
+    padding:0 12px 0px 16px;
+    height:32px;
+    align-items:center;
+    
+    margin-right:16px;
+    border-right:1px solid #ffffff1a;
+}
+`
+const Tabs=styled.div`
+position: relative;
+`
+const Bottomtab=styled.div`
+bottom:0;
+left:0;
+width:100%;
+position:absolute;
+height:2px;
+background-color:#9b4de0
+`
+const Tab=styled.div`
+width:100px;
+display:flex;
+position:relative;
+text-transform: uppercase;
+font-weight:600;
+color:${props=>props.active?'#fff':'#ffffff80'};
+justify-content:center;
+align-items:center;
+cursor:pointer;
+height:40px;
+&:hover{
+    color:#ffff
+}
+`
+const country_choice=[
+    {value:'vpop',name:'Việt Nam',url:'Viet-Nam'},
+    {value:'usuk',name:'US-UK',url:"Au-My"},
+    {value:'kpop',name:'K-POP',url:"Han-Quoc"},
+    {value:'cpop',name:'Hòa Tấu',url:"Hoa-Ngu"}, 
+]
 const Video=(props)=>{
     const {song,setsongs}=props
     const dispatch = useDispatch()
     const player=useSelector(state=>state.player)
     const {songs,play}=player
     const openvideo=async()=>{
-        const res =await axios.get(`${videosongURL}?id=${song.video}`,headers)
+        const res =await axios.get(`${videosongURL}?id=${song.video}`,headers())
         const datasongs=songs.map(item=>{
             if(item.id===song.id){
                 return({...item,mv:res.data})
@@ -165,17 +212,29 @@ Video.propTypes = {
 const Listmv=()=>{
     const [listmv,setListmv]=useState([])
     const {choice}=useParams()
+    const navigate=useNavigate()
     useEffect(()=>{
         (async()=>{
-            const res = await axios.get(listmvURL,headers)
+            const res = await axios.get(`${listmvURL}?choice=${country_choice.find(item=>item.url==choice).value}`,headers())
             setListmv(res.data)
         })()
         
     },[choice])
     return(
         <div className="body-wrapper">
+            <Navbartabs> 
+                <div className="title center">MV</div>
+                <Tabs className="flex listitem">
+                    {country_choice.map(item=>
+                        <Tab key={item.value} active={choice==item.url?true:false} onClick={()=>navigate(`/the-loai-video/${item.url}`)} className="tab">
+                            <div className="tab-name">{item.name}</div>
+                            {choice==item.url &&(<Bottomtab/>)}
+                        </Tab>
+                    )}
+                </Tabs>
+            </Navbartabs>
             <Listrecomend>
-                <div className="title mb-16">MV Của Nguyễn Đình Vũ</div>
+                <div className="title mb-16"></div>
                     <div className="row">
                         {listmv.map((item,index)=>
                              <Video

@@ -92,7 +92,8 @@ const Commentsong=()=>{
     },[])
     const [keyword,setKeyword]=useState('')
     const submit= async () =>{
-        const res = await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers)
+        
+        const res = await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers())
         const commentupdate=[{...res.data},...listcomment]
         setKeyword('')
         setListcomment(commentupdate)

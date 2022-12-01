@@ -4,11 +4,11 @@ import axios from "axios"
 import {useState,useEffect, useRef,useMemo, useCallback,useId} from "react"
 import {listsongURL,songURL,listsonguserURL,lyricsongURL, playlistURL} from "../../urls"
 import { actionuser, setsong, showmodal, updateplaylists, updatesongs } from "../../actions/player"
-import { headers, setrequestlogin,valid } from "../../actions/auth"
+import { expirationDate, headers, setrequestlogin,valid } from "../../actions/auth"
 import Actionsong from "../home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import {Songinfo,PlaySong, Showlyric, Likedsong} from '../Song'
+import {Songinfo,PlaySong, Showlyric, Likedsong, Showmv} from '../Song'
 import { Link } from "react-router-dom"
 import PropType from "prop-types"
 const listitem=[
@@ -113,16 +113,21 @@ export const Song=(props)=>{
             </div>
             <div>{song.album?.name}</div>
             <div className="item-end">
+                {song.video &&(
+                    <Showmv
+                        song={song}
+                    />
+                )}
                 {song.hasLyric && showaction?
                 <Showlyric
-                song={song}
+                    song={song}
                 />
                 :''}
                 <Likedsong
-                song={song}
-                className="song-info-like icon-button"
-                songs={songs}
-                setsongs={data=>setsong(data)}
+                    song={song}
+                    className="song-info-like icon-button"
+                    songs={songs}
+                    setsongs={data=>setsong(data)}
                 />
                 <div className={`duration ${showaction?'hiden':''} mr-8`}>
                     <p className="author">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</p>
@@ -156,7 +161,7 @@ export const Playlist=(props)=>{
     const removeplaylist= async (e)=>{
         e.preventDefault()
         e.stopPropagation()
-        const res= await axios.post(`${playlistURL}/${item.id}`,JSON.stringify({action:'delete'}),headers)
+        const res= await axios.post(`${playlistURL}/${item.id}`,JSON.stringify({action:'delete'}),headers())
         dispatch(updateplaylists(playlists.filter(playlist=>playlist.id!==item.id)))
         toast(<span>Đã xóa playlist khỏi thư viện</span>,{  
             position:toast.POSITION.BOTTOM_LEFT,
@@ -258,26 +263,22 @@ export const Playlist=(props)=>{
 }
 
 const Individual=()=>{
-    const user=useSelector(state => state.auth.user)
+    
     const dispatch = useDispatch()
     const [choice,setChoice]=useState('song')
     const [option,setOption]=useState('liked')
     const [songs,setSongs]=useState([])
     const datasongs=useSelector(state => state.player.songs)
     const player=useSelector(state => state.player)
-    const {playlists,currentIndex,play, time_stop_player,showinfo,infoRef,keepinfo}=player
+    const user=useSelector(state=>state.auth.user)
+    const {playlists,currentIndex}=player
     useEffect(() => {
         ( async ()=>{
-            if(valid){
-            const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers)
+            const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers())
                 const data=res.data.map(item=>{
                 return({...item,checked:false,})
             })
             setSongs(data) 
-        }
-        else{
-            dispatch(setrequestlogin(true))
-        }
         })()
     }, [option,dispatch])
     const count=songs.length

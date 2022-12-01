@@ -1,5 +1,5 @@
 import { actionuser, showmodal,updateplaylists } from "../actions/player"
-import { headers,setrequestlogin,valid } from "../actions/auth"
+import { headers,setrequestlogin,valid,expirationDate } from "../actions/auth"
 import {useDispatch,useSelector} from "react-redux"
 import {NavLink} from "react-router-dom"
 import {useState,useEffect} from "react"
@@ -8,23 +8,25 @@ import {listplaylistURL} from "../urls"
 
 const Sibar=()=>{
     const dispatch = useDispatch()
+    const user=useSelector(state=>state.auth.user)
     const addplaylist=()=>{
-        if(valid){
+        if(user){
         dispatch(showmodal(true))
         dispatch(actionuser({data:{title:'Thêm playlist'},action:'addplaylist'}))
         }
     }
     useEffect(()=>{
         ( async ()=>{
-            if(valid){
-            const res= await axios.get(listplaylistURL,headers)
+            const now=new Date()
+            if(user){
+            const res= await axios.get(listplaylistURL,headers())
             dispatch(updateplaylists(res.data))
             }
             
         })()
     },[dispatch])
     const checkuser=(e)=>{
-        if(!valid){
+        if(!user){
             e.preventDefault()
             dispatch(setrequestlogin(true))
         }
@@ -123,7 +125,7 @@ const Sibar=()=>{
                             </div>
                     )}
                     </NavLink>
-                    <NavLink title="MV"  to="/the-loai-video/viet-nam">
+                    <NavLink title="MV"  to="/the-loai-video/Viet-Nam">
                     {({ isActive }) => (
                         <div className={`navigation-item ${isActive?'active':''}`}>
                             <div className="navigation-item-icon">

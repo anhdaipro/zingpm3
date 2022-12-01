@@ -1,7 +1,8 @@
 import React, { useEffect,useRef } from 'react';
 import { connect,useSelector,useDispatch } from 'react-redux';
-import { checkAuthenticated,login,expiry} from '../actions/auth';
-import { actionuser, showmodal,setsong } from '../actions/player';
+import { checkAuthenticated, token} from '../actions/auth';
+import axios from 'axios';
+import dayjs from "dayjs"
 import Login from '../components/account/Login';
 import Actionsong,{Listaction} from '../components/home/Actionsong';
 import Navbar from '../components/Navbar';
@@ -14,6 +15,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import InfoArtist from '../components/modal/InfoArtist';
 import DetailFeed from '../components/modal/DetailFeed';
 import MV from '../components/home/MV';
+import Themes from '../components/modal/Themes';
+import { refreshTokenURL } from '../urls';
 
 const Layout = ({children}) => {
     const player=useSelector(state=>state.player)
@@ -22,7 +25,35 @@ const Layout = ({children}) => {
     const mvplayer=useSelector(state=>state.mvplayer)
     const {showvideo}=mvplayer
     const {showinfo,songs,showpost,showaction}=player
-    const requestlogin=useSelector(state=>state.auth.requestlogin)
+    const auth=useSelector(state=>state.auth)
+    const {requestlogin,theme,showtheme,user}=auth
+    
+    const refreshtoken= async ()=>{
+        if(user){
+            const res= await axios.post(refreshTokenURL,JSON.stringify({id:user.id}),{
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const data = res.data;
+            localStorage.setItem('token',data.access);
+            const expiri=dayjs().add(59,'minute')
+            localStorage.setItem("expirationDate",expiri);    
+        }       
+    }
+    useEffect(() => {
+        const timer=setInterval(() => {
+            if(user){
+                refreshtoken()
+            }
+        }, 1000*180);
+        return ()=>clearInterval(timer)
+    })
+    useEffect(()=>{
+        window.addEventListener('beforeunload', refreshtoken)
+        return () => window.removeEventListener('beforeunload', refreshtoken)
+    },[user])
+    
     
     const CloseButton=({ closeToast })=>(  
         <button >
@@ -32,16 +63,16 @@ const Layout = ({children}) => {
     </svg></button> )
     useEffect(() => {
         (async ()=>{
-            if(localStorage.token){
+            if(token()){
                 dispatch(checkAuthenticated())
             }
         })() 
        
-    }, [localStorage.token]);
+    }, [dispatch]);
     
     
     return (
-        <div className="wrapper main">  
+        <div className="wrapper main" style={{backgroundImage:`url(${theme})`,backgroundSize: `cover`}}>  
             <Sibar/>
             <Navbar/>
             <div className="main-container">
@@ -69,6 +100,7 @@ const Layout = ({children}) => {
             {requestlogin &&(
             <Login/>)}
             <Modal/> 
+            {showtheme&&(<Themes/>)}
             {showinfo &&<InfoArtist/>}
             
         </div>

@@ -33,12 +33,14 @@ const LoginFacebook=()=>{
                 picture: response.picture.data.url
             });
             const res1 = await axios.post(loginURL,JSON.stringify({token:res.data.access_token}), headers)
-            const token = res1.data.access;
-            localStorage.setItem('token',token);
             dispatch({
                 type:LOGIN_SUCCESS,
                 type:res1.data
             })
+            const token = res1.data.access;
+            localStorage.setItem('token',token);
+            const expiri=dayjs().add(59, 'minute')
+            localStorage.setItem("expirationDate", expiri);
             const search = window.location.search;
             const params = new URLSearchParams(search);
             if(params.get('next')!=null){

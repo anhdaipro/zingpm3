@@ -11,6 +11,7 @@ import "./css/sibar.css"
 import "./css/home.css"
 import "./css/user.css"
 import "./css/login.css"
+import "./css/theme.css"
 import "./css/responsive.css"
 import Homepage from './components/home/Homepage'
 import Discover from './components/discover/Discover'

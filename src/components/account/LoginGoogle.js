@@ -7,6 +7,7 @@ import axios from 'axios';
 import { gapi } from "gapi-script";
 import { LOGIN_FAIL, LOGIN_SUCCESS } from '../../actions/types';
 import { generateString } from '../../constants';
+import dayjs from 'dayjs';
 const LoginGoogle=(props)=>{
     const {googleLogin,login}=props
     const dispatch = useDispatch()
@@ -41,7 +42,8 @@ const LoginGoogle=(props)=>{
             })    
             const token = response.data.access;
             localStorage.setItem('token',token);
-            localStorage.setItem("expirationDate", response.data.access_expires);
+            const expiri=dayjs().add(59, 'minute')
+            localStorage.setItem("expirationDate", expiri);
             const search = window.location.search;
             const params = new URLSearchParams(search);
             if(params.get('next')!=null){

@@ -10,8 +10,8 @@ const Newsongs=()=>{
 
     useEffect(()=>{
         ( async ()=>{
-            const res=await axios.get(`${newsongURL}`,headers)
-        setListnewsong(res.data)
+            const res=await axios.get(`${newsongURL}`,headers())
+            setListnewsong(res.data)
         })()
         
     },[])

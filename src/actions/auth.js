@@ -22,6 +22,7 @@ import {
     GET_THREAD_FAIL,
     UPDATE_NOTIFI_SUCCESS,
     REQUEST_LOGIN,
+    UPDATE_THEME,
     
 } from './types';
 
@@ -124,10 +125,8 @@ export const loginotp = (user_id) => async dispatch =>{
             payload: res.data
             
         });
-        const expirationDate = new Date().getTime() + 1800 * 1000
-        localStorage.setItem("expirationDate", expirationDate);
-        const token = res.data.access;
-        localStorage.setItem('token',token);
+        localStorage.setItem("expirationDate", res.data.access_expires);
+        localStorage.setItem('token',res.data.access);
        
     } catch (err) {
         dispatch({
@@ -201,8 +200,10 @@ export const login = (username, password) => async dispatch => {
 };
 
 export const checkAuthenticated = () => async dispatch => {
+
     try {
-        const res = await axios.get(userinfoURL,{ 'headers': { Authorization:`JWT ${localStorage.token}` }})
+        const token=localStorage.getItem('token')
+        const res = await axios.get(userinfoURL,{ 'headers': { Authorization:`JWT ${token}` }})
         dispatch({
             payload: {...res.data},
             type: AUTHENTICATED_SUCCESS
@@ -242,7 +243,12 @@ export const setrequestlogin= (data)=>  {
         type:REQUEST_LOGIN
     }
 }
-
+export const settheme=(data)=>{
+    return{
+        payload:data,
+        type:UPDATE_THEME
+    }
+}
 export const reset_password = (email) => async dispatch => {
     const config = {
         headers: {
@@ -288,13 +294,21 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
     }
 };
 export const expirationDate = localStorage.getItem("expirationDate")
-export const token=localStorage.getItem('token')
-export const expiry=new Date(expirationDate).getTime() - new Date().getTime()
-export const valid=token && expirationDate && expiry>0
-export const headers={'headers':token && expirationDate && expiry>0?{ Authorization:`JWT ${localStorage.token}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
+export const token=()=>{
+    return localStorage.getItem('token')
+}
+
+export const expiry=()=>{
+  return  new Date(expirationDate).getTime() - new Date().getTime()
+}
+console.log(expiry())
+export const valid=token() && expirationDate
+export const headers=()=>{
+  return {'headers':token() && expirationDate && expiry()>0?{ Authorization:`JWT ${token()}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
+}
 export const logout = () => dispatch => {
     localStorage.removeItem('token')
-    
+    localStorage.removeItem('expirationDate')
     dispatch({
         type: LOGOUT
     });
@@ -310,7 +324,7 @@ export const updateprofile =(data) =>{
         let form=new FormData()
         form.append('participants',user_id)
         form.append('participants',profile_id)
-        const res =await axios.post(`${listThreadlURL}`, form,headers);
+        const res =await axios.post(`${listThreadlURL}`, form,headers());
 
         dispatch({
             type: CREATE_THREAD_SUCCESS,
@@ -331,7 +345,7 @@ export const  get_thread=(getlist,seen,thread_id)=> async dispatch=>{
         search_params.append('thread_id',thread_id)
         url.search = search_params.toString();
         let new_url = url.toString();
-        const res =await axios.get(new_url,headers)
+        const res =await axios.get(new_url,headers())
         dispatch({
             type: GET_THREAD_SUCCESS,
             payload:res.data

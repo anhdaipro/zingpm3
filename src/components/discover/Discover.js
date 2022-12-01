@@ -28,7 +28,6 @@ const now=dayjs()
     const hourday= Array(hournow).fill().map((_,i)=>{
         return dayjs().set('hour',i+1).format("DD-MM-YYYY HH")
     })
-    console.log(hourday)
     const yesterday=dayjs().subtract(24, 'hour')
     const houryesterday= [...Array(24 - hournow + 1).keys()].map(x => {
         return yesterday.set('hour',x + hournow).format("DD-MM-YYYY HH")
@@ -77,7 +76,7 @@ const Discover=()=>{
     useEffect(() => {
         ( async ()=>{
             
-            const res1 = await axios.get(zingchartURL,headers)
+            const res1 = await axios.get(zingchartURL,headers())
             setTopSongs(res1.data.topsongs)
             
             const data= res1.data.dashboard.map(item=>{
@@ -86,7 +85,7 @@ const Discover=()=>{
             setLabels(hours.map(item=>{
                 return `${item.slice(-2)}:00`
             }))
-            console.log(hours)
+            
             const datatop1 = data.filter(item=>item.song==res1.data.topsongs[0].id)
             const top1=hours.map((item,i)=>{
                 if(datatop1.find(itemchoice=>itemchoice.day==item)){
@@ -108,11 +107,11 @@ const Discover=()=>{
                 }
                 return 0
             })
-            console.log(datatop1)
+          
             setTop1(top1)
             setTop2(top2)
             setTop3(top3)
-            const res2 = await axios.get(listartistURL,headers)
+            const res2 = await axios.get(listartistURL,headers())
             const data2=res2.data
             setArtists(data2)
         })()
@@ -129,15 +128,7 @@ const Discover=()=>{
             clearInterval(timer.current)
         }
     }, [sliderIndex])
-    const sliders=useMemo(()=>{
-        const images=[...listimages]
-        const value=images.slice(sliderIndex,sliderIndex+4)
-        console.log(images.length-sliderIndex)
-        const valuebefore=sliderIndex>images.length-4?images.slice(0,4-images.length-sliderIndex):[]
-        console.log(valuebefore)
-        return sliderIndex<images.length-4?value:[...value,...valuebefore]
-    },[sliderIndex])
-    console.log(sliders)
+    
     return(
         
             <div className="body-wrapper">

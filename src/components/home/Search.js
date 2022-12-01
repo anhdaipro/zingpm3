@@ -110,7 +110,8 @@ display:flex;
 const Artist=(props)=>{
     const {item,artists,setartists}=props
     const setfollow=async (name,value)=>{
-        const res =await axios.post(`${artistURL}/${item.id}`,JSON.stringify({action:'follow'}),headers)
+        
+        const res =await axios.post(`${artistURL}/${item.id}`,JSON.stringify({action:'follow'}),headers())
         const dataupdate=artists.map(artist=>{
             if(artist.id===item.id){
                 return({...item,[name]:value})
@@ -156,14 +157,11 @@ const Search=()=>{
     const [params, setSearchParams] = useSearchParams();
     useEffect(() => {
         ( async () =>{
-            const res= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers)
+            const res= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers())
             const  data=res.data
-            
-            setSongs(current=>data.songs)
-           
-            
-            setArtists(current=>data.artists)
-            setPlaylists(current=>data.playlists)
+            setSongs(data.songs)
+            setArtists(data.artists)
+            setPlaylists(data.playlists)
             
         })()
         

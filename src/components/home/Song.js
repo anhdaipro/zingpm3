@@ -8,7 +8,7 @@ import Actionsong from "./Actionsong"
 import {useDispatch,useSelector} from "react-redux"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import  { Likedsong, PlaySong,Showlyric,Songinfo } from "../Song"
+import  { Likedsong, PlaySong,Showlyric,Showmv,Songinfo } from "../Song"
 
 const Song=(props)=>{
     const datasongs=useSelector(state => state.player.songs)
@@ -35,6 +35,11 @@ const Song=(props)=>{
             
             
             <div className={`${show?'':'hiden'} flex-center`}>
+                {song.video &&(
+                    <Showmv
+                        song={song}
+                    />
+                )}
                 {song.hasLyric&&(
                     <Showlyric
                     song={song}

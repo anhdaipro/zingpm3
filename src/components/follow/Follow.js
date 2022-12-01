@@ -6,7 +6,7 @@ import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, l
 import {setsong, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"
-import { headers, setrequestlogin,valid } from "../../actions/auth"
+import { expirationDate, headers, setrequestlogin,valid } from "../../actions/auth"
 import dayjs from "dayjs"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { timeago } from "../../constants"
@@ -57,6 +57,7 @@ const Follow=()=>{
     const timer=useRef()
     const player=useSelector(state=>state.player)
     const {choice}=useParams()
+    const user=useSelector(state=>state.auth.user)
     const [artists,setArtists]=useState([])
     const {posts,songs}=player
     const dispatch = useDispatch()
@@ -72,10 +73,10 @@ const Follow=()=>{
     useEffect(() => {
         ( async () =>{
             const url=choice?`${listartistURL}?choice=${country_choice.find(item=>item.url==choice).value}`:`${listartistURL}`
-            const res = await axios.get(url,headers)
+            const res = await axios.get(url,headers())
             const data=res.data
             setArtists(data)
-            const res1=await axios.get(listpostURL,headers)
+            const res1=await axios.get(listpostURL,headers())
             dispatch(updateposts(res1.data))
         })()
     }, [choice,dispatch])
@@ -83,15 +84,16 @@ const Follow=()=>{
     console.log(choice)
     const slideRef=useRef()
     const setfollow=useCallback( async (itemchoice,name,value)=>{
-        if(valid){
-        const res = await axios.post(`${artistURL}${itemchoice.artist.slug}`,JSON.stringify({action:'follow'}),headers)
-        const dataposts=posts.map(item=>{
-            if(item.artist.id===itemchoice.artist.id){
-                return({...item,artist:{...item.artist,[name]:value}})
-            }
-            return({...item})
-        })
-        dispatch(updateposts(dataposts))
+        
+        if(user){
+            const res = await axios.post(`${artistURL}${itemchoice.artist.slug}`,JSON.stringify({action:'follow'}),headers())
+            const dataposts=posts.map(item=>{
+                if(item.artist.id===itemchoice.artist.id){
+                    return({...item,artist:{...item.artist,[name]:value}})
+                }
+                return({...item})
+            })
+            dispatch(updateposts(dataposts))
     }
     else{
         dispatch(setrequestlogin(true))
@@ -99,8 +101,9 @@ const Follow=()=>{
     },[posts,dispatch])
 
     const setposts= useCallback(async (itemchoice,name,value)=>{
-        if(valid){
-        const res= await axios.post(`${postURL}/${itemchoice.id}`,JSON.stringify({'action':'like'}),headers)
+       
+        if(user){
+        const res= await axios.post(`${postURL}/${itemchoice.id}`,JSON.stringify({'action':'like'}),headers())
         const dataposts=posts.map(item=>{
             if(item.id===itemchoice.id){
                 return({...item,...res.data})
@@ -114,7 +117,7 @@ const Follow=()=>{
     }
     },[posts,dispatch])
     const showcomment= async (itemchoice)=>{
-        const res= await axios.get(`${listcommentURL}?post_id=${itemchoice.id}`,headers)
+        const res= await axios.get(`${listcommentURL}?post_id=${itemchoice.id}`,headers())
         dispatch(setshowpost({data:itemchoice,comments:res.data.comments,count:res.data.count,showpost:true}))
     }
     return (

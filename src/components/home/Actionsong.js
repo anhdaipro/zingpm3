@@ -4,7 +4,7 @@ import React, {useState,useEffect,useCallback,useRef,memo, useMemo,useId} from '
 import PropTypes from 'prop-types';
 import {showmodal,actionuser,updatesongs,setsong} from "../../actions/player"
 import {useDispatch, useSelector} from "react-redux"
-import { valid,headers } from '../../actions/auth';
+import { valid,headers, expirationDate } from '../../actions/auth';
 import { listcommentURL, listplaylistURL,playlistURL,songURL } from '../../urls';
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +13,7 @@ export const Listaction=(props)=>{
     const [showplaylist,setShowplaylist]=useState(false)
     const player=useSelector(state=>state.player)
     const {playlists,song,left,right,top,bottom,dotref,showaction}=player
-    const datasongs=useSelector(state=>state.player.songs)
+    const user=useSelector(state=>state.auth.user)
     const dispatch = useDispatch()
     const songid=useId()
     console.log(songid)
@@ -51,12 +51,13 @@ export const Listaction=(props)=>{
         dispatch(setsong({showaction:false}))
     }
     const showcomment= async ()=>{
-        const res= await axios.get(`${listcommentURL}?song_id=${song.id}`,headers)
+        const res= await axios.get(`${listcommentURL}?song_id=${song.id}`,headers())
         dispatch(showmodal(true))
         dispatch(actionuser({data:{data:{...res.data,...song},title:'Bình luận'},action:'showcomment'}))
     }
     const addplaylist=()=>{
-        if(valid){
+        const now =new Date()
+        if(user){
         dispatch(setsong({showaction:false}))
         dispatch(showmodal(true))
         dispatch(actionuser({data:{data:song,title:'Tạo playlist mới'},action:'addplaylist'}))
@@ -64,7 +65,7 @@ export const Listaction=(props)=>{
     }
     const addsongtoplaylist= async (itemchoice)=>{
         const data={songs:[song.id],action:'addsong'}
-        const res=  await axios.post(`${playlistURL}/${itemchoice.id}`,JSON.stringify(data),headers)
+        const res=  await axios.post(`${playlistURL}/${itemchoice.id}`,JSON.stringify(data),headers())
         toast(<span>Đã thêm bài hát '{song.name}' vào playlist thành công</span>,{  
             position:toast.POSITION.BOTTOM_LEFT,
             className:'toast-message',
@@ -241,7 +242,7 @@ const Actionsong=(props)=>{
             const position={left:left<400?left+width:left-280,top:top<400?top:null,bottom:top>400?0:null}
             dispatch(setsong({dotref:dotref,showaction:song_id==songid?!showaction:true,song_id:songid,song:song,...position}))
             if(!showaction && !song.user_id){
-                axios.get(`${songURL}/${song.id}`,headers)
+                axios.get(`${songURL}/${song.id}`,headers())
                 .then(res=>{
                     const data=datasongs.map(item=>{
                     if(item.id===song.id){

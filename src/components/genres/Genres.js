@@ -32,7 +32,7 @@ const Genres=()=>{
     const [genres,setGenres]=useState([])
     useEffect(() => {
         ( async ()=>{
-            const res = await axios.get(`${genresURL}`,headers)
+            const res = await axios.get(`${genresURL}`)
                 const data=res.data.map(item=>{
                 return({...item,checked:false})
             })

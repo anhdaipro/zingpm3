@@ -29,7 +29,7 @@ const PlaylistDetail=()=>{
     const dispatch = useDispatch()
     useEffect(() => {
         ( async () =>{
-            const res = await axios.get(`${playlistURL}/${id}`,headers)
+            const res = await axios.get(`${playlistURL}/${id}`,headers())
             const datasongs=res.data.songs
             setSongs(datasongs)
             setPlaylist({...res.data})
@@ -53,14 +53,14 @@ const PlaylistDetail=()=>{
                                     </div>
                                     <div className="zm-actions-container">
                                         <div className="zm-box zm-actions playlist-actions">
-                                            <button className="zm-btn zm-tooltip-btn animation-like is-hidden active is-hover-circle button" tabindex="0">
+                                            <button className="zm-btn zm-tooltip-btn animation-like is-hidden active is-hover-circle button" tabIndex="0">
                                                 <i className="icon ic-like"></i>
                                                 <i className="icon ic-like-full"></i>
                                             </button>
-                                            <button className="zm-btn action-play  button" tabindex="0">
+                                            <button className="zm-btn action-play  button" tabIndex="0">
                                                 <i className={`icon action-play ${play?'ic-gif-playing-white':'ic-svg-play-circle'} `}></i>
                                             </button>
-                                            <button className="zm-btn zm-tooltip-btn is-hidden is-hover-circle button" tabindex="0">
+                                            <button className="zm-btn zm-tooltip-btn is-hidden is-hover-circle button" tabIndex="0">
                                                 <i className="icon ic-more"></i>
                                             </button>
                                         </div>

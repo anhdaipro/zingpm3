@@ -45,7 +45,7 @@ const Searchcontent=()=>{
     const fetchkeyword= async (value)=>{
         try{
             if(value.trim()!=''){
-            const res = await axios.get(`${searchURL}?keyword=${value}`,headers)
+            const res = await axios.get(`${searchURL}?keyword=${value}`,headers())
             const data=res.data
             setArtists(data.artists)
             setSongs(data.songs)

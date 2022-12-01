@@ -125,7 +125,7 @@ const Artist=()=>{
     useEffect(() => {
         ( async () =>{
             const url=choice?`${artistURL}/${slugartist}?choice=${choice}`:`${artistURL}/${slugartist}`
-            const res = await axios.get(url,headers)
+            const res = await axios.get(url,headers())
             const data=res.data
             const datasongs=data.songs
             setSongs(datasongs)

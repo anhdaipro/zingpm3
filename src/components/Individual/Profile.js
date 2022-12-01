@@ -131,7 +131,7 @@ export const FormProfile=()=>{
         let form=new FormData()
         form.append('avatar',file)
         form.append('name',name)
-        const res= await axios.post(profileURL,form,{headers:{ Authorization:`JWT ${token}`,'Content-Type': 'multipart/form-data'}})
+        const res= await axios.post(profileURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
         dispatch(showmodal(false))
         dispatch(updateprofile({avatar:avatar,name:name}))
     }
@@ -176,7 +176,7 @@ const Profile=()=>{
     const user=useSelector(state=>state.auth.user)
     useEffect(() => {
         ( async ()=>{
-            const res =await axios.get(profileURL,headers)
+            const res =await axios.get(profileURL,headers())
             dispatch(updateprofile({...res.data}))
         })()
         

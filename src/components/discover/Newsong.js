@@ -20,7 +20,7 @@ const Listnewsong=(props)=>{
     },[listnewsong])
     useEffect(()=>{
         ( async ()=>{
-            const res=await axios.get(`${newsongURL}?limit=true&filter=${choice}`,headers)
+            const res=await axios.get(`${newsongURL}?limit=true&filter=${choice}`,headers())
             setListnewsong(res.data)
         })()
         

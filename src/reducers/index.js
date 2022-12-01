@@ -5,4 +5,3 @@ import playerReducer from "./player"
 
 const rootReducer=combineReducers({auth:authReducer,player:playerReducer,mvplayer:mvplayerReducer})
 export default rootReducer
-console.log(rootReducer)

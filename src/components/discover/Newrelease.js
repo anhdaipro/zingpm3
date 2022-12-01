@@ -70,7 +70,7 @@ const Newrelease=()=>{
     const {playlists,currentIndex,play}=player
     useEffect(()=>{
         ( async ()=>{
-            const res=await axios.get(`${newsongURL}?choice=${choice}&filter=${params.get('filter')}`,headers)
+            const res=await axios.get(`${newsongURL}?choice=${choice}&filter=${params.get('filter')}`,headers())
         setSongs(res.data)
         })()
         

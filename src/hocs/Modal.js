@@ -10,6 +10,7 @@ import Continuteplayer from "../components/modal/Continuteplayer"
 import Addplaylist from "../components/modal/Addplaylist"
 import { FormProfile } from "../components/Individual/Profile"
 import Commentsong from "../components/modal/Commentsong"
+import Addfeed from "../components/modal/Addfeed"
 const Modal=()=>{
     const show = useSelector(state => state.player.show)
     const action=useSelector(state => state.player.action)
@@ -30,7 +31,8 @@ const Modal=()=>{
     
     const editlyric= async ()=>{
         if(lyrics){
-           const res= await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({action:'update',lyrics:lyrics}),headers)
+            
+           const res= await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({action:'update',lyrics:lyrics}),headers())
             dispatch(showmodal(false))
         }
     }
@@ -49,7 +51,7 @@ const Modal=()=>{
                         <p className="lyric-song">{data.data.lyrics}</p>:
                         <div className='emty-lyric'>Lyric đang được cập nhật</div>}</>:
                         <textarea placeholder="Nhập lời bài hát vào đây" spellCheck={false} onChange={e=>setLyrics(e.target.value)} value={lyrics} style={{width:'100%',height:'100%'}}></textarea>}
-                    </div>:action=='editprofile'?<FormProfile/>:action=='addplaylist'?
+                    </div>:action=='editprofile'?<FormProfile/>:action=='addfeed'?<Addfeed/>:action=='addplaylist'?
                     <Addplaylist/>:action==='showcomment'?<Commentsong/>:action=='timeplayer'?
                     <Timepicker/>:action=='continueplayer'?<Continuteplayer/>:<DeleteTimer/>}
                 </div>

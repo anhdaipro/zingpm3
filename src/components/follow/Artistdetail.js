@@ -8,7 +8,7 @@ const Artistdetail=()=>{
     
     useEffect(()=>{
         ( async () =>{
-           const res= await axios.get(newsongURL,headers)
+           const res= await axios.get(newsongURL,headers())
         })()
     },[])
     return(

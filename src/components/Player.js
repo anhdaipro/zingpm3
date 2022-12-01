@@ -8,8 +8,8 @@ import {setshowvideo} from "../actions/mv"
 import Actionsong from "./home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';    
-import { headers, setrequestlogin,valid } from "../actions/auth"
-import {Likedsong, Songinfo} from "./Song"
+import { expiry, headers, setrequestlogin,valid } from "../actions/auth"
+import {Likedsong, Showlyric, Showmv, Songinfo} from "./Song"
 import {debounce} from "lodash"
 import Slider from "./home/Slider"
 import { dataURLtoFile } from "../constants"
@@ -102,10 +102,8 @@ const Player=()=>{
     const {repeat,ramdom,onerepeat}=state
     const [dragvolume,setDragvolume]=useState(false)
     const navigate=useNavigate()
-    
     const [drag,setDrag]=useState({time:false,volume:false})
     const dispatch=useDispatch()
-    
     const percent=useMemo(()=>{
         const currentTime=time.seconds+time.minutes*60
         return duration?currentTime/duration:0
@@ -127,7 +125,7 @@ const Player=()=>{
             dispatch(setsong({duration:0,songs:datasongs,time:{seconds:0,minutes:0}})) 
         }
         else{
-            dispatch(setsong({duration:0}))
+            dispatch(setsong({duration:0,time:{seconds:0,minutes:0}}))
         }
     })()
     },[song.id])
@@ -139,7 +137,7 @@ const Player=()=>{
             dispatch(actionuser({data:{title:'Thời gian phát nhạc đã kết thúc, bạn có muốn tiếp tục phát bài hát này?'},action:'continueplayer'}))
         }
     }, [time_stop_player,dispatch])
-
+    
     useEffect(() => {
         if(localStorage.getItem('index')){
             dispatch(setsong({currentIndex:parseInt(localStorage.getItem('index'))}))
@@ -157,9 +155,7 @@ const Player=()=>{
         return () => window.removeEventListener('beforeunload', listener)
     },[currentIndex,time.seconds,time.minutes])
     
-    
     const forward=(e)=>{
-        
         if(ramdom){
             const indexchoice=randomIntFromInterval(currentIndex+1,songs.length-1)
             dispatch(setsong({change:true,play:true,currentIndex:currentIndex>=songs.length-1?0:indexchoice}))
@@ -171,8 +167,6 @@ const Player=()=>{
         }
     }
     
-    
-
     const timeref=useRef()
     
     const settimeaudio=(e)=>{
@@ -243,8 +237,6 @@ const Player=()=>{
         }
     },[drag.time,timeref,drag.volume,volumeref,duration])
 
-    
-    
     useEffect(()=>{
         const setdrag=(e)=>{
             setDrag(prev=>{return{...prev,time:false,volume:false}})
@@ -301,43 +293,26 @@ const Player=()=>{
         setVolume(percent)
     }
    
-    
     const timecurent=useMemo(()=>{
         return(time.minutes*60+time.seconds)*1000
     },[time])
     
     const scrollRef=useRef()
-    const setshowlyric= async ()=>{
-        if(!song.sentences){
-        const res = await axios.get(`${lyricsongURL}?id=${song.id}`,headers)
-        const data=songs.map(item=>{
-            if(item.id===song.id){
-                return({...item,...res.data})
-            }
-            return({...item,})
-        })
-        dispatch(setsong({songs:data,showoption:'lyric',showplaylist:false}))
-    }
-    else{
-        dispatch(setsong({showoption:'lyric',showplaylist:false}))
-    }
-    }
+    
     const [scroll,setScroll]=useState(false)
     const handleEndScroll = useMemo(() =>debounce(() => setScroll(false), 1000)
     ,[]);
+
     const handleScroll = e => {
         setScroll(true)
         handleEndScroll();
     };
     
     const sentencesshow=useMemo(() =>{
-        
-           
         const itemcurrent=song.sentences?song.sentences.findLast(item=>item.words[0].startTime<=timecurent):null
         return itemcurrent
         
     },[timecurent,song.sentences])
-    
     
     const listdisplay=()=>{
         const indexcurrent=sentencesshow?song.sentences.findIndex(item=>item.words[0].startTime==sentencesshow.words[0].startTime):0
@@ -352,8 +327,16 @@ const Player=()=>{
             </li>
         )
     }
+
     var elem=document.documentElement
-    const [fullscreem,setFullscreem]=useState(false)
+    function isVideoInFullscreen() {
+        if (document.fullscreenElement) {
+          return true;
+
+        }
+        return false;
+    }
+    
     function openFullscreen() {
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
@@ -364,8 +347,6 @@ const Player=()=>{
         }
     }
     
-    
-    
     function closeFullscreen() {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -375,24 +356,7 @@ const Player=()=>{
             document.msExitFullscreen();
         }
     }
-    const openvideo=async ()=>{
-        
-        if(song.mv){
-            dispatch(setshowvideo({showvideo:true,song:song,change:true,play:true,currentIndex:0}))
-            dispatch(setsong({play:false}))
-        }
-        else{
-            const res =await axios.get(`${videosongURL}?id=${song.video}`,headers)
-            const datasongs=songs.map(item=>{
-                if(item.id===song.id){
-                    return({...item,mv:res.data})
-                }
-                return({...item,})
-            })
-            dispatch(setsong({songs:datasongs,play:false}))
-            dispatch(setshowvideo({change:true,currentIndex:0,play:true,showvideo:true,song:{...song,mv:res.data}}))
-        }
-    }
+    
     const songid=useId()
     return(
         songs.length>0 &&(
@@ -420,12 +384,12 @@ const Player=()=>{
                             </div>
                             <div className="lyric-button-group flex-center">
                                 <div onClick={()=>{
-                                    if(fullscreem){
-                                        setFullscreem(false)
+                                    if(isVideoInFullscreen()){
+                                        
                                         closeFullscreen()
                                     }
                                     else{
-                                        setFullscreem(true)
+                                       
                                         openFullscreen()
                                     }
                                 }} className="icon-button" aria-label="Toàn màn hình">
@@ -550,7 +514,7 @@ const Player=()=>{
                                     </div>
                                     <div onClick={()=>{
                                             dispatch(setsong({change:true,play:!play}))
-                                            }} className="song-player-button play-icon">
+                                        }} className="song-player-button play-icon">
                                         {duration>0?<svg  stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                                             {
@@ -643,14 +607,12 @@ const Player=()=>{
                     
                     <div className="player-control-right">
                         <div className="music-control__right item-center">
-                            <button onClick={openvideo} disabled={song.video?false:true} className="icon-button">
-                                <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 1000 1000" enableBackground="new 0 0 1000 1000" xmlSpace="preserve">
-                                    <g><path d="M508.4,347.9c-1,0-1.9,0.2-2.9,0.3c-0.1,0-0.2,0-0.3,0c-1,0.1-1.9,0.2-2.8,0.5c-7.3,1.3-14,5.5-18.1,12.3L373.2,572L262.1,360.5c-6-10.1-17.9-14.6-28.9-12.1c-0.2,0-0.3,0.1-0.5,0.1c-1.1,0.3-2.1,0.6-3.1,1c-1,0.4-2,0.8-3,1.3c-0.2,0.1-0.4,0.2-0.6,0.3c-0.1,0-0.1,0.1-0.2,0.2c-3,1.7-5.6,3.9-7.7,6.6c0,0,0,0,0,0.1c-2,2.5-3.4,5.4-4.3,8.6c-0.1,0.2-0.1,0.3-0.2,0.5c-0.5,2-0.9,4.1-0.9,6.3v253.4c0,14,11.4,25.3,25.3,25.3c14,0,25.3-11.4,25.3-25.3V476.1l85.8,163.4c6.3,10.7,19.3,15.2,30.9,11.7c7-1.5,13.3-5.7,17.2-12.1l85.8-162.8v150.6c0,14,11.4,25.3,25.3,25.3c14,0,25.3-11.4,25.3-25.3V373.3C533.8,359.3,522.4,347.9,508.4,347.9z"/><path d="M789.5,350.2c-12.6-5.8-27.4,0-33,13l-79,195.1l-79-195.1c-5.6-13-20.4-18.8-33-13c-12.6,5.8-18.2,21.1-12.6,34.1L653,631.7c1.6,7.7,6.3,14.6,13.8,18.1c3.5,1.6,7.1,2.2,10.7,2.2c3.6,0.1,7.2-0.6,10.7-2.2c7.5-3.5,12.1-10.4,13.8-18.1L802,384.3C807.7,371.3,802.1,356,789.5,350.2z"/><path d="M787.2,60.7H212.8C100.8,60.7,10,151.5,10,263.4v473.1c0,112,90.8,202.8,202.8,202.8h574.5c112,0,202.8-90.8,202.8-202.8V263.5C990,151.5,899.2,60.7,787.2,60.7z M939.3,736.6c0,84-68.1,152.1-152.1,152.1H212.8c-84,0-152.1-68.1-152.1-152.1V263.5c0-84,68.1-152.1,152.1-152.1h574.5c84,0,152.1,68.1,152.1,152.1V736.6z"/></g>
-                                </svg>
-                            </button>
-                            <button disabled={song.hasLyric?false:true} onClick={()=>setshowlyric()} className="icon-button">
-                                <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M388.938 29.47c-23.008 0-46.153 9.4-62.688 25.405 5.74 46.14 21.326 75.594 43.75 94.28 22.25 18.543 52.078 26.88 87.75 28.345 13.432-16.07 21.188-37.085 21.188-58 0-23.467-9.75-47.063-26.344-63.656C436 39.25 412.404 29.47 388.938 29.47zm-76.282 42.374c-8.808 14.244-13.75 30.986-13.75 47.656 0 23.467 9.782 47.063 26.375 63.656 16.595 16.594 40.19 26.375 63.658 26.375 18.678 0 37.44-6.196 52.687-17.093-31.55-3.2-59.626-12.46-81.875-31-23.277-19.397-39.553-48.64-47.094-89.593zm-27.78 67.72l-64.47 83.78c2.898 19.6 10.458 35.1 22.094 46.187 11.692 11.142 27.714 18.118 48.594 19.626l79.312-65.28c-21.2-3.826-41.14-14.11-56.437-29.407-14.927-14.927-25.057-34.286-29.095-54.907zM300 201.468a8 8 0 0 1 .03 0 8 8 0 0 1 .533 0 8 8 0 0 1 5.875 13.374l-34.313 38.78a8.004 8.004 0 1 1-12-10.593l34.313-38.78a8 8 0 0 1 5.562-2.78zM207.594 240L103 375.906c3.487 13.327 7.326 20.944 12.5 26.03 5.03 4.948 12.386 8.46 23.563 12.408l135.312-111.438c-17.067-3.61-31.595-11.003-42.906-21.78-11.346-10.81-19.323-24.827-23.876-41.126zM95.97 402.375c-9.12 5.382-17.37 14.08-23.126 24.406-9.656 17.317-11.52 37.236-2.25 50.47 6.665 4.337 10.566 4.81 13.844 4.344 1.794-.256 3.618-.954 5.624-1.875-3.18-9.575-6.3-20.93-2.5-33.314 3.03-9.87 10.323-19.044 23.47-27.5-2.406-1.65-4.644-3.49-6.75-5.562-3.217-3.163-5.94-6.78-8.313-10.97z"></path></svg>
-                            </button>
+                            <Showmv
+                            song={song}
+                            />
+                            <Showlyric
+                            song={song}
+                            />
                             
                             <button className="icon-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none">

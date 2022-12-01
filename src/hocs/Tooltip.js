@@ -37,7 +37,7 @@ export default class Tooltip extends React.Component {
 const Comment=(props)=>{
   const {item,setcomments}=props
   const setlikecomment= async (itemchoice,name)=>{
-      const res = await axios.post(`${commentURL}/${itemchoice.id}`,JSON.stringify({action:name}),headers)
+      const res = await axios.post(`${commentURL}/${itemchoice.id}`,JSON.stringify({action:name}),headers())
       setcomments(current=>current.map(item=>{
           if(itemchoice.id===item.id){
               return({...item,...res.data})

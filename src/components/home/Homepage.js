@@ -9,7 +9,6 @@ import {useDispatch,useSelector} from "react-redux"
 import Song from "./Song"
 const now=dayjs()
     const hournow=now.get('hour')-1>0?now.get('hour'):0
-    console.log(hournow)
     const hourday= Array(hournow).fill().map((_,i)=>{
         return dayjs().set('hour',i+1).format("DD-MM-YYYY HH")
     })
@@ -34,8 +33,8 @@ const Homepage=()=>{
     
     useEffect(() => {
         ( async ()=>{
-            const res = await axios.get(zingchartURL,headers)
-            console.log(res.data)
+            const res = await axios.get(zingchartURL,headers())
+            
             setSongs(res.data.topsongs)
             const data= res.data.dashboard.map(item=>{
               return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})

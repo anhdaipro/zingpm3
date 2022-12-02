@@ -181,7 +181,7 @@ const Video=(props)=>{
             return({...item,})
         })
         dispatch(setsong({songs:datasongs,play:false}))
-        dispatch(setshowvideo({showvideo:true,song:{...song,mv:res.data}}))
+        dispatch(setshowvideo({time:{seconds:0,minutes:0},play:true,showvideo:true,song:{...song,mv:res.data}}))
     }
     return(
         <Item className="item">

@@ -28,6 +28,7 @@ import Search from './components/home/Search'
 import Newrelease from './components/discover/Newrelease'
 import Artistdetail from './components/follow/Artistdetail'
 import Listmv from './components/home/Listmv'
+import Radio from './components/radio.js/Radio'
 const App=()=>{ 
   return(
     <Provider store={store}>
@@ -43,7 +44,7 @@ const App=()=>{
                 <Route exact path="/" element={<Discover/>}/> 
                 <Route exact path="hub" element={<Genres/>}/> 
                 <Route exact path="album/:slug" element={<Detailgenre/>}/>
-                
+                <Route exact path="liveradio" element={<Radio/>}/>
                 <Route path=":slugartist" element={<Artist/>}>
                   <Route path=":choice"/>    
                 </Route>   

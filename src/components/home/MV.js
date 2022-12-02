@@ -456,7 +456,6 @@ const MV=()=>{
         }
     }
     
-    
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
     const settimeshow=(e)=>{
@@ -770,7 +769,7 @@ const MV=()=>{
                                                     {!play?<path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"></path>:<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"></path>}
                                                 </svg>}
                                             </button>
-                                            <div  className="controls-wrapper">
+                                            <div onClick={e=>e.stopPropagation()} className="controls-wrapper">
                                                 <div  className="song-player-slider mb-8 item-center">
                                                     <Contentprogess 
                                                         onMouseMove={(e)=>settimeshow(e)} 

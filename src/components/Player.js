@@ -332,7 +332,6 @@ const Player=()=>{
     function isVideoInFullscreen() {
         if (document.fullscreenElement) {
           return true;
-
         }
         return false;
     }

@@ -26,7 +26,7 @@ width:4px
     display:none
 }
 .main-container{
-margin-left:70px !important
+margin-left:70px !important;
 }
 .sideNav .sibar-add-playlist,.sideNav .sidebar__library-center{
     display:none !important

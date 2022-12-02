@@ -36,7 +36,7 @@ const Navbar=()=>{
                     let image = canvas.toDataURL("image/png");
                     let file_preview = dataURLtoFile(image,'dbc9a-rg53.png');
                     let form=new FormData()
-                    form.append('name',file.name.slice(-12))
+                    form.append('name',file.name.slice(-50,-6))
                     form.append('file',file)
                     form.append('file_preview',file_preview)
                     form.append('duration',video.duration)

@@ -598,7 +598,7 @@ cursor:pointer
 }
 }
 @media screen and (max-width: 1024px){
-.is-widescreen-4:last-child {
+.is-widescreen-4:nth-child(3) {
     display: none;
 }
 }

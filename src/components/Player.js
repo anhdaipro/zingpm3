@@ -15,6 +15,7 @@ import Slider from "./home/Slider"
 import { dataURLtoFile } from "../constants"
 import { useNavigate } from "react-router"
 import VideoPlayer from "./home/Media"
+import dayjs from "dayjs"
 const Dot=styled.div`
 heigth:100%;
 width:1px;
@@ -86,12 +87,13 @@ align-items:center
 const  randomIntFromInterval=(min, max)=> { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
-const now=new Date()
+
 const listitems=[
 {name:'Playlists',value:'playlists'},
 {name:'Karaoke',value:'karaoke'},
 {name:'Lyric',value:'lyric'},
 ]
+
 const Player=()=>{
     const player= useSelector(state => state.player)
     const {songs,play,view,time_stop_player,currentIndex,time,change,showoption,loading,duration}=player
@@ -107,17 +109,19 @@ const Player=()=>{
     const percent=useMemo(()=>{
         const currentTime=time.seconds+time.minutes*60
         return duration?currentTime/duration:0
-    },[time.seconds,time.minutes])
+    },[time.seconds,time.minutes,duration])
     const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
     const index=change?currentIndex:localStorage.getItem('index')?parseInt(localStorage.getItem('index')):0
     const song=songs[index]
+    const now=useMemo(() =>dayjs(),)
+    console.log(now)
     useEffect(()=>{
         ( async ()=>{ 
             if(!song.file){
             dispatch((setsong({loading:false})))
             const res = await axios.get(`${streamingURL}/${song.id}`)
             const datasongs=songs.map(item=>{
-                if(item.id===songs[currentIndex].id){
+                if(item.id===song.id){
                     return({...res.data,...item})
                 }
                 return({...item})
@@ -129,20 +133,21 @@ const Player=()=>{
         }
     })()
     },[song.id])
-    
+   console.log(time_stop_player)
     useEffect(() => {
-        if(time_stop_player && now==time_stop_player){
+        if(time_stop_player && now().isAfter(time_stop_player)){
+            console.log('oj')
             dispatch(setsong({change:true,play:false}))
             dispatch(showmodal(true))
-            dispatch(actionuser({data:{title:'Thời gian phát nhạc đã kết thúc, bạn có muốn tiếp tục phát bài hát này?'},action:'continueplayer'}))
+            dispatch(actionuser({data:{data:song,title:'Thời gian phát nhạc đã kết thúc, bạn có muốn tiếp tục phát bài hát này?'},action:'continueplayer'}))
         }
-    }, [time_stop_player,dispatch])
+    }, [time_stop_player,dispatch,now])
     
     useEffect(() => {
         if(localStorage.getItem('index')){
             dispatch(setsong({currentIndex:parseInt(localStorage.getItem('index'))}))
         }
-    }, [])
+    }, [dispatch])
     const audioref=useRef()
     useEffect(()=>{
         const listener=(event)=>{
@@ -159,6 +164,9 @@ const Player=()=>{
         if(ramdom){
             const indexchoice=randomIntFromInterval(currentIndex+1,songs.length-1)
             dispatch(setsong({change:true,play:true,currentIndex:currentIndex>=songs.length-1?0:indexchoice}))
+        }
+        else if(repeat){
+            dispatch(setsong({change:true,play:true,currentIndex:currentIndex}))
         }
         else{
             const indexchoice=currentIndex+1>songs.length-1?0:currentIndex+1

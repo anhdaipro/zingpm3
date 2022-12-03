@@ -9,6 +9,7 @@ import axios from "axios"
 import PropTypes from 'prop-types';
 import { useParams } from "react-router"
 import VideoPlayer from "./Media"
+import { dataURLtoFile } from "../../constants"
 
 export const Item=styled.div`
     position: relative;
@@ -296,6 +297,16 @@ height:20px;
 &:hover .--z--bar-fill-load{
     height:4px
 };
+.canvas-preview{
+    position:absolute;
+    color: #f7f7f7;
+    width:100px;
+    background-color: rgba(0,0,0,0.6);
+    transform:translateX(-50%);
+    height:72px;
+    border-radius: 0.2em;
+    top: -94px;
+};
 .seek-time{
     position:absolute;
     color: #f7f7f7;
@@ -305,7 +316,7 @@ height:20px;
     padding: 0.2em 0.5em;
     font-size: 1.1em;
     white-space: nowrap;
-    top: -1.9em;
+    top: -20px;
 };
 &:hover .progress{
     height: 4px;
@@ -422,6 +433,7 @@ const MV=()=>{
     const [volume,setVolume]=useState(0.5)
     const [percentload,setPercentload]=useState(0)
     const timeref=useRef()
+    const [urlvideo,seturlvideo]=useState()
     const [state,setState]=useState({width:document.documentElement.clientWidth})
     const timer=useRef()
     const [ramdom,setRamdom]=useState(false)
@@ -431,6 +443,7 @@ const MV=()=>{
         return duration?currentTime*100/duration:0
     },[time.seconds,time.minutes,duration])
     
+        
     useEffect(()=>{
         (async()=>{
             const res = await axios.get(listmvURL,headers())
@@ -442,7 +455,14 @@ const MV=()=>{
         })()  
     },[slug,song.id])
     const mv=listmv.length>0?listmv[currentIndex]:song
-   
+    useEffect(() => {
+        const url=mv.mv.file
+        axios({url,responseType: 'blob',})
+        .then((response) => {
+            const urlObject = window.URL.createObjectURL(new Blob([response.data]));
+            seturlvideo(urlObject)
+        });
+    }, [mv.id])
     const videoRef=useRef()
     const forward=(e)=>{
         e.stopPropagation()
@@ -455,9 +475,11 @@ const MV=()=>{
             dispatch(setshowvideo({play:true,currentIndex:indexchoice}))
         }
     }
-    
+    console.log(urlvideo)
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
+    const canvasRef=useRef()
+    const [image,setImage]=useState()
     const settimeshow=(e)=>{
         e.stopPropagation()
         setShowtime(true)
@@ -467,6 +489,7 @@ const MV=()=>{
         const percent=(clientX-left)/width
         const times=percent*duration
         setTimeshow(times)
+        
     }
     const settimeaudio=(e)=>{
         e.stopPropagation() 
@@ -642,6 +665,7 @@ const MV=()=>{
                             <canvas className="react-blur-canvas" width="735" height="657" ></canvas>
                         </div>
                     </div>
+                    
                     <Videocontent  className={`video-container ${isVideoInFullscreen()?'video-fullcreem':''}`}>
                         <div className={`${isVideoInFullscreen()?'fullcreem':''}`}>
                             <div className="video-header">
@@ -721,6 +745,7 @@ const MV=()=>{
                                             }}
                                              className={`z--player ${isVideoInFullscreen()?'player-full-screem':''}`} data-player="" tabIndex="1">
                                             <VideoPlayer setsong={setshowvideo} url={videosongURL} player={mvplayer} mediaElement={videoRef} volume={volume}>
+                                            <svg class="iqp-icon iqp-icon-fullscreen" aria-hidden="true"> <use class="iqp-svg-symbol iqp-svg-fullscreen1" xlinkHref="#iqp-svg-fullscreen1-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen2" xlinkHref="#iqp-svg-fullscreen2-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen3" xlinkHref="#iqp-svg-fullscreen3-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen4" XlinkHref="https://www.iq.com/iqp-svg-fullscreen4-g"></use> </svg>
                                             <video
                                             
                                              playsinline 
@@ -755,7 +780,7 @@ const MV=()=>{
                                                 }}             
                                             onLoadedData={(e)=>{
                                                 dispatch(setshowvideo({duration:videoRef.current.duration}))                       
-                                            }} 
+                                            }} s
                                             ref={videoRef} preload="auto" src={mv.mv.file} muted={muted}></video>
                                             </VideoPlayer>
                                             <button className={percent>percentload?'loading-video':'playpause-fadeout'} type="button" style={{display: `${percent>=percentload||animation?'flex':'none'}`}}>
@@ -770,7 +795,7 @@ const MV=()=>{
                                                 </svg>}
                                             </button>
                                             <div onClick={e=>e.stopPropagation()} className="controls-wrapper">
-                                                <div  className="song-player-slider mb-8 item-center">
+                                                <div  className="song-player-slider item-center">
                                                     <Contentprogess 
                                                         onMouseMove={(e)=>settimeshow(e)} 
                                                         onMouseLeave={()=>setShowtime(false)}
@@ -788,6 +813,7 @@ const MV=()=>{
                                                         <span className="bar --z--bar-fill-load" style={{backgroundColor: `rgb(184, 184, 184)`, width: `${percentload}%`}}></span>
                                                         <SeekBar className="seekbar" style={{width:`${percent}%`}}></SeekBar>
                                                         <span className={`seek-time ${showtime?'':'hiden'}`} style={{left: `${timeshow*100/duration}%`, marginLeft: `-19.5px`}}>{('0'+Math.floor((timeshow) / 60) % 60).slice(-2)}:{('0'+Math.floor(timeshow)  % 60).slice(-2)}</span>
+                                                        
                                                     </Contentprogess> 
                                                 </div>
                                                 <ControlVideo className="control-video flex">

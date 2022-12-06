@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useState,useEffect,useRef, useCallback } from "react"
 import { useSelector ,useDispatch} from "react-redux"
-import { headers } from "../../actions/auth"
+import { expiry, headers, setrequestlogin, token } from "../../actions/auth"
 import { updateposts,setshowpost } from "../../actions/player"
 import { commentURL,listcommentURL,artistURL, postURL } from "../../urls"
 import dayjs from "dayjs"
@@ -103,15 +103,21 @@ font-size: 13px;
 `
 export const Comment=(props)=>{
     const {item,setcomments,comments,url}=props
+    const dispatch = useDispatch()
     const setlikecomment= async (name)=>{
-        const res = await axios.post(`${commentURL}/${item.id}`,JSON.stringify({action:name}),headers())
-        const data=comments.map(comment=>{
-            if(item.id===comment.id){
-                return({...comment,...res.data})
-            }
-            return({...comment})
-        })
-        setcomments(data)
+        if(token() && expiry()>0){
+            const res = await axios.post(`${commentURL}/${item.id}`,JSON.stringify({action:name}),headers())
+            const data=comments.map(comment=>{
+                if(item.id===comment.id){
+                    return({...comment,...res.data})
+                }
+                return({...comment})
+            })
+            setcomments(data)
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     return(
         <div key={item.id}>
@@ -197,27 +203,35 @@ const DetailFeed=()=>{
     }
     
     const setfollow= async (name,value)=>{
-        
-        const res = await axios.post(`${artistURL}${item.artist.slug}`,JSON.stringify({action:'follow'}),headers())
-        const dataposts=posts.map(post=>{
-            if(item.artist.id===post.artist.id){
-                return({...post,artist:{...post.artist,[name]:value}})
-            }
-            return({...post})
-        })
-        setItem({...item,artist:{...item.artist,[name]:value}})
-        dispatch(updateposts(dataposts))
+        if(token() && expiry()>0){
+            const res = await axios.post(`${artistURL}${item.artist.slug}`,JSON.stringify({action:'follow'}),headers())
+            const dataposts=posts.map(post=>{
+                if(item.artist.id===post.artist.id){
+                    return({...post,artist:{...post.artist,[name]:value}})
+                }
+                return({...post})
+            })
+            setItem({...item,artist:{...item.artist,[name]:value}})
+            dispatch(updateposts(dataposts))
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
 
     const setcomments=useCallback((data)=>{
         setListcomment(data)
     },[])
     const submit= async () =>{
-        
+        if(token() && expiry()>0){
         const res = await axios.post(`${postURL}/${data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers())
         const commentupdate=[{...res.data},...listcomment]
         setKeyword('')
         setListcomment(commentupdate)
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     function autogrow(e) {
         e.target.style.height = "5px";

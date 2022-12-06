@@ -96,7 +96,7 @@ const listitems=[
 
 const Player=()=>{
     const player= useSelector(state => state.player)
-    const {songs,play,view,time_stop_player,currentIndex,time,change,showoption,loading,duration}=player
+    const {songs,play,view,time_stop_player,currentIndex,time,change,showoption,show,duration}=player
     const [muted,setMuted]=useState(false)
     const showsongs=useSelector(state => state.player.showplaylist)
     const [state,setState]=useState({ramdom:false,repeat:false,onerepeat:false})
@@ -113,8 +113,7 @@ const Player=()=>{
     const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
     const index=change?currentIndex:localStorage.getItem('index')?parseInt(localStorage.getItem('index')):0
     const song=songs[index]
-    const now=useMemo(() =>dayjs(),)
-    console.log(now)
+    
     useEffect(()=>{
         ( async ()=>{ 
             if(!song.file){
@@ -132,16 +131,17 @@ const Player=()=>{
             dispatch(setsong({duration:0,time:{seconds:0,minutes:0}}))
         }
     })()
-    },[song.id])
-   console.log(time_stop_player)
+    },[song,dispatch,songs])
+   
     useEffect(() => {
-        if(time_stop_player && now().isAfter(time_stop_player)){
+        const now=() =>dayjs()
+        if(time_stop_player && now().isAfter(time_stop_player) &&!show && play){
             console.log('oj')
             dispatch(setsong({change:true,play:false}))
             dispatch(showmodal(true))
             dispatch(actionuser({data:{data:song,title:'Thời gian phát nhạc đã kết thúc, bạn có muốn tiếp tục phát bài hát này?'},action:'continueplayer'}))
         }
-    }, [time_stop_player,dispatch,now])
+    }, [time_stop_player,dispatch,song,show,play,time])
     
     useEffect(() => {
         if(localStorage.getItem('index')){
@@ -158,7 +158,7 @@ const Player=()=>{
         }
         window.addEventListener('beforeunload', listener)
         return () => window.removeEventListener('beforeunload', listener)
-    },[currentIndex,time.seconds,time.minutes])
+    },[currentIndex,time.seconds,time.minutes,url,songs])
     
     const forward=(e)=>{
         if(ramdom){
@@ -243,7 +243,7 @@ const Player=()=>{
         return ()=>{
             document.removeEventListener('mousemove',setprogess)
         }
-    },[drag.time,timeref,drag.volume,volumeref,duration])
+    },[drag.time,timeref,drag.volume,volumeref,duration,dispatch])
 
     useEffect(()=>{
         const setdrag=(e)=>{

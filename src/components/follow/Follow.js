@@ -6,7 +6,7 @@ import { listartistURL,songURL,artistInfohURL,listpostURL, artistURL, postURL, l
 import {setsong, setshowpost, updateposts } from "../../actions/player"
 import { Slide } from "react-slideshow-image"
 import axios from "axios"
-import { expirationDate, headers, setrequestlogin,valid } from "../../actions/auth"
+import { expirationDate, headers, setrequestlogin,valid,token,expiry } from "../../actions/auth"
 import dayjs from "dayjs"
 import { Link, useLocation, useParams } from "react-router-dom"
 import { timeago } from "../../constants"
@@ -84,8 +84,7 @@ const Follow=()=>{
     console.log(choice)
     const slideRef=useRef()
     const setfollow=useCallback( async (itemchoice,name,value)=>{
-        
-        if(user){
+        if(token() && expiry()>0){
             const res = await axios.post(`${artistURL}${itemchoice.artist.slug}`,JSON.stringify({action:'follow'}),headers())
             const dataposts=posts.map(item=>{
                 if(item.artist.id===itemchoice.artist.id){
@@ -101,8 +100,7 @@ const Follow=()=>{
     },[posts,dispatch])
 
     const setposts= useCallback(async (itemchoice,name,value)=>{
-       
-        if(user){
+        if(token() && expiry()>0){
         const res= await axios.post(`${postURL}/${itemchoice.id}`,JSON.stringify({'action':'like'}),headers())
         const dataposts=posts.map(item=>{
             if(item.id===itemchoice.id){

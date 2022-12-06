@@ -71,7 +71,7 @@ const Login=()=>{
             });
             const expiri=dayjs().add(59,'minute')
             localStorage.setItem("expirationDate",expiri);
-            const token = res.data.access;
+            const token = res.data.token;
             localStorage.setItem('token',token);
             
             dispatch(setrequestlogin(false))

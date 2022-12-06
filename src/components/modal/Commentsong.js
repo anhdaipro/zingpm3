@@ -4,7 +4,7 @@ import {Comment} from "./DetailFeed"
 import styled from "styled-components"
 import axios from "axios"
 import { songURL } from "../../urls"
-import { headers } from "../../actions/auth"
+import { expiry, headers, setrequestlogin, token } from "../../actions/auth"
 import { showmodal } from "../../actions/player"
 const Commentcontent=styled.div`
 width:652px;
@@ -92,11 +92,15 @@ const Commentsong=()=>{
     },[])
     const [keyword,setKeyword]=useState('')
     const submit= async () =>{
-        
-        const res = await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers())
-        const commentupdate=[{...res.data},...listcomment]
-        setKeyword('')
-        setListcomment(commentupdate)
+        if(token() && expiry()>0){
+            const res = await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({body:keyword,action:'comment'}),headers())
+            const commentupdate=[{...res.data},...listcomment]
+            setKeyword('')
+            setListcomment(commentupdate)
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     function autogrow(e) {
         e.target.style.height = "5px";

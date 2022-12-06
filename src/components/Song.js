@@ -4,7 +4,7 @@ import axios from "axios"
 import { artistInfohURL,lyricsongURL,songURL,videosongURL } from "../urls"
 import {setsong,showinfoArtist,updatesongs} from "../actions/player"
 import {useSelector,useDispatch} from "react-redux"
-import { expirationDate, expiry, headers,setrequestlogin,valid } from "../actions/auth"
+import { expirationDate, expiry, headers,setrequestlogin,token,valid } from "../actions/auth"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { setshowvideo } from '../actions/mv'
@@ -79,13 +79,11 @@ const Songinfo=({song})=>{
   const setshowartist=async (name)=>{
     try{
       if(!showinfo ||(showinfo && data.id!=song.id)){
-        dispatch(showinfoArtist({showinfo:false,}))
-       
         const res = await axios.get(`${artistInfohURL}?name=${name}`,headers())
         const data=res.data
         const rects=artistRef.current.getBoundingClientRect();
         const {left,right,top,width}=rects
-        dispatch(showinfoArtist({showinfo:true,data:data,left:left>700?null:left,top:top,right:left<700?null:widthscreem-left-width}))
+        dispatch(showinfoArtist({showinfo:true,artistRef:artistRef,data:data,left:left>700?null:left,top:top,right:left<700?null:widthscreem-left-width}))
       }
     }
     catch(e){
@@ -97,9 +95,7 @@ const Songinfo=({song})=>{
     <>
       <h3 className="song-name">{song.name}</h3>
       <h4 className="song-artist"><span
-        ref={artistRef} onMouseLeave={()=>{
-        dispatch(showinfoArtist({showinfo:false}))
-      }} onMouseEnter={()=>{
+        ref={artistRef} onMouseEnter={()=>{
         if(song.artists.length>0){
         setshowartist(song.artist_name)}}} 
       href={`/${song.artist_name}`}>{song.artist_name}</span></h4>
@@ -202,7 +198,7 @@ const Likedsong=(props)=>{
   const setliked= async (name,value)=>{
     try{
       console.log(expiry())
-      if(valid){
+      if(token() && expiry()>0){
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers())
         if(songs){
           const dataupdate=songs.map(item=>{

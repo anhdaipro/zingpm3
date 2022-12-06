@@ -2,7 +2,7 @@ import { useSelector,useDispatch } from "react-redux"
 import { showmodal } from "../actions/player"
 import { useState,useEffect,useRef,useMemo } from "react"
 import { songURL,newplaylistURL } from "../urls"
-import { headers } from "../actions/auth"
+import { expiry, headers, setrequestlogin, token } from "../actions/auth"
 import axios from "axios"
 import Timepicker from "../components/modal/Timepicker"
 import DeleteTimer from "../components/modal/Deletetimer"
@@ -31,9 +31,13 @@ const Modal=()=>{
     
     const editlyric= async ()=>{
         if(lyrics){
-            
+           if(token() && expiry()>0){
            const res= await axios.post(`${songURL}/${data.data.id}`,JSON.stringify({action:'update',lyrics:lyrics}),headers())
             dispatch(showmodal(false))
+           }
+           else{
+               dispatch(setrequestlogin(true))
+           }
         }
     }
     

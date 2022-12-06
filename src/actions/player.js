@@ -9,48 +9,56 @@ export const setsong =(data)=>{
         type:PLAYER
     }
 }
+
 export const updatesongs=(data)=>{
     return{
         payload:data,
         type:UPDATE_SONGS
     }
 }
+
 export const showmodal=(show)=>{
     return{
         payload:show,
         type:SHOW_MODAL
     }
 }
+
 export const updateplaylists=(data)=>{
     return{
         payload:data,
         type:UPDATE_PLAYLISTS
     }
 }
+
 export const showactionplayer=(data)=>{
     return{
         payload:data,
         type:SHOW_ACTION
     }
 }
+
 export const showplaylist=(show)=>{
     return{
         payload:show,
         type:SHOW_PLAYLIST
     }
 }
+
 export const playerstop=(data)=>{
     return{
         payload:data,
         type:TIME_STOP_PLAYER
     }
 }
+
 export const actionuser=(data)=>{
     return{
         payload:data,
         type:ACTION_USER
     }
 }
+
 export const updateposts=(data)=>{
     return{
         payload:data,
@@ -64,6 +72,7 @@ export const setshowpost=(data)=>{
         type:SHOW_POST
     }
 }
+
 export const showinfoArtist=(data)=>{
     return{
         payload:data,

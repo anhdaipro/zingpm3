@@ -8,7 +8,7 @@ import axios from "axios"
 import styled from "styled-components"
 import { toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import { expirationDate, headers, setrequestlogin,valid } from "../../actions/auth"
+import { expirationDate, expiry, headers, setrequestlogin,token,valid } from "../../actions/auth"
 const StyleSwitch=styled.div`
 position:relative;
 border-radius:12px;
@@ -37,8 +37,7 @@ const Addplaylist=()=>{
     const dispatch = useDispatch()
     const addplaylist= async () =>{
         try{
-            const now =new Date()
-            if(user){
+            if(token() && expiry()>0){
             const res= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay,slug:slugify(keyword)}),headers())
             dispatch(showmodal(false))
             const playlistupdate=[...playlists,{...res.data,user:user.id,user_name:user.name,images:[]}]

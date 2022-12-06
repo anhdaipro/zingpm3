@@ -24,7 +24,7 @@ const Layout = ({children}) => {
     const dotref=useRef()
     const mvplayer=useSelector(state=>state.mvplayer)
     const {showvideo}=mvplayer
-    const {showinfo,songs,showpost,showaction}=player
+    const {showinfo,songs,showpost,showaction,show}=player
     const auth=useSelector(state=>state.auth)
     const {requestlogin,theme,showtheme,user}=auth
     
@@ -36,7 +36,7 @@ const Layout = ({children}) => {
                 }
             })
             const data = res.data;
-            localStorage.setItem('token',data.access);
+            localStorage.setItem('token',data.token);
             const expiri=dayjs().add(59,'minute')
             localStorage.setItem("expirationDate",expiri);    
         }       
@@ -101,7 +101,7 @@ const Layout = ({children}) => {
             <Login/>)}
             <Modal/> 
             {showtheme&&(<Themes/>)}
-            {showinfo &&<InfoArtist/>}
+            {showinfo && !show && <InfoArtist/>}
             
         </div>
         

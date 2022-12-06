@@ -9,13 +9,8 @@ import {
     PASSWORD_RESET_CONFIRM_FAIL,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
-    GOOGLE_AUTH_SUCCESS,
-    GOOGLE_AUTH_FAIL,
-    FACEBOOK_AUTH_SUCCESS,
-    FACEBOOK_AUTH_FAIL,
     LOGOUT,
     UPDATE_PROFILE_SUCCESS,
-    UPDATE_PROFILE_FAIL,
     GET_THREAD_SUCCESS,
     CREATE_THREAD_FAIL,
     CREATE_THREAD_SUCCESS,
@@ -25,88 +20,9 @@ import {
     UPDATE_THEME,
     
 } from './types';
-
 import axios from 'axios';
 import { listThreadlURL, loginURL,userinfoURL,userprofileURL} from '../urls';
 import { isVietnamesePhoneNumber,validatEemail } from '../constants';
-
-
-
-export const googleAuthenticate = (state, code) => async dispatch => {
-    if (state && code) {
-        const config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-
-        const details = {
-            'state': state,
-            'code': code
-        };
-
-        const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
-
-        try {
-            const res = await axios.post(`https://anhdai.herokuapp.com/auth/o/google-oauth2/?${formBody}`, config);
-            dispatch({
-                type: GOOGLE_AUTH_SUCCESS,
-                payload: res.data
-            });
-
-        } catch (err) {
-            dispatch({
-                type: GOOGLE_AUTH_FAIL
-            });
-        }
-    }
-};
-
-export const googleLogin = (accessToken) => async dispatch => {
-    try {
-        
-        const res=await axios.post('https://daiviet.herokuapp.com/api-auth/convert-token', {
-			token: accessToken,
-            backend: "google-oauth2",
-            grant_type: "convert_token",
-            client_id: "874868987927-hudvamdogth0ei4hctcp5gja538tggkf.apps.googleusercontent.com",
-            client_secret: "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",
-		})
-        dispatch({
-            type: GOOGLE_AUTH_SUCCESS,
-            payload: res.data
-        });
-        localStorage.setItem('access_token', res.data.access_token);
-		localStorage.setItem('refresh_token', res.data.refresh_token);
-    }
-    catch (err) {
-        dispatch({
-            type: GOOGLE_AUTH_FAIL
-        });
-    }
-};
-
-export const facebookLogin = (accessToken) => async dispatch =>{
-    try {
-    const res=await axios.post('https://daiviet.herokuapp.com/api-auth/convert-token', {
-        token: accessToken,
-        backend: "facebook",
-        grant_type: "convert_token",
-        client_id: "864145964959803",
-        client_secret: "6d30952c56bcdd893b7f247bb4b11bee",
-        })
-        dispatch({
-            type: FACEBOOK_AUTH_SUCCESS,
-            payload: res.data
-        });
-        localStorage.setItem('access_token',res.data.access_token);
-    }
-    catch (err) {
-        dispatch({
-            type: FACEBOOK_AUTH_FAIL
-        });
-    }
-};
 
 export const loginotp = (user_id) => async dispatch =>{
     const config = {
@@ -126,7 +42,7 @@ export const loginotp = (user_id) => async dispatch =>{
             
         });
         localStorage.setItem("expirationDate", res.data.access_expires);
-        localStorage.setItem('token',res.data.access);
+        localStorage.setItem('token',res.data.token);
        
     } catch (err) {
         dispatch({
@@ -134,36 +50,6 @@ export const loginotp = (user_id) => async dispatch =>{
         })
     }
 }
-export const facebookAuthenticate = (state, code) => async dispatch => {
-    if (state && code && !localStorage.getItem('access')) {
-        const config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        };
-
-        const details = {
-            'state': state,
-            'code': code
-        };
-
-        const formBody = Object.keys(details).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
-
-        try {
-            const res = await axios.post(`https://anhdai.herokuapp.com/auth/o/facebook/?${formBody}`, config);
-
-            dispatch({
-                type: FACEBOOK_AUTH_SUCCESS,
-                payload: res.data
-            });
-
-        } catch (err) {
-            dispatch({
-                type: FACEBOOK_AUTH_FAIL
-            });
-        }
-    }
-};
 
 export const login = (username, password) => async dispatch => {
     const config = {
@@ -189,7 +75,7 @@ export const login = (username, password) => async dispatch => {
             
         });
         localStorage.setItem("expirationDate", res.data.access_expires);
-        const token = res.data.access;
+        const token = res.data.token;
         localStorage.setItem('token',token);
        
     } catch (err) {
@@ -215,6 +101,7 @@ export const checkAuthenticated = () => async dispatch => {
         });
     }
 }
+
 export const signup = (username, email, password,profile) => async dispatch => {
     const config = {
         headers: {
@@ -237,18 +124,21 @@ export const signup = (username, email, password,profile) => async dispatch => {
         })
     }
 };
+
 export const setrequestlogin= (data)=>  {
     return{
         payload:data,
         type:REQUEST_LOGIN
     }
 }
+
 export const settheme=(data)=>{
     return{
         payload:data,
         type:UPDATE_THEME
     }
 }
+
 export const reset_password = (email) => async dispatch => {
     const config = {
         headers: {
@@ -293,7 +183,9 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
         });
     }
 };
+
 export const expirationDate = localStorage.getItem("expirationDate")
+
 export const token=()=>{
     return localStorage.getItem('token')
 }
@@ -301,11 +193,13 @@ export const token=()=>{
 export const expiry=()=>{
   return  new Date(expirationDate).getTime() - new Date().getTime()
 }
-console.log(expiry())
+
 export const valid=token() && expirationDate
+
 export const headers=()=>{
   return {'headers':token() && expirationDate && expiry()>0?{ Authorization:`JWT ${token()}`,'Content-Type': 'application/json' }:{'Content-Type': 'application/json'}}
 }
+
 export const logout = () => dispatch => {
     localStorage.removeItem('token')
     localStorage.removeItem('expirationDate')
@@ -313,12 +207,14 @@ export const logout = () => dispatch => {
         type: LOGOUT
     });
 };
+
 export const updateprofile =(data) =>{
     return{
         type: UPDATE_PROFILE_SUCCESS,
         payload:data
     };
 }
+
  export const create_thread =(user_id,profile_id)=> async dispatch=>{
     try {
         let form=new FormData()
@@ -336,6 +232,7 @@ export const updateprofile =(data) =>{
         });
     }
 }
+
 export const  get_thread=(getlist,seen,thread_id)=> async dispatch=>{
     try{
         let url=new URL(listThreadlURL)
@@ -357,7 +254,8 @@ export const  get_thread=(getlist,seen,thread_id)=> async dispatch=>{
         });
     }
 }
-export const updatenotify=(data,action)=>async dispatch=>{
+
+export const updatenotify=(data)=>async dispatch=>{
     dispatch({
         type: UPDATE_NOTIFI_SUCCESS,
         payload:data

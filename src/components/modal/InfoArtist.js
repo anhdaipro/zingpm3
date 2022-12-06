@@ -1,7 +1,7 @@
 import { useRef,useState,useMemo, useEffect } from "react"
 import { useSelector,useDispatch } from "react-redux"
 import styled from 'styled-components'
-import { headers } from "../../actions/auth"
+import { expiry, headers, setrequestlogin, token, valid } from "../../actions/auth"
 import {artistURL} from "../../urls"
 import axios from "axios"
 import { showinfoArtist } from "../../actions/player"
@@ -26,7 +26,7 @@ const Song=(props)=>{
 }
 const InfoArtist=()=>{
     const player=useSelector(state=>state.player)
-    const {left,right,top,data,showinfo}=player
+    const {left,right,top,data,showinfo,artistRef}=player
     const infoRef=useRef()
     const dispatch = useDispatch()
     useEffect(()=>{
@@ -36,12 +36,26 @@ const InfoArtist=()=>{
     },[dispatch,showinfo])
    
     const setfollow=async()=>{
-        
+        if(token() && expiry()>0){
         const res = await  axios.post(`${artistURL}${data.slug}`,JSON.stringify({action:'follow'}),headers())
         dispatch(showinfoArtist({data:{...data,followed:!data.followed}}))
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
+    useEffect(() => {
+        const setshow=(event)=>{
+            const {target}=event
+            if(showinfo && !artistRef.current.contains(target) && !infoRef.current.contains(target)){
+                dispatch(showinfoArtist({showinfo:false}))
+            }
+        }
+        document.addEventListener('mousemove',setshow)
+        return ()=>document.removeEventListener('mousemove',setshow)
+    }, [showinfo])
     return(
-        <div ref={infoRef} onMouseEnter={()=>dispatch(showinfoArtist({keepinfo:true,showinfo:true}))} onMouseLeave={()=>dispatch(showinfoArtist({keepinfo:false,showinfo:false}))} style={{zIndex:100,top:top,left:left,right:right,position:'fixed',transform:'translateY(-100%)'}}>
+        <div ref={infoRef} onMouseEnter={()=>dispatch(showinfoArtist({showinfo:true}))} style={{zIndex:100,top:top,left:left,right:right,position:'fixed',transform:'translateY(-100%)'}}>
             <ModalContent>
                 <div className="item-space" style={{width:'100%',position:'relative'}}>
                     <div className="flex mr-8" style={{width:'70%'}} >

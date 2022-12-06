@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useRef,useState,useEffect } from "react"
 import { useSelector,useDispatch } from "react-redux"
-import { headers,token } from "../../actions/auth"
+import { headers,setrequestlogin,token,expiry } from "../../actions/auth"
 import { showmodal } from "../../actions/player"
 import { dataURLtoFile } from "../../constants"
 import { uploadpostURL } from "../../urls"
@@ -100,6 +100,7 @@ const Addfeed=()=>{
     const [formData,setformDatata]=useState({caption:'',file:null,file_preview:null,duration:0})
     const {caption,file,file_preview,duration}=formData
     const submit= async ()=>{
+        if(token() && expiry()>0){
         let form=new FormData()
         form.append('file',file)
         form.append('file_preview',file_preview)
@@ -107,6 +108,10 @@ const Addfeed=()=>{
         form.append('caption',caption)
         const res= await axios.post(uploadpostURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
         dispatch(showmodal(false))
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     const previewFile=(e)=>{
         [].forEach.call(e.target.files, function(file) {

@@ -25,14 +25,14 @@ color:#fff;
 background-color:#493961
 }
 `
-const now=dayjs()
+
 const Timepicker=()=>{
     const time_stop_player=useSelector(state=>state.player.time_stop_player)
     const [time,setTime]=useState()
     const [hour,setHour]=useState(0)
     const [minute,setMinute]=useState(0)
     const dispatch = useDispatch()
-    
+    const now=dayjs()
     useEffect(()=>{
         if(time_stop_player){
             setTime(time_stop_player)

@@ -9,11 +9,7 @@ import { headers } from "../../actions/auth"
 import { Song } from "../follow/Follow"
 
 const Listnewsong=(props)=>{
-    const player=useSelector(state => state.player)
-    const {currentIndex,play,showinfo,infoRef,keepinfo}=player
     const [listnewsong,setListnewsong]=useState([])
-    const datasongs=useSelector(state => state.player.songs)
-    const dispatch = useDispatch()
     const {choice}=props
     const newsongs=useMemo(()=>{
         return partition(listnewsong,4)

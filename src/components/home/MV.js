@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState,useMemo } from "react"
 import { useSelector,useDispatch } from "react-redux"
-import { headers } from "../../actions/auth"
+import { headers, setrequestlogin,token,expiry } from "../../actions/auth"
 import { setshowvideo} from "../../actions/mv"
 import { setsong } from "../../actions/player"
 import styled from "styled-components"
@@ -644,13 +644,18 @@ const MV=()=>{
         }
     }
     const setlikemv= async (value)=>{
-        const res= await axios.post(videosongURL,JSON.stringify({action:'like',id:mv.mv.id}),headers())
-        setListmv(current=>current.map(item=>{
-            if(item.id==mv.id){
-                return({...item,mv:{...item.mv,liked:value}})
-            }
-            return({...item,})
-        }))
+        if(token() && expiry()>0){
+            const res= await axios.post(videosongURL,JSON.stringify({action:'like',id:mv.mv.id}),headers())
+            setListmv(current=>current.map(item=>{
+                if(item.id==mv.id){
+                    return({...item,mv:{...item.mv,liked:value}})
+                }
+                return({...item,})
+            }))
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     const [animation,setAmimation]=useState(false)
     console.log(percent)

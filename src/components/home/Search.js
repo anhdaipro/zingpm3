@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useState,useRef,useEffect, useMemo, useCallback } from "react"
 import { useSelector,useDispatch } from "react-redux"
-import { headers } from "../../actions/auth"
+import { headers, setrequestlogin,token,expiry } from "../../actions/auth"
 import { searchURL,searchitemURL,  artistURL } from "../../urls"
 import styled from "styled-components"
 import {useNavigate,useParams,useSearchParams} from 'react-router-dom'
@@ -109,16 +109,21 @@ display:flex;
 `
 const Artist=(props)=>{
     const {item,artists,setartists}=props
+    const dispatch = useDispatch()
     const setfollow=async (name,value)=>{
-        
-        const res =await axios.post(`${artistURL}/${item.id}`,JSON.stringify({action:'follow'}),headers())
-        const dataupdate=artists.map(artist=>{
-            if(artist.id===item.id){
-                return({...item,[name]:value})
-            }
-            return({...item,})
-        })
-        setartists(dataupdate)
+        if(token() && expiry()>0){
+            const res =await axios.post(`${artistURL}/${item.id}`,JSON.stringify({action:'follow'}),headers())
+            const dataupdate=artists.map(artist=>{
+                if(artist.id===item.id){
+                    return({...item,[name]:value})
+                }
+                return({...item,})
+            })
+            setartists(dataupdate)
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     return(
         <div  className="item">

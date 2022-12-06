@@ -4,7 +4,7 @@ import React, {useState,useEffect,useCallback,useRef,memo, useMemo,useId} from '
 import PropTypes from 'prop-types';
 import {showmodal,actionuser,updatesongs,setsong} from "../../actions/player"
 import {useDispatch, useSelector} from "react-redux"
-import { valid,headers, expirationDate } from '../../actions/auth';
+import { valid,headers, expirationDate, setrequestlogin,token,expiry } from '../../actions/auth';
 import { listcommentURL, listplaylistURL,playlistURL,songURL } from '../../urls';
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -65,12 +65,17 @@ export const Listaction=(props)=>{
     }
     const addsongtoplaylist= async (itemchoice)=>{
         const data={songs:[song.id],action:'addsong'}
-        const res=  await axios.post(`${playlistURL}/${itemchoice.id}`,JSON.stringify(data),headers())
-        toast(<span>Đã thêm bài hát '{song.name}' vào playlist thành công</span>,{  
-            position:toast.POSITION.BOTTOM_LEFT,
-            className:'toast-message',
-        });
-        dispatch(setsong({showaction:false}))
+        if(token() && expiry()>0){
+            const res=  await axios.post(`${playlistURL}/${itemchoice.id}`,JSON.stringify(data),headers())
+            toast(<span>Đã thêm bài hát '{song.name}' vào playlist thành công</span>,{  
+                position:toast.POSITION.BOTTOM_LEFT,
+                className:'toast-message',
+            });
+            dispatch(setsong({showaction:false}))
+        }
+        else{
+            dispatch(setrequestlogin(true))
+        }
     }
     return(
         <div ref={dropref} className="detail-song" style={{position:'absolute',left:`${left}px`,top:`${top}px`,right:`${right}px`,bottom:`${bottom}px`,width:'280px'}}>

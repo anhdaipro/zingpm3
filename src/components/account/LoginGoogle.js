@@ -40,7 +40,7 @@ const LoginGoogle=(props)=>{
                 type:LOGIN_SUCCESS,
                 payload:response.data
             })    
-            const token = response.data.access;
+            const token = response.data.token;
             localStorage.setItem('token',token);
             const expiri=dayjs().add(59, 'minute')
             localStorage.setItem("expirationDate", expiri);

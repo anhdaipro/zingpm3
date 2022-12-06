@@ -37,7 +37,7 @@ const LoginFacebook=()=>{
                 type:LOGIN_SUCCESS,
                 type:res1.data
             })
-            const token = res1.data.access;
+            const token = res1.data.token;
             localStorage.setItem('token',token);
             const expiri=dayjs().add(59, 'minute')
             localStorage.setItem("expirationDate", expiri);

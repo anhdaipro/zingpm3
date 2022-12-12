@@ -93,6 +93,7 @@ const Discover=()=>{
                 }
                 return 0
             })
+            if(res1.data.topsongs.length>1){
             const datatop2=data.filter(item=>item.song==res1.data.topsongs[1].id)
             const top2=hours.map((item,i)=>{
                 if(datatop2.find(itemchoice=>itemchoice.day==item)){
@@ -100,6 +101,9 @@ const Discover=()=>{
                 }
                 return 0
             })
+            setTop2(top2)
+            }
+            if(res1.data.topsongs.length>2){
             const datatop3=data.filter(item=>item.song==res1.data.topsongs[2].id)
             const top3=hours.map((item,i)=>{
                 if(datatop3.find(itemchoice=>itemchoice.day==item)){
@@ -107,10 +111,12 @@ const Discover=()=>{
                 }
                 return 0
             })
+            setTop3(top3)
+            }
           
             setTop1(top1)
-            setTop2(top2)
-            setTop3(top3)
+            
+            
             const res2 = await axios.get(listartistURL,headers())
             const data2=res2.data
             setArtists(data2)

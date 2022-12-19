@@ -112,7 +112,7 @@ const GradientChart = (props) => {
         labels:labels,
         datasets: [
         {
-            label: 'Doanh thu',
+           
             data: top1,
             fill:false,
             borderWidth:2,
@@ -134,7 +134,7 @@ const GradientChart = (props) => {
             },
         },
         {
-            label: 'Luot truy cap',
+            
             data: top2,
             fill:false,
             pointRadius:index==1?4:0,
@@ -156,7 +156,7 @@ const GradientChart = (props) => {
             
         },
         {
-            label: 'Tiền',
+            
             data: top3,
             fill:false,
             borderWidth:2,

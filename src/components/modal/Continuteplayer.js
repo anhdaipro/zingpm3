@@ -1,5 +1,6 @@
 import { useSelector,useDispatch } from "react-redux"
 import {showmodal,playerstop, setsong} from "../../actions/player"
+import { originURL } from "../../urls"
 import { Songinfo } from "../Song"
 const Continuteplayer=()=>{
     const data=useSelector(state=>state.player.data)
@@ -8,7 +9,7 @@ const Continuteplayer=()=>{
         
             <div>
                 <div className="flex mb-16">
-                    <div className="song-image mr-8" style={{backgroundImage:`url(${data.data.image_cover})`}}></div>
+                    <img className="song-image mr-8" src={`${originURL}${data.data.image_cover}`} />
                     <div className="card-info">
                         <Songinfo
                             song={data.data}

@@ -111,9 +111,9 @@ const Player=()=>{
         return duration?currentTime/duration:0
     },[time.seconds,time.minutes,duration])
     const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
-    const index=change?currentIndex:localStorage.getItem('index')?parseInt(localStorage.getItem('index')):0
+    const index=currentIndex
     const song=songs[index]
-    
+  
     useEffect(()=>{
         ( async ()=>{ 
             if(!song.file){
@@ -136,7 +136,7 @@ const Player=()=>{
     useEffect(() => {
         const now=() =>dayjs()
         if(time_stop_player && now().isAfter(time_stop_player) &&!show && play){
-            console.log('oj')
+           
             dispatch(setsong({change:true,play:false}))
             dispatch(showmodal(true))
             dispatch(actionuser({data:{data:song,title:'Thời gian phát nhạc đã kết thúc, bạn có muốn tiếp tục phát bài hát này?'},action:'continueplayer'}))
@@ -251,9 +251,7 @@ const Player=()=>{
             if(dragvolume){
                 audioref.current.currentTime=time.seconds+time.minutes*60
                 setDragvolume(false)
-                
             }
-
         }
         document.addEventListener('mouseup',setdrag)
         return ()=>{
@@ -439,9 +437,9 @@ const Player=()=>{
                                 <div className="is-size-M column is-fullhd-7 is-tablet-12">
                                     <ul onScroll={e => handleScroll(e)} ref={scrollRef} className="scroll-content">
                                         <li className="item is-over">{`Bài hát: ${song.name}`}</li>
-                                        {song.lyrics?<li className={`item ${song.lyrics[0].startTimeMs>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>:
+                                        {song.lyrics && song.lyrics.length>0?<li className={`item ${song.lyrics[0].startTimeMs>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>:
                                         <li className={`item ${song.sentences[0].words[0].startTime>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>}
-                                        {song.lyrics?<>
+                                        {song.lyrics && song.lyrics.length>0?<>
                                         {song.lyrics.map((item,index)=>{
                                             const min= item.startTimeMs
                                             const max=index<song.lyrics.length-1?song.lyrics[index+1].startTimeMs:duration*1000
@@ -489,7 +487,7 @@ const Player=()=>{
                     <div className="play-control-wrapper">
                         <div className="player-control-left">
                             <div className='flex-center'>
-                                <div className="song-image" style={{backgroundImage:`url(${songs[currentIndex].image_cover})`}}></div>
+                                <img className="song-image" src={`${originURL}${songs[currentIndex].image_cover}`}/>
                                 <div className="card-info">
                                     <Songinfo
                                         song={songs[currentIndex]}
@@ -664,7 +662,7 @@ const Player=()=>{
                         </div>
                     </div>
                 </div>
-                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={songURL}  volume={volume}>
+                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={originURL+songURL}  volume={volume}>
                 <audio data-html5-video preload="auto" muted={muted}
                     onPlay={()=>{
                         dispatch(setsong({change:true,play:true}))
@@ -687,7 +685,7 @@ const Player=()=>{
                            
                                                 
                     } }
-                    ref={audioref} loop={onerepeat||repeat?true:false}  src={url}/>
+                    ref={audioref} loop={onerepeat||repeat?true:false}  src={originURL+url}/>
                 </VideoPlayer>
                 </div>
             </div>

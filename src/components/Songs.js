@@ -122,14 +122,11 @@ const Songs=()=>{
         ( async ()=>{
             if(songs.length==0){
                 
-                if(localStorage.getItem('songs')){
-                    dispatch(updatesongs(JSON.parse(localStorage.getItem('songs'))))
-                }
-                else{
+                
                 const res = await axios.get(listsongURL,headers())
                 
                 dispatch(setsong({songs:res.data}))
-            }
+            
             }
         })()
     }, [songs.length,dispatch])

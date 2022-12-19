@@ -204,7 +204,7 @@ const DetailFeed=()=>{
     
     const setfollow= async (name,value)=>{
         if(token() && expiry()>0){
-            const res = await axios.post(`${artistURL}${item.artist.slug}`,JSON.stringify({action:'follow'}),headers())
+            const res = await axios.post(`${artistURL}/${item.artist.slug}`,JSON.stringify({action:'follow'}),headers())
             const dataposts=posts.map(post=>{
                 if(item.artist.id===post.artist.id){
                     return({...post,artist:{...post.artist,[name]:value}})

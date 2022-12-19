@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {showmodal,actionuser,updatesongs,setsong} from "../../actions/player"
 import {useDispatch, useSelector} from "react-redux"
 import { valid,headers, expirationDate, setrequestlogin,token,expiry } from '../../actions/auth';
-import { listcommentURL, listplaylistURL,playlistURL,songURL } from '../../urls';
+import { listcommentURL, listplaylistURL,originURL,playlistURL,songURL } from '../../urls';
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export const Listaction=(props)=>{
@@ -82,7 +82,7 @@ export const Listaction=(props)=>{
         <div style={{position:'relative'}}>
             <div>
                 <div className="song-info">
-                    <div className='song-image' style={{backgroundImage:`url(${song.image_cover})`,width:'40px',height:'40px'}}></div>
+                    <img className='song-image' src={`${originURL}${song.image_cover}`} style={{width:'40px',height:'40px'}}/>
                     <div className="flex-col flex-1" style={{width:0}}>
                         <div className='song-name' style={{fontSize:'14px'}}>{song.name}</div>
                         <div className="flex-center">

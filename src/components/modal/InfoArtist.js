@@ -2,7 +2,7 @@ import { useRef,useState,useMemo, useEffect } from "react"
 import { useSelector,useDispatch } from "react-redux"
 import styled from 'styled-components'
 import { expiry, headers, setrequestlogin, token, valid } from "../../actions/auth"
-import {artistURL} from "../../urls"
+import {artistURL, originURL} from "../../urls"
 import axios from "axios"
 import { showinfoArtist } from "../../actions/player"
 const ModalContent=styled.div`
@@ -16,7 +16,7 @@ const Song=(props)=>{
     const {song}=props
     return(
         <div  style={{width:'25%',overflow:'hidden'}} className="flex-col p-4" key={song.id}>
-            <div className="song-image" style={{backgroundImage: `url(${song.image_cover})`}}></div>
+            <img className="song-image" src={`${originURL}${song.image_cover}`}/>
             <div className="mt-8">
                 <h3 className="song-name">{song.name}</h3>
                 <div className="subtitle">{new Date(song.created_at).getFullYear()}</div>
@@ -37,7 +37,7 @@ const InfoArtist=()=>{
    
     const setfollow=async()=>{
         if(token() && expiry()>0){
-        const res = await  axios.post(`${artistURL}${data.slug}`,JSON.stringify({action:'follow'}),headers())
+        const res = await  axios.post(`${artistURL}/${data.slug}`,JSON.stringify({action:'follow'}),headers())
         dispatch(showinfoArtist({data:{...data,followed:!data.followed}}))
         }
         else{

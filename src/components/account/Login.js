@@ -69,10 +69,11 @@ const Login=()=>{
                 type: LOGIN_SUCCESS,
                 payload: res.data 
             });
-            const expiri=dayjs().add(59,'minute')
+            const {refresh,access}=res.data
+            const expiri=dayjs().add(259,'minute')
             localStorage.setItem("expirationDate",expiri);
-            const token = res.data.token;
-            localStorage.setItem('token',token);
+            localStorage.setItem('refresh',refresh);
+            localStorage.setItem('token',access);
             
             dispatch(setrequestlogin(false))
             window.location.href="/"

@@ -10,12 +10,12 @@ import Song from "./Song"
 const now=dayjs()
     const hournow=now.get('hour')-1>0?now.get('hour'):0
     const hourday= Array(hournow).fill().map((_,i)=>{
-        return dayjs().set('hour',i+1).format("DD-MM-YYYY HH")
+        return dayjs().set('hour',i+1)
     })
     
     const yesterday=dayjs().subtract(24, 'hour')
     const houryesterday= [...Array(24 - hournow + 1).keys()].map(x => {
-        return yesterday.set('hour',x + hournow).format("DD-MM-YYYY HH")
+        return yesterday.set('hour',x + hournow)
     });
 const hours=[...houryesterday,...hourday]
 
@@ -36,32 +36,29 @@ const Homepage=()=>{
             const res = await axios.get(zingchartURL,headers())
             
             setSongs(res.data.topsongs)
-            const data= res.data.dashboard.map(item=>{
-              return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
-            })
             setLabels(hours.map(item=>{
-                return `${item.slice(-2)}:00`
+                return `${item.format("HH")}:00`
             }))
             setListvalues(res.data.songvalue)
             
-            const datatop1 = data.filter(item=>item.song==res.data.topsongs[0].id)
+            const datatop1 = res.data.dashboard[0].views
             const top1=hours.map((item,i)=>{
-                if(datatop1.find(itemchoice=>itemchoice.day==item)){
-                    return datatop1.find(itemchoice=>itemchoice.day==item).count
+                if(datatop1.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop1.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
-            const datatop2=data.filter(item=>item.song==res.data.topsongs[1].id)
+            const datatop2=res.data.dashboard.length>1?res.data.dashboard[1].views:[]
             const top2=hours.map((item,i)=>{
-                if(datatop2.find(itemchoice=>itemchoice.day==item)){
-                    return datatop2.find(itemchoice=>itemchoice.day==item).count
+                if(datatop2.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop2.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
-            const datatop3=res.data.topsongs.length>2?data.filter(item=>item.song==res.data.topsongs[2].id):[]
+            const datatop3=res.data.dashboard.length>2?res.data.dashboard[2].views:[]
             const top3=hours.map((item,i)=>{
-                if(datatop3.find(itemchoice=>itemchoice.day==item)){
-                    return datatop3.find(itemchoice=>itemchoice.day==item).count
+                if(datatop3.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop3.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
@@ -71,7 +68,7 @@ const Homepage=()=>{
             setTop3(top3)
         })()
     }, [])
-    
+    console.log(top1)
     const setsongs=useCallback((data)=>{
         setSongs(data)
     },[])

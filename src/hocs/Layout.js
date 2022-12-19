@@ -30,13 +30,13 @@ const Layout = ({children}) => {
     
     const refreshtoken= async ()=>{
         if(user){
-            const res= await axios.post(refreshTokenURL,JSON.stringify({id:user.id}),{
+            const res= await axios.post(refreshTokenURL,JSON.stringify({refresh:localStorage.getItem('refresh')}),{
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             const data = res.data;
-            localStorage.setItem('token',data.token);
+            localStorage.setItem('token',data.access);
             const expiri=dayjs().add(59,'minute')
             localStorage.setItem("expirationDate",expiri);    
         }       
@@ -89,7 +89,7 @@ const Layout = ({children}) => {
             <MV/>)}
             <ToastContainer 
                 hideProgressBar={true}
-                autoClose={3000}
+                autoClose={2000}
                 pauseOnHover={false}
                 pauseOnFocusLoss={false}
                 icon={false}

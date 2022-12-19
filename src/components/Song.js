@@ -1,7 +1,7 @@
 
 import {useState,useRef} from 'react'
 import axios from "axios"
-import { artistInfohURL,lyricsongURL,songURL,videosongURL } from "../urls"
+import { artistInfohURL,lyricsongURL,originURL,songURL,videosongURL } from "../urls"
 import {setsong,showinfoArtist,updatesongs} from "../actions/player"
 import {useSelector,useDispatch} from "react-redux"
 import { expirationDate, expiry, headers,setrequestlogin,token,valid } from "../actions/auth"
@@ -125,7 +125,8 @@ const PlaySong=({song})=>{
   }
   return(
     <div onClick={(e)=>setplaysong(e)} className="thumb" style={{position:'relative'}}>
-      <div style={{backgroundImage: `url('${song.image_cover}')`,width:'100%',height:'100%',backgroundSize:'cover'}}></div>
+      <img style={{width:'100%',height:'100%',backgroundSize:'cover'}} src={`${originURL}${song.image_cover}`} />
+      
         <div style={{display:'flex',justifyContent:'center'}} className="item-center song-item-image-overlay">
             {datasongs.length>0 && song.id === datasongs[currentIndex].id?
               duration>0?play?<img src="https://mp3-react-vinhbuihd.vercel.app/images/icon-playing.gif" style={{width: '20px', height: '20px'}}/>:

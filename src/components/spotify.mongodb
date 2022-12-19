@@ -1,0 +1,4 @@
+use("spotify")
+
+
+ db.artists.find( { $text: { $search: "\"su\"" } } )

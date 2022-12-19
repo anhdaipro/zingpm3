@@ -50,7 +50,7 @@ const Song=(props)=>{
                 song={song}
                 className="song-info-like icon-button"
                 songs={songs}
-                setsongs={data=>setsong(data)}
+                setsongs={data=>setsongs(data)}
                 />
                 <Actionsong
                     className={`icon-button btn-more-action`}

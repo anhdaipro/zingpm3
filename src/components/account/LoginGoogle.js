@@ -40,10 +40,11 @@ const LoginGoogle=(props)=>{
                 type:LOGIN_SUCCESS,
                 payload:response.data
             })    
-            const token = response.data.token;
-            localStorage.setItem('token',token);
-            const expiri=dayjs().add(59, 'minute')
-            localStorage.setItem("expirationDate", expiri);
+            const {refresh,access}=res.data
+            const expiri=dayjs().add(259,'minute')
+            localStorage.setItem("expirationDate",expiri);
+            localStorage.setItem('refresh',refresh);
+            localStorage.setItem('token',access);
             const search = window.location.search;
             const params = new URLSearchParams(search);
             if(params.get('next')!=null){

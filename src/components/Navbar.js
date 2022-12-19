@@ -1,7 +1,7 @@
 import {useState,useRef,useEffect,useMemo} from 'react'
 import axios from "axios"
 import { dataURLtoFile, generateString, slugify } from '../constants';
-import { setrequestlogin,settheme,token } from '../actions/auth';
+import { expiry, setrequestlogin,settheme,token } from '../actions/auth';
 import { useSelector,useDispatch } from 'react-redux';
 import AccountLogin from './header/AccountLogin';
 import Searchcontent from './header/Searchcontent';
@@ -72,23 +72,22 @@ const Navbar=()=>{
                           base64String += String.fromCharCode(picture.data[i]);
                       }
                       const dataUrl = "data:" + picture.format + ";base64," +window.btoa(base64String);
-                      form.append('media_cover',dataURLtoFile(dataUrl,title))
-                      form.append('image',dataURLtoFile(dataUrl,title))
-                      console.log(dataURLtoFile(dataUrl,title))
+                      form.append('image_cover',dataURLtoFile(dataUrl,title+".png"))
+                      
                   }
                   form.append('file',file)
-                  form.append('name',title)
+                  form.append('song_name',title)
                   form.append('slug',slugify(title))
-                  form.append('album',album)
+                  form.append('album_name',album)
                   form.append('artist_name',artist)
                   form.append('viewer','1')
+                  if(user.singer){
                   form.append('singer',user.singer)
+                  }
                   if(genre){
-                    form.append('genre',genre)
+                    form.append('genre_name',genre)
                   }
-                  if(lyrics){
-                    form.append('lyrics',lyrics.lyrics)
-                  }
+                  
                   form.append('duration',audio.duration)
                   
                   axios.post(uploadsongURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
@@ -128,7 +127,7 @@ const Navbar=()=>{
                         <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M32 144l48 64 64-32-16 304c64 16 192 16 256 0l-16-304 64 32 48-64-112-96-48-16c-16 64-112 64-128 0l-48 16z"></path></svg>
                     </div>
                     <div onClick={()=>{
-                        if(user){
+                        if(token() && expiry()>0){
                         inputref.current.click()
                         }
                         else{
@@ -139,7 +138,7 @@ const Navbar=()=>{
                         <input ref={inputref} multiple={true} onChange={(e)=>previewFile(e)} type="file" accept="audio/*"/>
                     </div>
                     <div onClick={()=>{
-                        if(user){
+                        if(token() && expiry()>0){
                         inputref1.current.click()
                         }
                         else{

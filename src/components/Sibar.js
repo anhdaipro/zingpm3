@@ -24,7 +24,7 @@ const Sibar=()=>{
             }
             
         })()
-    },[dispatch])
+    },[dispatch,user])
     const checkuser=(e)=>{
         if(!user){
             e.preventDefault()

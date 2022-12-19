@@ -34,7 +34,7 @@ export const loginotp = (user_id) => async dispatch =>{
     form.append('user_id',user_id)
     
     try {
-        const res = await axios.post('https://anhdai.herokuapp.com/api/v4/login', form, config);
+        const res = await axios.post(loginURL, form, config);
 
         dispatch({
             type: LOGIN_SUCCESS,

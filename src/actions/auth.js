@@ -23,7 +23,7 @@ import {
 import axios from 'axios';
 import { listThreadlURL, loginURL,userinfoURL,userprofileURL,registerURL} from '../urls';
 import { isVietnamesePhoneNumber,validatEemail } from '../constants';
-
+import dayjs from "dayjs"
 export const loginotp = (user_id) => async dispatch =>{
     const config = {
         headers: {
@@ -41,8 +41,11 @@ export const loginotp = (user_id) => async dispatch =>{
             payload: res.data
             
         });
-        localStorage.setItem("expirationDate", res.data.access_expires);
-        localStorage.setItem('token',res.data.token);
+        const data=res.data
+        const expiri=dayjs().add(59,'minute')
+        localStorage.setItem("expirationDate",expiri); 
+     
+        localStorage.setItem('token',data.access);
        
     } catch (err) {
         dispatch({
@@ -75,7 +78,8 @@ export const login = (username, password) => async dispatch => {
             
         });
         const data=res.data
-        localStorage.setItem("expirationDate", data.access_expires);
+        const expiri=dayjs().add(59,'minute')
+        localStorage.setItem("expirationDate",expiri); 
      
         localStorage.setItem('token',data.access);
        

@@ -71,9 +71,9 @@ const Login=()=>{
             });
             const expiri=dayjs().add(59,'minute')
             localStorage.setItem("expirationDate",expiri);
-            const token = res.data.access;
-            localStorage.setItem('token',token);
-            
+            const data = res.data
+            localStorage.setItem('token',data.access);
+            localStorage.setItem('refresh',data.refresh);
             dispatch(setrequestlogin(false))
             window.location.href="/"
         } 

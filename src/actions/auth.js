@@ -74,9 +74,10 @@ export const login = (username, password) => async dispatch => {
             payload: res.data
             
         });
-        localStorage.setItem("expirationDate", res.data.access_expires);
-        const token = res.data.token;
-        localStorage.setItem('token',token);
+        const data=res.data
+        localStorage.setItem("expirationDate", data.access_expires);
+     
+        localStorage.setItem('token',data.access);
        
     } catch (err) {
         dispatch({

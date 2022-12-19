@@ -30,7 +30,7 @@ const Layout = ({children}) => {
     
     const refreshtoken= async ()=>{
         if(user){
-            const res= await axios.post(refreshTokenURL,JSON.stringify({id:user.id}),{
+            const res= await axios.post(refreshTokenURL,JSON.stringify({refresh:localStorage.getItem("refresh")}),{
                 headers: {
                     'Content-Type': 'application/json'
                 }

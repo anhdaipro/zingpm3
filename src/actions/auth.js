@@ -44,7 +44,7 @@ export const loginotp = (user_id) => async dispatch =>{
         const data=res.data
         const expiri=dayjs().add(59,'minute')
         localStorage.setItem("expirationDate",expiri); 
-     
+        localStorage.setItem('refresh',data.refresh);
         localStorage.setItem('token',data.access);
        
     } catch (err) {
@@ -80,7 +80,7 @@ export const login = (username, password) => async dispatch => {
         const data=res.data
         const expiri=dayjs().add(59,'minute')
         localStorage.setItem("expirationDate",expiri); 
-     
+        localStorage.setItem('refresh',data.refresh);
         localStorage.setItem('token',data.access);
        
     } catch (err) {

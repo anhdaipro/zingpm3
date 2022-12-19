@@ -44,6 +44,7 @@ const LoginGoogle=(props)=>{
             localStorage.setItem('token',data.access);
             const expiri=dayjs().add(59, 'minute')
             localStorage.setItem("expirationDate", expiri);
+            localStorage.setItem('refresh',data.refresh);
             const search = window.location.search;
             const params = new URLSearchParams(search);
             if(params.get('next')!=null){

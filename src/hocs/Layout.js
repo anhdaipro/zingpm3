@@ -36,7 +36,7 @@ const Layout = ({children}) => {
                 }
             })
             const data = res.data;
-            localStorage.setItem('token',data.token);
+            localStorage.setItem('token',data.access);
             const expiri=dayjs().add(59,'minute')
             localStorage.setItem("expirationDate",expiri);    
         }       

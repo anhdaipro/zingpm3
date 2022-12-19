@@ -112,7 +112,7 @@ export const signup = (username, email, password,profile) => async dispatch => {
     const body = JSON.stringify({ username, email, password, profile});
    
     try {
-        const res = await axios.post(`https://daiviet.herokuapp.com/api/v3/register`, body, config);
+        const res = await axios.post(`https://web-production-c334.up.railway.app/api/v1/register`, body, config);
 
         dispatch({
             type: SIGNUP_SUCCESS,
@@ -149,7 +149,7 @@ export const reset_password = (email) => async dispatch => {
     const body = JSON.stringify({ email });
 
     try {
-        await axios.post(`https://anhdai.herokuapp.com/api/v4/reset/password/`, body, config);
+        await axios.post(`https://web-production-c334.up.railway.app/api/v4/reset/password/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_SUCCESS
@@ -171,7 +171,7 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
     const body = JSON.stringify({ uidb64, token,password});
 
     try {
-        const res =await axios.post(`https://anhdai.herokuapp.com/api/v4/password-reset/${uidb64}/${token}/`, body, config);
+        const res =await axios.post(`https://web-production-c334.up.railway.app/api/v4/password-reset/${uidb64}/${token}/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS,

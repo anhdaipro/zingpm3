@@ -127,7 +127,7 @@ export const Song=(props)=>{
                     song={song}
                     className="song-info-like icon-button"
                     songs={songs}
-                    setsongs={data=>setsong(data)}
+                    setsongs={data=>setsongs(data)}
                 />
                 <div className={`duration ${showaction?'hiden':''} mr-8`}>
                     <p className="author">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</p>

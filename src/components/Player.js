@@ -131,7 +131,7 @@ const Player=()=>{
             dispatch(setsong({duration:0,time:{seconds:0,minutes:0}}))
         }
     })()
-    },[song.file,dispatch,songs])
+    },[song.file,dispatch])
    
     useEffect(() => {
         const now=() =>dayjs()

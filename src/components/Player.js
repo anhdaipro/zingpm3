@@ -439,9 +439,9 @@ const Player=()=>{
                                 <div className="is-size-M column is-fullhd-7 is-tablet-12">
                                     <ul onScroll={e => handleScroll(e)} ref={scrollRef} className="scroll-content">
                                         <li className="item is-over">{`Bài hát: ${song.name}`}</li>
-                                        {song.lyrics?<li className={`item ${song.lyrics[0].startTimeMs>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>:
+                                        {song.lyrics.length>0?<li className={`item ${song.lyrics[0].startTimeMs>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>:
                                         <li className={`item ${song.sentences[0].words[0].startTime>timecurent?'is-active':''}`}>Ca sĩ: {song.artist_name}</li>}
-                                        {song.lyrics?<>
+                                        {song.lyrics.length>0?<>
                                         {song.lyrics.map((item,index)=>{
                                             const min= item.startTimeMs
                                             const max=index<song.lyrics.length-1?song.lyrics[index+1].startTimeMs:duration*1000

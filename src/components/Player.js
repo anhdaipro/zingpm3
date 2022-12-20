@@ -607,7 +607,7 @@ const Player=()=>{
                                     <SeekBarCircle className="seekbarcircle" style={{left:`${percent*100}%`}}></SeekBarCircle>
                                     <SeekBar className="seekbar" style={{width:`${percent*100}%`}}></SeekBar>
                                 </Contentprogess>
-                                <div className="song-player-slider-duration">{('0'+Math.floor((duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(duration)  % 60).slice(-2)}</div> 
+                                <div className="song-player-slider-duration">{('0'+Math.floor((song.duration) / 60) % 60).slice(-2)}:{('0'+Math.floor(song.duration)  % 60).slice(-2)}</div> 
                             </div>
                             
                         </div>

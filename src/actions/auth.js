@@ -194,7 +194,7 @@ export const expirationDate = localStorage.getItem("expirationDate")
 export const token=()=>{
     return localStorage.getItem('token')
 }
-console.log(token())
+
 export const expiry=()=>{
   return  new Date(expirationDate).getTime() - new Date().getTime()
 }

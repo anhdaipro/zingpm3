@@ -1,5 +1,5 @@
-export const api='https://web-production-c334.up.railway.app/api'
-export const originURL='https://web-production-c334.up.railway.app'
+export const api='https://zingmp3server-production.up.railway.app/api'
+export const originURL='https://zingmp3server-production.up.railway.app'
 export const LoginsocialURL=`${api}/v1/oauth/login`
 export const refreshTokenURL=`${api}/v1/refresh`
 export const verifyemailURL=`${api}/v3/verify/email`

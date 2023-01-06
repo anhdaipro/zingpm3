@@ -380,7 +380,7 @@ const Player=()=>{
                             <div className="lyric-left"></div>
                             <div className="lyric-tab flex-center">
                                 {listitems.map(item=>
-                                <button disabled={item.value=='karaoke' && !song.sentences?true:false} key={item.value} onClick={()=>{
+                                <button disabled={item.value=='karaoke' && !song.hasKaraoke?true:false} key={item.value} onClick={()=>{
                                     dispatch(setsong({showoption:item.value}))
                                     }}  
                                     className={`tab-item ${item.value===showoption?'is-active':''}`}>{item.name}</button>

@@ -34,7 +34,7 @@ export const loginotp = (user_id) => async dispatch =>{
     form.append('user_id',user_id)
     
     try {
-        const res = await axios.post('https://anhdai.herokuapp.com/api/v4/login', form, config);
+        const res = await axios.post(loginURL, form, config);
 
         dispatch({
             type: LOGIN_SUCCESS,
@@ -75,7 +75,7 @@ export const login = (username, password) => async dispatch => {
             
         });
         localStorage.setItem("expirationDate", res.data.access_expires);
-        const token = res.data.token;
+        const token = res.data.access;
         localStorage.setItem('token',token);
        
     } catch (err) {
@@ -149,7 +149,7 @@ export const reset_password = (email) => async dispatch => {
     const body = JSON.stringify({ email });
 
     try {
-        await axios.post(`https://anhdai.herokuapp.com/api/v4/reset/password/`, body, config);
+        await axios.post(`https://web-production-c334.up.railway.app/api/v4/reset/password/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_SUCCESS
@@ -171,7 +171,7 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
     const body = JSON.stringify({ uidb64, token,password});
 
     try {
-        const res =await axios.post(`https://anhdai.herokuapp.com/api/v4/password-reset/${uidb64}/${token}/`, body, config);
+        const res =await axios.post(`https://web-production-c334.up.railway.app/api/v4/password-reset/${uidb64}/${token}/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS,

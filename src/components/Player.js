@@ -317,7 +317,7 @@ const Player=()=>{
     };
     
     const sentencesshow=useMemo(() =>{
-        const itemcurrent=song.sentences.length>0?song.sentences.findLast(item=>item.words[0].startTime<=timecurent):null
+        const itemcurrent=song.sentences && song.sentences.length>0?song.sentences.findLast(item=>item.words[0].startTime<=timecurent):null
         return itemcurrent
         
     },[timecurent,song.sentences])

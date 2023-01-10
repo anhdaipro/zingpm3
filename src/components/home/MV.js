@@ -457,7 +457,7 @@ const MV=()=>{
     const mv=listmv.length>0?listmv[currentIndex]:song
     useEffect(() => {
         const url=mv.mv.file
-        axios({url,responseType: 'blob',})
+        axios({url,responseType: 'arraybuffer'})
         .then((response) => {
             const urlObject = window.URL.createObjectURL(new Blob([response.data]));
             seturlvideo(urlObject)

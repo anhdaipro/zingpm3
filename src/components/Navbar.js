@@ -25,8 +25,8 @@ const Navbar=()=>{
                 const video=document.createElement('video')
                 video.src=url
                 video.addEventListener('loadeddata', e =>{
-                    var rand = Math.round(Math.random() * video.duration * 1000) + 1;
-                    video.currentTime = rand / 1000;
+                    var rand = video.duration/2
+                    video.currentTime = rand 
                 })
                 video.addEventListener('seeked',e=>{
                     let canvas = document.createElement('canvas');

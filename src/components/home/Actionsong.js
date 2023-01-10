@@ -226,6 +226,7 @@ export const Listaction=(props)=>{
 const Actionsong=(props)=>{
     const {song,className,setsongs,songs,songid}=props
     const dotref=useRef()
+    console.log(song)
     const player=useSelector(state=>state.player)
     const {song_id,showaction}=player
     const datasongs=useSelector(state=>state.player.songs)
@@ -256,6 +257,7 @@ const Actionsong=(props)=>{
                         return({...item})
                     })
                     dispatch(updatesongs(data))
+                    dispatch(setsong({song:...res.data,song}))
                     if(songs){
                         setsongs(songs.map(item=>{
                             if(item.id===song.id){

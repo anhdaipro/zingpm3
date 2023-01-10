@@ -475,7 +475,7 @@ const MV=()=>{
             dispatch(setshowvideo({play:true,currentIndex:indexchoice}))
         }
     }
-    console.log(urlvideo)
+    
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
     const canvasRef=useRef()

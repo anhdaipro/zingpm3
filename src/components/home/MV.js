@@ -768,7 +768,15 @@ const MV=()=>{
                                                 onTimeUpdate={()=>{
                                                     if(!drag.time && duration){
                                                         dispatch(setshowvideo({time:{seconds:videoRef.current.currentTime % 60,minutes:Math.floor((videoRef.current.currentTime) / 60) % 60}}))
-                            
+                                                        const video=videoRef.current
+                                                        let loadend=[]
+                                                        var bf = video.buffered;
+                                                        for (let i = 0; i < bf.length; i++) {
+                                                            loadend.push(bf.end(i) )
+                                                        }    
+                                                        console.log(loadend)
+                                                        const loadPercentage = bf.end(loadend.length-1) / duration;
+                                                        setPercentload(loadPercentage*100)
                                                     }  
                                                 }}
                                                 onProgress={(e)=>{

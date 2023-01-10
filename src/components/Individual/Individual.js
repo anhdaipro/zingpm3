@@ -4,7 +4,7 @@ import axios from "axios"
 import {useState,useEffect, useRef,useMemo, useCallback,useId} from "react"
 import {listsongURL,songURL,listsonguserURL,lyricsongURL, playlistURL} from "../../urls"
 import { actionuser, setsong, showmodal, updateplaylists, updatesongs } from "../../actions/player"
-import { expirationDate, headers, setrequestlogin,valid } from "../../actions/auth"
+import { expirationDate, headers, setrequestlogin,expiry } from "../../actions/auth"
 import Actionsong from "../home/Actionsong"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
@@ -274,11 +274,16 @@ const Individual=()=>{
     const {playlists,currentIndex}=player
     useEffect(() => {
         ( async ()=>{
-            const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers())
-                const data=res.data.map(item=>{
-                return({...item,checked:false,})
-            })
-            setSongs(data) 
+            if(expiry() && localStorage.token){
+                const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers())
+                    const data=res.data.map(item=>{
+                    return({...item,checked:false,})
+                })
+                setSongs(data) 
+            }
+            else{
+                dispatch(setrequestlogin(true))
+            }
         })()
     }, [option,dispatch])
     const count=songs.length

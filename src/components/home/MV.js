@@ -778,7 +778,8 @@ const MV=()=>{
                                                         var bf = video.buffered;
                                                         for (let i = 0; i < bf.length; i++) {
                                                             loadend.push(bf.end(i) )
-                                                        }           
+                                                        }    
+                                                        console.log(loadend)
                                                         const loadPercentage = bf.end(loadend.length-1) / duration;
                                                         setPercentload(loadPercentage*100)
                                                     }

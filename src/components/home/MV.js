@@ -795,7 +795,7 @@ const MV=()=>{
                                             onLoadedData={(e)=>{
                                                 dispatch(setshowvideo({duration:videoRef.current.duration}))                       
                                             }} s
-                                            ref={videoRef} preload="auto" src={urlvideo} muted={muted}></video>
+                                            ref={videoRef} preload="auto" src={mv.mv.file} muted={muted}></video>
                                             </VideoPlayer>
                                             <button className={percent>percentload?'loading-video':'playpause-fadeout'} type="button" style={{display: `${percent>=percentload||animation?'flex':'none'}`}}>
                                                 {percent>=percentload?

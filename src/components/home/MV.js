@@ -658,8 +658,7 @@ const MV=()=>{
         }
     }
     const [animation,setAmimation]=useState(false)
-    console.log(percent)
-    console.log(percentload)
+    
     const [miniplayer,setMiniplayer]=useState(false)
     return(
         <div className={`zm-video-modal ${miniplayer?'video-minimize':'zm-video-animation-enter-done'}`}>

@@ -257,7 +257,7 @@ const Actionsong=(props)=>{
                         return({...item})
                     })
                     dispatch(updatesongs(data))
-                    dispatch(setsong({song:...res.data,song}))
+                    dispatch(setsong({song:{...res.data,song}}))
                     if(songs){
                         setsongs(songs.map(item=>{
                             if(item.id===song.id){

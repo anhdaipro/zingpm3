@@ -102,7 +102,7 @@ const Player=()=>{
     const [state,setState]=useState({ramdom:false,repeat:false,onerepeat:false})
     const [volume,setVolume]=useState(1)
     const {repeat,ramdom,onerepeat}=state
-    const [dragvolume,setDragvolume]=useState(false)
+    const [changetime,setChangetime]=useState(false)
     const navigate=useNavigate()
     const [drag,setDrag]=useState({time:false,volume:false})
     const dispatch=useDispatch()
@@ -232,9 +232,8 @@ const Player=()=>{
                 const percent=clientX<min?0:clientX>max?1:(clientX-left)/width
                 const times=percent*duration
                 dispatch(setsong({change:true,time:{seconds:times % 60,minutes:Math.floor((times) / 60) % 60}}))
-               
                 if(times!=audioref.current.currentTime){
-                    setDragvolume(true)
+                    setChangetime(true)
                 }
             }
         }
@@ -248,16 +247,16 @@ const Player=()=>{
     useEffect(()=>{
         const setdrag=(e)=>{
             setDrag(prev=>{return{...prev,time:false,volume:false}})
-            if(dragvolume){
+            if(changetime){
                 audioref.current.currentTime=time.seconds+time.minutes*60
-                setDragvolume(false)
+                setChangetime(false)
             }
         }
         document.addEventListener('mouseup',setdrag)
         return ()=>{
             document.removeEventListener('mouseup',setdrag)
         }
-    },[time.seconds,time.minutes,audioref,dragvolume,drag.time,currentIndex])
+    },[time.seconds,time.minutes,audioref,changetime,drag.time,currentIndex])
     
    
     const backward=(e)=>{

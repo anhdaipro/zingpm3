@@ -125,7 +125,7 @@ const PlaySong=({song})=>{
   }
   return(
     <div onClick={(e)=>setplaysong(e)} className="thumb" style={{position:'relative'}}>
-      <img style={{width:'100%',height:'100%',backgroundSize:'cover'}} src={`${originURL}${song.image_cover}`} />
+      <img style={{width:'100%',height:'100%',backgroundSize:'cover'}} src={`${song.image_cover}`} />
       
         <div style={{display:'flex',justifyContent:'center'}} className="item-center song-item-image-overlay">
             {datasongs.length>0 && song.id === datasongs[currentIndex].id?

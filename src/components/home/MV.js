@@ -501,7 +501,7 @@ const MV=()=>{
         const minutes=Math.floor(times/60)
         const seconds=Math.floor(times-minutes*60)
         videoRef.current.currentTime=times
-        console.log('dd')
+        
         dispatch(setshowvideo({time:{seconds:seconds,minutes:minutes}}))
         
     }
@@ -768,7 +768,14 @@ const MV=()=>{
                                                 onTimeUpdate={()=>{
                                                     if(!drag.time && duration){
                                                         dispatch(setshowvideo({time:{seconds:videoRef.current.currentTime % 60,minutes:Math.floor((videoRef.current.currentTime) / 60) % 60}}))
-                            
+                                                        const video=videoRef.current
+                                                        let loadend=[]
+                                                        var bf = video.buffered;
+                                                        for (let i = 0; i < bf.length; i++) {
+                                                            loadend.push(bf.end(i) )
+                                                        }           
+                                                        const loadPercentage = bf.end(loadend.length-1) / duration;
+                                                        setPercentload(loadPercentage*100)
                                                     }  
                                                 }}
                                                 onProgress={(e)=>{
@@ -783,9 +790,9 @@ const MV=()=>{
                                                         setPercentload(loadPercentage*100)
                                                     }
                                                 }}             
-                                            onLoadedData={(e)=>{
+                                            onLoad={(e)=>{
                                                 dispatch(setshowvideo({duration:videoRef.current.duration}))                       
-                                            }} s
+                                            }}
                                             ref={videoRef} preload="auto" src={mv.mv.file} muted={muted}></video>
                                             </VideoPlayer>
                                             <button className={percent>percentload?'loading-video':'playpause-fadeout'} type="button" style={{display: `${percent>=percentload||animation?'flex':'none'}`}}>

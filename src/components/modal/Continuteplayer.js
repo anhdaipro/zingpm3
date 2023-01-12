@@ -9,7 +9,7 @@ const Continuteplayer=()=>{
         
             <div>
                 <div className="flex mb-16">
-                    <img className="song-image mr-8" src={`${originURL}${data.data.image_cover}`} />
+                    <img className="song-image mr-8" src={`${data.data.image_cover}`} />
                     <div className="card-info">
                         <Songinfo
                             song={data.data}

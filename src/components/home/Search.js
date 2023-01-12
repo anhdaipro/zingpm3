@@ -151,6 +151,7 @@ Artist.prototype={
     artists:PropType.array.isRequired,
     setartists:PropType.func.isRequired
 }
+
 const Search=()=>{
     const [songs,setSongs]=useState([])
     const navigate=useNavigate()
@@ -165,6 +166,7 @@ const Search=()=>{
             const res= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers())
             const  data=res.data
             setSongs(data.songs)
+            console.log(res)
             setArtists(data.artists)
             setPlaylists(data.playlists)
             
@@ -180,7 +182,7 @@ const Search=()=>{
     const setartists=useCallback((data)=>{
         setArtists(data)
     },[])
-    console.log(songs)
+    
     return(
         <div className="body-wrapper">
             <div>

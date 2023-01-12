@@ -82,7 +82,7 @@ export const Listaction=(props)=>{
         <div style={{position:'relative'}}>
             <div>
                 <div className="song-info">
-                    <img className='song-image' src={`${originURL}${song.image_cover}`} style={{width:'40px',height:'40px'}}/>
+                    <img className='song-image' src={`${song.image_cover}`} style={{width:'40px',height:'40px'}}/>
                     <div className="flex-col flex-1" style={{width:0}}>
                         <div className='song-name' style={{fontSize:'14px'}}>{song.name}</div>
                         <div className="flex-center">

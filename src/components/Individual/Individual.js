@@ -274,6 +274,7 @@ const Individual=()=>{
     const {playlists,currentIndex}=player
     useEffect(() => {
         ( async ()=>{
+            if(expiry() && localStorage.token)
             const res = await axios.get(`${listsonguserURL}?choice=${option}`,headers())
                 const data=res.data.map(item=>{
                 return({...item,checked:false,})

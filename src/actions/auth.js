@@ -149,7 +149,7 @@ export const reset_password = (email) => async dispatch => {
     const body = JSON.stringify({ email });
 
     try {
-        await axios.post(`https://zingmp3-1qrf.onrender.com/api/v4/reset/password/`, body, config);
+        await axios.post(`https://zingmp3server-cvx4oj7k2-anhdaipro.vercel.app/api/v4/reset/password/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_SUCCESS
@@ -171,7 +171,7 @@ export const reset_password_confirm = (uidb64, token, password) => async dispatc
     const body = JSON.stringify({ uidb64, token,password});
 
     try {
-        const res =await axios.post(`https://zingmp3-1qrf.onrender.com/api/v4/password-reset/${uidb64}/${token}/`, body, config);
+        const res =await axios.post(`https://zingmp3server-cvx4oj7k2-anhdaipro.vercel.app/api/v4/password-reset/${uidb64}/${token}/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS,

@@ -314,6 +314,7 @@ const Player=()=>{
         handleEndScroll();
     };
     
+    const item="Drivin' towards the sun"
     const sentencesshow=useMemo(() =>{
         const itemcurrent=song.sentences?song.sentences.findLast(item=>item.words[0].startTime<=timecurent):null
         return itemcurrent
@@ -487,7 +488,7 @@ const Player=()=>{
                     <div className="play-control-wrapper">
                         <div className="player-control-left">
                             <div className='flex-center'>
-                                <img className="song-image" src={`${originURL}${songs[currentIndex].image_cover}`}/>
+                                <img className="song-image" src={`${songs[currentIndex].image_cover}`}/>
                                 <div className="card-info">
                                     <Songinfo
                                         song={songs[currentIndex]}
@@ -502,7 +503,7 @@ const Player=()=>{
                                     <Actionsong 
                                         song={songs[currentIndex]}
                                         className={`song-dot icon-button`}
-                                       songid={songid}
+                                        songid={songid}
                                     />    
                                 </div>
                             </div>
@@ -662,7 +663,7 @@ const Player=()=>{
                         </div>
                     </div>
                 </div>
-                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={originURL+songURL}  volume={volume}>
+                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={songURL}  volume={volume}>
                 <audio data-html5-video preload="auto" muted={muted}
                     onPlay={()=>{
                         dispatch(setsong({change:true,play:true}))
@@ -685,7 +686,7 @@ const Player=()=>{
                            
                                                 
                     } }
-                    ref={audioref} loop={onerepeat||repeat?true:false}  src={originURL+url}/>
+                    ref={audioref} loop={onerepeat||repeat?true:false}  src={url}/>
                 </VideoPlayer>
                 </div>
             </div>

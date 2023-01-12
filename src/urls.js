@@ -1,5 +1,5 @@
-export const api='https://zingmp3server-cvx4oj7k2-anhdaipro.vercel.app/api'
-export const originURL='https://zingmp3server-cvx4oj7k2-anhdaipro.vercel.app'
+export const api='https://zingmp3server.vercel.app/api'
+export const originURL='https://zingmp3server.vercel.app'
 export const LoginsocialURL=`${api}/v1/oauth/login`
 export const refreshTokenURL=`${api}/v1/refresh`
 export const verifyemailURL=`${api}/v3/verify/email`

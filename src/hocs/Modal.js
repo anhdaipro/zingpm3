@@ -51,10 +51,10 @@ const Modal=()=>{
                     {action=='editlyrics'?
                     <div className="lyric-content">
                         {!edit?<>
-                        {data.data.lyrics?
-                        <p className="lyric-song">{data.data.lyrics}</p>:
+                        {data.data.hasLyric?
+                        <p className="lyric-song">{data.data.lyrics.map(item=>item.words).join(' ')}</p>:
                         <div className='emty-lyric'>Lyric đang được cập nhật</div>}</>:
-                        <textarea placeholder="Nhập lời bài hát vào đây" spellCheck={false} onChange={e=>setLyrics(e.target.value)} value={lyrics} style={{width:'100%',height:'100%'}}></textarea>}
+                        <textarea placeholder="Nhập lời bài hát vào đây" spellCheck={false} onChange={e=>setLyrics(e.target.value)} value={lyrics.map(item=>item.words)} style={{width:'100%',height:'100%'}}></textarea>}
                     </div>:action=='editprofile'?<FormProfile/>:action=='addfeed'?<Addfeed/>:action=='addplaylist'?
                     <Addplaylist/>:action==='showcomment'?<Commentsong/>:action=='timeplayer'?
                     <Timepicker/>:action=='continueplayer'?<Continuteplayer/>:<DeleteTimer/>}

@@ -11,6 +11,11 @@ padding: 70px 60px;
 color:#fff;
 margin-right: -4px;
 }
+.avatar-skeleton {
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+}
 .no-content.container {
     width: 100%;
     color: var(--text-secondary);

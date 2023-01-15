@@ -6,9 +6,10 @@ import { searchURL,searchitemURL,  artistURL } from "../../urls"
 import styled from "styled-components"
 import {useNavigate,useParams,useSearchParams} from 'react-router-dom'
 import { partition } from "../../constants"
-import Song from "./Song"
+
 import PropType  from "prop-types"
 import { Playlist } from "../Individual/Individual"
+import { Song } from "../follow/Follow"
 
 const items=[
     {name:'Tất cả',value:'all',url:'tat-ca'},
@@ -153,32 +154,32 @@ Artist.prototype={
 }
 
 const Search=()=>{
-    const [songs,setSongs]=useState([])
+    const [search,setSearch]=useState({songs:[]})
+    const [categories,setCategories]=useState()
     const navigate=useNavigate()
+    const [groups,setGroups]=useState([])
     const {choice}=useParams()
-    const dispatch = useDispatch()
-    const player=useSelector(state=>state.player)
     const [playlists,setPlaylists]=useState([])
     const [artists,setArtists]=useState([])
     const [params, setSearchParams] = useSearchParams();
+    const {songs}=search
     useEffect(() => {
         ( async () =>{
-            const res= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers())
-            const  data=res.data
-            setSongs(data.songs)
-            console.log(res)
+            const res1= await axios.get(`${searchitemURL}?choice=${items.find(item=>item.url==choice).value}&keyword=${params.get('keyword')}`,headers())
+            const  data=res1.data
             setArtists(data.artists)
+            console.log(data)
+            setSearch({songs:data.songs})
             setPlaylists(data.playlists)
             
         })()
         
-    }, [params,choice])
-    const groups=useMemo(()=>{
-        return partition(songs,3)
-    },[songs])
-    const setsongs=useCallback((data)=>{
-        setSongs(data)
-    },[])
+    }, [choice,params])
+    
+    
+    const setsongs=(data)=>{
+        setSearch({songs:data})
+    }
     const setartists=useCallback((data)=>{
         setArtists(data)
     },[])
@@ -200,20 +201,15 @@ const Search=()=>{
                 <div className="standings-content section">
                     <div className="title">Nổi bật</div>
                     <div className="list">
-                        {songs.length>0&&(
-                            <div>
-                                <div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div>
-                                    <div>Bài hát</div>
-                                    <h3>{songs[0].name}</h3>
-                                    <h4>{songs[0].artist_name}</h4>
-                                </div>
-                            </div>
-                        )}
-                        {artists.length>0&& (
+                        {songs.length>0?
+                            <Song
+                                songs={songs}
+                                setsongs={data=>setsongs(data)}
+                                song={songs[0]}
+                                
+                            />
+                        :''}
+                        {artists.length>0?
                             <div>
                                 <div>
                                     <div></div>
@@ -225,8 +221,8 @@ const Search=()=>{
                                     <h4>{artists[0].count_follow}</h4>
                                 </div>
                             </div>
-                        )}
-                        {playlists.length>0&&(
+                        :''}
+                        {playlists.length>0?
                             <div>
                                 <div>
                                     <div></div>
@@ -238,31 +234,31 @@ const Search=()=>{
                                     <h4>{artists[0].artists}</h4>
                                 </div>
                             </div>
-                        )}
+                        :''}
                     </div>
                 </div>
-                {songs.length>0 &&(
+                {songs.length>0?
                 <div className='songs-content section'>
                     <div className="title"> Bài hát</div>
-                    <div className="list">
-                        {groups.map((item,index)=>
+                    <div className="list d-flex">
+                        {partition(songs,3).map((item,index)=>
                             <div key={index} className="column mar-b-0 is-fullhd-4 is-widescreen-4 is-desktop-4 is-touch-6 is-tablet-6">
                                 <div className="list">
-                                {item.map(song=>
-                                    <Song
-                                    index={index}
-                                    songs={songs}
-                                    setsongs={data=>setsongs(data)}
-                                    song={song}
-                                    key={item.id}
-                                    />
-                                )}
+                                    {item.map(song=>
+                                        <Song
+                                            index={index}
+                                            songs={songs}
+                                            setsongs={data=>setsongs(data)}
+                                            song={song}
+                                            key={song.id}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         )}
                     </div>
-                </div>)}
-                {playlists.length>0&&(
+                </div>:''}
+                {playlists.length>0?
                 <div className="playlists-content section">
                     <div className="title">Playlist</div>
                     <div className="list">
@@ -273,8 +269,9 @@ const Search=()=>{
                             />
                         )}
                     </div>
-                </div>)}
-                {artists.length >0 &&( <div className="artists-content section">
+                </div>:''}
+                {artists.length >0 ? 
+                <div className="artists-content section">
                     <div className="title">Nghệ sĩ</div>
                     <div className="list">
                         {artists.map(item=>
@@ -286,7 +283,7 @@ const Search=()=>{
                             />
                         )}
                     </div>
-                </div>)}
+                </div>:''}
             </SearchWrapper>
         </div>
     )

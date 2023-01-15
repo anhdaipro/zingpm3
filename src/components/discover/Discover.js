@@ -24,13 +24,14 @@ const listitems=[
     {name:"Quốc tế",value:'usuk'},
 ]
 const now=dayjs()
-    const hournow=now.get('hour')%2==0?now.get('hour'):now.get('hour')-1
+    const hournow=now.get('hour')-1>0?now.get('hour'):0
     const hourday= Array(hournow).fill().map((_,i)=>{
-        return dayjs().set('hour',i+1).format("DD-MM-YYYY HH")
+        return dayjs().set('hour',i+1)
     })
+    
     const yesterday=dayjs().subtract(24, 'hour')
     const houryesterday= [...Array(24 - hournow + 1).keys()].map(x => {
-        return yesterday.set('hour',x + hournow).format("DD-MM-YYYY HH")
+        return yesterday.set('hour',x + hournow)
     });
 const hours=[...houryesterday,...hourday]
 
@@ -79,34 +80,31 @@ const Discover=()=>{
             const res1 = await axios.get(zingchartURL,headers())
             setTopSongs(res1.data.topsongs)
             
-            const data= res1.data.dashboard.map(item=>{
-              return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
-            })
             setLabels(hours.map(item=>{
-                return `${item.slice(-2)}:00`
+                return `${item.format("HH")}:00`
             }))
-            
-            const datatop1 = data.filter(item=>item.song==res1.data.topsongs[0].id)
+            const datatop1 = res1.data.dashboard[0].views
             const top1=hours.map((item,i)=>{
-                if(datatop1.find(itemchoice=>itemchoice.day==item)){
-                    return datatop1.find(itemchoice=>itemchoice.day==item).count
+                if(datatop1.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop1.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
-            const datatop2=data.filter(item=>item.song==res1.data.topsongs[1].id)
+            const datatop2=res1.data.dashboard.length>1?res1.data.dashboard[1].views:[]
             const top2=hours.map((item,i)=>{
-                if(datatop2.find(itemchoice=>itemchoice.day==item)){
-                    return datatop2.find(itemchoice=>itemchoice.day==item).count
+                if(datatop2.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop2.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
-            const datatop3=data.filter(item=>item.song==res1.data.topsongs[2].id)
+            const datatop3=res1.data.dashboard.length>2?res1.data.dashboard[2].views:[]
             const top3=hours.map((item,i)=>{
-                if(datatop3.find(itemchoice=>itemchoice.day==item)){
-                    return datatop3.find(itemchoice=>itemchoice.day==item).count
+                if(datatop3.find(itemchoice=>item.isSame(itemchoice.day,'hour'))){
+                    return datatop3.find(itemchoice=>item.isSame(itemchoice.day,'hour')).count
                 }
                 return 0
             })
+           
           
             setTop1(top1)
             setTop2(top2)
@@ -194,6 +192,7 @@ const Discover=()=>{
                             <GradientChart
                             songs={topsongs}
                             time={new Date()}
+                            
                             labels={labels}
                             top1={top1}
                             top2={top2}

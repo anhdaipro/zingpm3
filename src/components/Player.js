@@ -364,9 +364,7 @@ const Player=()=>{
     
     const songid=useId()
     return(
-        songs.length>0 &&(
-            <div className="zm-section now-playing-bar is-idle">
-                
+            <>
                 <div className={`fs-nowplaying ${showoption && song.hasLyric?'show':''} zm-video-animation-enter-done`}>
                     <div className="fs-background">
                         <div className="video-blur-image">
@@ -688,8 +686,8 @@ const Player=()=>{
                     ref={audioref} loop={onerepeat||repeat?true:false}  src={url}/>
                 </VideoPlayer>
                 </div>
-            </div>
-        )
+            </>
+        
     )
 }
 export default Player

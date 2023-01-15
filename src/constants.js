@@ -225,9 +225,15 @@ name:"May",coin:5},
 {image:'https://res.cloudinary.com/dltj2mkhl/image/upload/v1653455647/a4c4dc437fd3a6632aba149769491f49.png_tplv-obj_xkoytb.png',
 name:"Tiktok",coin:5},
 ]
-export const partition=(array, n)=>{
-  return array.length ? [array.splice(0, n)].concat(partition(array, n)) : [];
-}
+
+export const partition = function(arr, length) {
+  var result = [];
+  for(var i = 0; i < arr.length; i++) {
+    if(i % length === 0) result.push([]);
+    result[result.length - 1].push(arr[i]);
+  }
+  return result;
+};
 export const  slugify=(str) =>{
 	str = str.replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ')
            .toLowerCase();  

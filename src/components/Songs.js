@@ -121,10 +121,7 @@ const Songs=()=>{
     useEffect(() => {
         ( async ()=>{
             if(songs.length==0){
-                
-                
                 const res = await axios.get(listsongURL,headers())
-                
                 dispatch(setsong({songs:res.data}))
             
             }
@@ -135,7 +132,6 @@ const Songs=()=>{
     const setstopplay=()=>{
         dispatch(showmodal(true))
         const data={data:{title:time_stop_player?"Xóa hẹn giờ":'Hẹn Giờ Dừng Phát Nhạc'},action:time_stop_player?'deletetimer':'timeplayer'}
-        
         dispatch(actionuser(data))
     }
 
@@ -146,7 +142,7 @@ const Songs=()=>{
         useEffect(()=>{
             const handleClick=(event)=>{
                 const {target}=event
-                if(!parentref.current.contains(target) ){
+                if(show&& !parentref.current.contains(target) ){
                     setShow(false)
                 }
             }

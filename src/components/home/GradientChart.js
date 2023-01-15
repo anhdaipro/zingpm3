@@ -43,7 +43,7 @@ position:absolute;
 const GradientChart = (props) => {
     const {labels,songs,top1,top2,top3,listvalues}=props
     const max=top1.length>0?Math.max.apply(Math, top1):5
-    console.log(max)
+    
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [tooltipData, setTooltipData] = useState(null);
     const [tooltipPos, setTooltipPos] = useState(null);

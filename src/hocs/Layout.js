@@ -80,8 +80,11 @@ const Layout = ({children}) => {
                 {children}
                 </div>
             </div>
-            {songs.length>0&&(
-            <Player/>)}
+            <div className="zm-section now-playing-bar is-idle">
+                {songs.length>0&&(
+                <Player/>)}
+            </div>
+            
             <Songs/>
             {showaction &&(<Listaction/>)}
             {showpost&&(<DetailFeed/>)}

@@ -69,3 +69,94 @@ export const usePagination = ({
 
   return paginationRange;
 };
+
+useEffect(() => {
+  ( async ()=>{
+      
+      const res1 = await axios.get(zingchartURL,headers())
+      setTopSongs(res1.data.topsongs)
+      
+      const data= res1.data.dashboard.map(item=>{
+        return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
+      })
+      setLabels(hours.map(item=>{
+          return `${item.slice(-2)}:00`
+      }))
+      
+      const datatop1 = data.filter(item=>item.song==res1.data.topsongs[0].id)
+      const top1=hours.map((item,i)=>{
+          if(datatop1.find(itemchoice=>itemchoice.day==item)){
+              return datatop1.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+      if(res1.data.topsongs.length>1){
+      const datatop2=data.filter(item=>item.song==res1.data.topsongs[1].id)
+      const top2=hours.map((item,i)=>{
+          if(datatop2.find(itemchoice=>itemchoice.day==item)){
+              return datatop2.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+      setTop2(top2)
+      }
+      if(res1.data.topsongs.length>2){
+      const datatop3=data.filter(item=>item.song==res1.data.topsongs[2].id)
+      const top3=hours.map((item,i)=>{
+          if(datatop3.find(itemchoice=>itemchoice.day==item)){
+              return datatop3.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+      setTop3(top3)
+      }
+    
+      setTop1(top1)
+      
+      
+      const res2 = await axios.get(listartistURL,headers())
+      const data2=res2.data
+      setArtists(data2)
+  })()
+}, [])
+
+useEffect(() => {
+  ( async ()=>{
+      const res = await axios.get(zingchartURL,headers())
+      
+      setSongs(res.data.topsongs)
+      const data= res.data.dashboard.map(item=>{
+        return ({...item,day:dayjs(item.day).format("DD-MM-YYYY HH")})
+      })
+      setLabels(hours.map(item=>{
+          return `${item.slice(-2)}:00`
+      }))
+      setListvalues(res.data.songvalue)
+      
+      const datatop1 = data.filter(item=>item.song==res.data.topsongs[0].id)
+      const top1=hours.map((item,i)=>{
+          if(datatop1.find(itemchoice=>itemchoice.day==item)){
+              return datatop1.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+      const datatop2=data.filter(item=>item.song==res.data.topsongs[1].id)
+      const top2=hours.map((item,i)=>{
+          if(datatop2.find(itemchoice=>itemchoice.day==item)){
+              return datatop2.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+      const datatop3=res.data.topsongs.length>2?data.filter(item=>item.song==res.data.topsongs[2].id):[]
+      const top3=hours.map((item,i)=>{
+          if(datatop3.find(itemchoice=>itemchoice.day==item)){
+              return datatop3.find(itemchoice=>itemchoice.day==item).count
+          }
+          return 0
+      })
+     
+      setTop1(top1)
+      setTop2(top2)
+      setTop3(top3)
+  })()
+}, [])

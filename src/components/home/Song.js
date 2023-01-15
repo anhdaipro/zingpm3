@@ -29,7 +29,7 @@ const Song=(props)=>{
             <PlaySong song={song}/>        
             <div className="card-info">
                 <Songinfo
-                song={song}
+                    song={song}
                 />
             </div>
             

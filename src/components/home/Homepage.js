@@ -7,6 +7,8 @@ import { headers } from "../../actions/auth"
 import dayjs from "dayjs"
 import {useDispatch,useSelector} from "react-redux"
 import Song from "./Song"
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 const now=dayjs()
     const hournow=now.get('hour')-1>0?now.get('hour'):0
     const hourday= Array(hournow).fill().map((_,i)=>{
@@ -18,7 +20,30 @@ const now=dayjs()
         return yesterday.set('hour',x + hournow)
     });
 const hours=[...houryesterday,...hourday]
-
+function Box(){
+    return (
+        <div
+            className="playlist-item"
+        >
+            
+            <Skeleton containerClassName="thumb" className="thumb"></Skeleton>
+            
+            <div class="card-info">
+                
+                    <Skeleton containerClassName="song-name" className="song-name" width={100}></Skeleton>
+               
+               
+                <Skeleton width={160}></Skeleton>
+               
+            </div>
+            <div class="flex-center">
+               
+                <Skeleton circle containerClassName="icon-button" count={4} className="icon-button"></Skeleton>
+               
+            </div>
+        </div>
+    )
+}
 const Homepage=()=>{
     const datasongs=useSelector(state => state.player.songs)
     const [songs,setSongs]=useState([])
@@ -28,7 +53,7 @@ const Homepage=()=>{
     const [top2,setTop2]=useState([])
     const [top3,setTop3]=useState([])
     const dispatch = useDispatch()
-  
+    const [loading,setLoading]=useState(true)
     const player=useSelector(state => state.player)
     
     useEffect(() => {
@@ -62,7 +87,7 @@ const Homepage=()=>{
                 }
                 return 0
             })
-           
+           setLoading(false)
             setTop1(top1)
             setTop2(top2)
             setTop3(top3)
@@ -88,15 +113,20 @@ const Homepage=()=>{
                 <div style={{position:'relative',width:'100%',marginTop:'52px',height:'270px'}}>
                 <GradientChart
                     songs={songs}
-                    
                     labels={labels}
                     top1={top1}
-                    
                     top2={top2}
                     top3={top3}
                 />
                 </div>
                 <div>
+                    {loading?
+                    <SkeletonTheme highlightColor="#3a3344" baseColor="rgba(255, 255, 255, 0.2)">
+                        <Skeleton wrapper={Box}  height={60} count={5} />
+                    </SkeletonTheme>
+                   
+                    
+                    :<>
                     {songs.map((song,index)=>
                         <Song
                             song={song}
@@ -105,7 +135,7 @@ const Homepage=()=>{
                             index={index}
                             setsongs={data=>setsongs(data)}
                         />
-                    )}
+                    )}</>}
                 </div>
             </div>
             

@@ -683,7 +683,7 @@ const MV=()=>{
                                                 <div className="media-content">
                                                     <div className="title">{mv.name}</div>
                                                     <div className="subtitle is-one-line">
-                                                        <a className="is-ghost" href="/nguyendinhvu">Nguyễn Đình Vũ</a>, 
+                                                        <a className="is-ghost" href={`/${mv.artist_name}`}>{mv.artist_name}</a>, 
                                                         <a className="is-ghost" href="/nghe-si/ACV-Music">ACV</a>
                                                     </div>
                                                  </div>

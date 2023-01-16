@@ -41,6 +41,7 @@ const LoginFacebook=()=>{
             localStorage.setItem("expirationDate",expiri);
             localStorage.setItem('refresh',refresh);
             localStorage.setItem('token',access);
+            console.log(res.data)
             const search = window.location.search;
             const params = new URLSearchParams(search);
             

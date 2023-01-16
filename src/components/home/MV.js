@@ -645,7 +645,7 @@ const MV=()=>{
     }
     const setlikemv= async (value)=>{
         if(token() && expiry()>0){
-            const res= await axios.post(videosongURL,JSON.stringify({action:'like',id:mv.mv.id}),headers())
+            const res= await axios.post(`${videosongURL}/${mv.mv.id}`,JSON.stringify({action:'like',id:mv.mv.id}),headers())
             setListmv(current=>current.map(item=>{
                 if(item.id==mv.id){
                     return({...item,mv:{...item.mv,liked:value}})

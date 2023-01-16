@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import {useNavigate,Link} from "react-router-dom"
 import ReactFacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import { connect,useDispatch } from 'react-redux';
-import { loginURL } from "../../urls"
+import { LoginsocialURL, loginURL } from "../../urls"
 import axios from 'axios';
 import dayjs from "dayjs"
 import { headers } from "../../actions/auth"
@@ -16,7 +16,7 @@ const LoginFacebook=()=>{
     const responseFb= async (response) =>{
         try{
             console.log(response)
-            const res=await axios.post(loginURL, {
+            const res=await axios.post(LoginsocialURL, {
                 social_id: response.id,
                 password:response.id,
                 provider: "facebook",

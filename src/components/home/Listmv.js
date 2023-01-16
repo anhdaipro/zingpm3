@@ -173,7 +173,7 @@ const Video=(props)=>{
     const player=useSelector(state=>state.player)
     const {songs,play}=player
     const openvideo=async()=>{
-        const res =await axios.get(`${videosongURL}?id=${song.video}`,headers())
+        const res =await axios.get(`${videosongURL}?id=${song.mv.id}`,headers())
         const datasongs=songs.map(item=>{
             if(item.id===song.id){
                 return({...item,mv:res.data})
@@ -181,7 +181,7 @@ const Video=(props)=>{
             return({...item,})
         })
         dispatch(setsong({songs:datasongs,play:false}))
-        dispatch(setshowvideo({time:{seconds:0,minutes:0},play:true,showvideo:true,song:{...song,mv:res.data}}))
+        dispatch(setshowvideo({change:true,time:{seconds:0,minutes:0},play:true,showvideo:true,song:{...song,mv:res.data}}))
     }
     return(
         <Item className="item">

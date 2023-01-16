@@ -122,7 +122,7 @@ export const FormProfile=()=>{
     },[data.changefile])
     const previewFile= async (e)=>{
         [].forEach.call(e.target.files, function(file) {
-            console.log(file)
+            
             var url = (window.URL || window.webkitURL).createObjectURL(file);
             setformdata({...formdata,avatar:url,file:file})
         })

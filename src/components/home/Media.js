@@ -6,7 +6,7 @@ const VideoPlayer = (props) => {
     const {player,mediaElement,url,volume,setsong}=props
     const dispatch=useDispatch()
     const {duration,change,play,currentIndex,songs,view,time}=player
-   
+  
     useEffect(()=>{
         if(duration){
             mediaElement.current.volume=volume

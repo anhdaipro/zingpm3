@@ -81,7 +81,7 @@ const Follow=()=>{
         })()
     }, [choice,dispatch])
     const location=useLocation()
-    console.log(choice)
+    
     const slideRef=useRef()
     const setfollow=useCallback( async (itemchoice,name,value)=>{
         if(token() && expiry()>0){

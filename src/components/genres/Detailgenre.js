@@ -61,7 +61,7 @@ background-color:#9b4de0
 
 const Detailgenre=()=>{
     const dispatch = useDispatch()
-    console.log(headers)
+    
     const [genre,setGenre]=useState()
     const [option,setOption]=useState()
     const [songs,setSongs]=useState([])

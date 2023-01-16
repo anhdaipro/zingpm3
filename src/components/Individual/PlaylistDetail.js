@@ -49,7 +49,7 @@ const PlaylistDetail=()=>{
                             <div className="song-slider">
                                 <div onClick={()=>dispatch(setsong({play:!play}))} className="zm-card-image">
                                     <div className={`box1 ${play?'animated infinite rotate-full boder-50':'scale-image'}`}>
-                                        <img className="" src={songs[0].image_cover} alt="" />
+                                        {songs.lenght>0&&(<img className="" src={songs[0].image_cover} alt="" />)}
                                     </div>
                                     <div className="zm-actions-container">
                                         <div className="zm-box zm-actions playlist-actions">

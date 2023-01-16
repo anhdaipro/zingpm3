@@ -93,7 +93,7 @@ const Homepage=()=>{
             setTop3(top3)
         })()
     }, [])
-    console.log(top1)
+    
     const setsongs=useCallback((data)=>{
         setSongs(data)
     },[])

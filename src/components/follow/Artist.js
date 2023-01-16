@@ -102,8 +102,7 @@ const Video=(props)=>{
 const Artist=()=>{
     const {slugartist}=useParams()
     const {choice}=useParams()
-    console.log(slugartist)
-    console.log(choice)
+    
     const [songs,setSongs]=useState([])
     const [artist,setArtist]=useState()
     const [playlists,setPlaylists]=useState([])

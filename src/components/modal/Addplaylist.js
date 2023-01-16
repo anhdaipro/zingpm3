@@ -40,7 +40,7 @@ const Addplaylist=()=>{
             if(token() && expiry()>0){
             const res= await axios.post(newplaylistURL,JSON.stringify({name:keyword,public:publics,ramdom_play:ramdomplay,slug:slugify(keyword)}),headers())
             dispatch(showmodal(false))
-            const playlistupdate=[...playlists,{...res.data,user:user.id,user_name:user.name,images:[]}]
+            const playlistupdate=[...playlists,{...res.data,name:keyword,user:user.id,user_name:user.name,images:[]}]
             dispatch(updateplaylists(playlistupdate))
             toast.success(<span>Tạo playlist  "{keyword}" thành công</span>,{ 
                 position: toast.POSITION.BOTTOM_LEFT,

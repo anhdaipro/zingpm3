@@ -20,7 +20,7 @@ const Navbar=()=>{
     const uploadfile=async (e)=>{
         try{
             [].forEach.call(e.target.files, function(file) {
-                console.log(file)
+                
                 var url = (window.URL || window.webkitURL).createObjectURL(file);
                 const video=document.createElement('video')
                 video.src=url
@@ -42,7 +42,7 @@ const Navbar=()=>{
                     form.append('duration',video.duration)
                     axios.post(uploadmvURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
                     .then(res=>{
-                        console.log(res.data)
+                        
                     })
                 })
                 
@@ -56,14 +56,14 @@ const Navbar=()=>{
     const previewFile= async (e)=>{
         try{
         [].forEach.call(e.target.files, function(file) {
-            console.log(file)
+            
             var url = (window.URL || window.webkitURL).createObjectURL(file);
             const audio=document.createElement('audio')
             audio.src=url
             audio.addEventListener('loadeddata', e =>{      
               jsmediatags.read(file, {
                 onSuccess: function(tag) {
-                  console.log(tag);
+                  
                   const {title,artist,genre,album,lyrics,picture}=tag.tags
                   let form=new FormData()
                   if(picture){
@@ -92,7 +92,7 @@ const Navbar=()=>{
                   
                   axios.post(uploadsongURL,form,{headers:{ Authorization:`JWT ${token()}`,'Content-Type': 'multipart/form-data'}})
                   .then(res=>{
-                    console.log(res.data)
+             
                   })
                 },
                 onError: function(error) {

@@ -113,7 +113,7 @@ export const Song=(props)=>{
             </div>
             <div>{song.album?.name}</div>
             <div className="item-end">
-                {song.video &&(
+                {song.mv &&(
                     <Showmv
                         song={song}
                     />
@@ -190,7 +190,7 @@ export const Playlist=(props)=>{
         <div style={{width:'25%'}} className="slider-item">
             <Link to={`/playlist/${item.slug}/${item.id}`}>
                 <div className="playlist-image-wrapper">
-                    <div className="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`${item.images[0]}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
+                    <div className="container-discover__slider-item-img" style={{backgroundImage:`url(${item.images[0]?`${item.images[0].image_cover}`:'https://photo-zmp3.zmdcdn.me/album_default.png'})`,backgroundSize:'cover',width:'100%',paddingTop:'100%'}}></div>
                     <div className="card-list-image-hover">
                         <button className="icon-button">
                         {user.id==item.user?

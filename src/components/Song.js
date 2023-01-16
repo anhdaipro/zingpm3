@@ -15,24 +15,24 @@ const Showmv=({song})=>{
   const player=useSelector(state => state.player)
   const {songs}=player
   const openvideo=async ()=>{
-    if(song.mv){
-        dispatch(setshowvideo({showvideo:true,song:song,change:true,play:true,currentIndex:0}))
-        dispatch(setsong({play:false}))
+    if(song.mv.file){
+        dispatch(setshowvideo({change:true,showvideo:true,song:song,change:true,play:true,currentIndex:0}))
+        dispatch(setsong({change:true,play:false}))
     }
     else{
-        const res =await axios.get(`${videosongURL}?id=${song.video}`)
+        const res =await axios.get(`${videosongURL}?id=${song.mv}`)
         const datasongs=songs.map(item=>{
             if(item.id===song.id){
                 return({...item,mv:res.data})
             }
             return({...item,})
         })
-        dispatch(setsong({songs:datasongs,play:false}))
+        dispatch(setsong({change:true,songs:datasongs,play:false}))
         dispatch(setshowvideo({change:true,currentIndex:0,play:true,showvideo:true,song:{...song,mv:res.data}}))
     }
   }
   return(
-    <button onClick={openvideo} disabled={song.video?false:true} className="icon-button">
+    <button onClick={openvideo} disabled={song.mv?false:true} className="icon-button">
       <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 1000 1000" enableBackground="new 0 0 1000 1000" xmlSpace="preserve">
         <g><path d="M508.4,347.9c-1,0-1.9,0.2-2.9,0.3c-0.1,0-0.2,0-0.3,0c-1,0.1-1.9,0.2-2.8,0.5c-7.3,1.3-14,5.5-18.1,12.3L373.2,572L262.1,360.5c-6-10.1-17.9-14.6-28.9-12.1c-0.2,0-0.3,0.1-0.5,0.1c-1.1,0.3-2.1,0.6-3.1,1c-1,0.4-2,0.8-3,1.3c-0.2,0.1-0.4,0.2-0.6,0.3c-0.1,0-0.1,0.1-0.2,0.2c-3,1.7-5.6,3.9-7.7,6.6c0,0,0,0,0,0.1c-2,2.5-3.4,5.4-4.3,8.6c-0.1,0.2-0.1,0.3-0.2,0.5c-0.5,2-0.9,4.1-0.9,6.3v253.4c0,14,11.4,25.3,25.3,25.3c14,0,25.3-11.4,25.3-25.3V476.1l85.8,163.4c6.3,10.7,19.3,15.2,30.9,11.7c7-1.5,13.3-5.7,17.2-12.1l85.8-162.8v150.6c0,14,11.4,25.3,25.3,25.3c14,0,25.3-11.4,25.3-25.3V373.3C533.8,359.3,522.4,347.9,508.4,347.9z"/><path d="M789.5,350.2c-12.6-5.8-27.4,0-33,13l-79,195.1l-79-195.1c-5.6-13-20.4-18.8-33-13c-12.6,5.8-18.2,21.1-12.6,34.1L653,631.7c1.6,7.7,6.3,14.6,13.8,18.1c3.5,1.6,7.1,2.2,10.7,2.2c3.6,0.1,7.2-0.6,10.7-2.2c7.5-3.5,12.1-10.4,13.8-18.1L802,384.3C807.7,371.3,802.1,356,789.5,350.2z"/><path d="M787.2,60.7H212.8C100.8,60.7,10,151.5,10,263.4v473.1c0,112,90.8,202.8,202.8,202.8h574.5c112,0,202.8-90.8,202.8-202.8V263.5C990,151.5,899.2,60.7,787.2,60.7z M939.3,736.6c0,84-68.1,152.1-152.1,152.1H212.8c-84,0-152.1-68.1-152.1-152.1V263.5c0-84,68.1-152.1,152.1-152.1h574.5c84,0,152.1,68.1,152.1,152.1V736.6z"/></g>
       </svg>
@@ -198,7 +198,7 @@ const Likedsong=(props)=>{
   const datasongs=useSelector(state => state.player.songs)
   const setliked= async (name,value)=>{
     try{
-      console.log(expiry())
+      
       if(token() && expiry()>0){
         const res=await axios.post(`${songURL}/${song.id}`,JSON.stringify({action:'like'}),headers())
         if(songs){

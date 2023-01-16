@@ -35,7 +35,7 @@ const Song=(props)=>{
             
             
             <div className={`${show?'':'hiden'} flex-center`}>
-                {song.video &&(
+                {song.mv &&(
                     <Showmv
                         song={song}
                     />

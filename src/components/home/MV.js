@@ -475,7 +475,7 @@ const MV=()=>{
             dispatch(setshowvideo({play:true,currentIndex:indexchoice}))
         }
     }
-    console.log(urlvideo)
+    
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
     const canvasRef=useRef()
@@ -533,7 +533,7 @@ const MV=()=>{
         
         const settime=(e)=>{
             if(drag.time){
-                console.log('dd')
+                
                 const rects = timeref.current.getBoundingClientRect();
                 const clientX=e.clientX
                 const left =rects.left
@@ -658,8 +658,7 @@ const MV=()=>{
         }
     }
     const [animation,setAmimation]=useState(false)
-    console.log(percent)
-    console.log(percentload)
+    
     const [miniplayer,setMiniplayer]=useState(false)
     return(
         <div className={`zm-video-modal ${miniplayer?'video-minimize':'zm-video-animation-enter-done'}`}>
@@ -757,14 +756,15 @@ const MV=()=>{
                                                 onPlay={()=>{
                                                     dispatch(setshowvideo({play:true}))
                                                 }} 
-                                                onAbort={()=>console.log('loading')}
+                                               
                                                 onPause={()=>dispatch(setshowvideo({play:false}))} 
                                                 onEnded={()=>{
                                                     const value=currentIndex==listmv.length-1?0:currentIndex+1
                                                     
                                                     dispatch(setshowvideo({play:true,currentIndex:value}))
                                                 }}
-                                                onCanPlay={()=>console.log('can')}
+                                                onLoadedData={e=>dispatch(setshowvideo({duration:videoRef.current.duration}))}
+                                                
                                                 onTimeUpdate={()=>{
                                                     if(!drag.time && duration){
                                                         dispatch(setshowvideo({time:{seconds:videoRef.current.currentTime % 60,minutes:Math.floor((videoRef.current.currentTime) / 60) % 60}}))

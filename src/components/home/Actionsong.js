@@ -16,7 +16,7 @@ export const Listaction=(props)=>{
     const user=useSelector(state=>state.auth.user)
     const dispatch = useDispatch()
     const songid=useId()
-    console.log(songid)
+   
     useEffect(()=>{
         const handleClick=(event)=>{
             const {target}=event

@@ -40,7 +40,7 @@ const LoginGoogle=(props)=>{
                 type:LOGIN_SUCCESS,
                 payload:response.data
             })    
-            const {refresh,access}=res.data
+            const {refresh,access}=response.data
             const expiri=dayjs().add(259,'minute')
             localStorage.setItem("expirationDate",expiri);
             localStorage.setItem('refresh',refresh);

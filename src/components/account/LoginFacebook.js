@@ -4,6 +4,7 @@ import ReactFacebookLogin from 'react-facebook-login/dist/facebook-login-render-
 import { connect,useDispatch } from 'react-redux';
 import { loginURL } from "../../urls"
 import axios from 'axios';
+import dayjs from "dayjs"
 import { headers } from "../../actions/auth"
 import { LOGIN_SUCCESS } from '../../actions/types';
 import { generateString } from '../../constants';
@@ -15,7 +16,6 @@ const LoginFacebook=()=>{
     const responseFb= async (response) =>{
         try{
             console.log(response)
-
             const res=await axios.post(loginURL, {
                 social_id: response.id,
                 password:response.id,
@@ -32,10 +32,9 @@ const LoginFacebook=()=>{
                 email: response.email,
                 picture: response.picture.data.url
             });
-            const res1 = await axios.post(loginURL,JSON.stringify({token:res.data.access_token}), headers)
             dispatch({
                 type:LOGIN_SUCCESS,
-                type:res1.data
+                payload:res.data
             })
             const {refresh,access}=res.data
             const expiri=dayjs().add(259,'minute')
@@ -57,7 +56,7 @@ const LoginFacebook=()=>{
     }
     return(
         <ReactFacebookLogin
-            appId="185202659227880"
+            appId="697186108669015"
             fields="name,email,picture"
             callback={responseFb}
             render={renderProps => (

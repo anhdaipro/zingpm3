@@ -12,6 +12,7 @@ import LoginInstagram from "./LoginInstagram"
 import {ToastContainer, toast } from'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import dayjs from "dayjs"
+import LoginFacebook from "./LoginFacebook"
 const Btnpass=styled.button`
 display:flex;
 width:20px;
@@ -153,7 +154,7 @@ const Login=()=>{
                     </Dotcontent>
                     <div className="flex-center mb-16">
                         <LoginGoogle/>
-                        
+                        <LoginFacebook/>
                         <LoginInstagram/>
                     </div>
                     <div className="item-center">

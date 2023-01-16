@@ -10,7 +10,7 @@ const LoginInstagram=()=>{
       cssclassName="InstagramLogin"
       onSuccess={responseInstagram}
       onFailure={responseInstagram}
-    />
+    ><span>Instagram</span></InstagramLogin>
     )
 }
 export default LoginInstagram

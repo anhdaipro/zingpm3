@@ -21,7 +21,7 @@ const LoginFacebook=()=>{
                 password:response.id,
                 provider: "facebook",
                 name:response.name,
-                usename:generateString(12),
+                username:generateString(12),
                 email:response.email,
                 avatar:response.picture.url
             })

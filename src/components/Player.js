@@ -660,7 +660,7 @@ const Player=()=>{
                         </div>
                     </div>
                 </div>
-                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={songURL}  volume={volume}>
+                <VideoPlayer mediaElement={audioref} setsong={setsong} player={player} url={`${songURL}/${song.id}`}  volume={volume}>
                 <audio data-html5-video preload="auto" muted={muted}
                     onPlay={()=>{
                         dispatch(setsong({change:true,play:true}))

@@ -748,7 +748,7 @@ const MV=()=>{
                                                 }
                                             }}
                                              className={`z--player ${isVideoInFullscreen()?'player-full-screem':''}`} data-player="" tabIndex="1">
-                                            <VideoPlayer setsong={setshowvideo} url={videosongURL} player={mvplayer} mediaElement={videoRef} volume={volume}>
+                                            <VideoPlayer setsong={setshowvideo} url={`${videosongURL}/${mv.mv.id}`} player={mvplayer} mediaElement={videoRef} volume={volume}>
                                             <svg class="iqp-icon iqp-icon-fullscreen" aria-hidden="true"> <use class="iqp-svg-symbol iqp-svg-fullscreen1" xlinkHref="#iqp-svg-fullscreen1-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen2" xlinkHref="#iqp-svg-fullscreen2-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen3" xlinkHref="#iqp-svg-fullscreen3-g"></use> <use class="iqp-svg-symbol iqp-svg-fullscreen4" XlinkHref="https://www.iq.com/iqp-svg-fullscreen4-g"></use> </svg>
                                             <video
                                             

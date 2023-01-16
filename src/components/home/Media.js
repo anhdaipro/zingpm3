@@ -28,7 +28,7 @@ const VideoPlayer = (props) => {
         ( async ()=>{
             try{
                 if(view){
-                    const res = await axios.post(`${url}/${songs[currentIndex].id}`,JSON.stringify({action:'view'}),headers())
+                    const res = await axios.post(`${url}`,JSON.stringify({action:'view'}),headers())
                 }
             }
             catch(e){

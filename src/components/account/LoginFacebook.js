@@ -15,7 +15,7 @@ const LoginFacebook=()=>{
     const dispatch = useDispatch()
     const responseFb= async (response) =>{
         try{
-            console.log(response)
+           
             const res=await axios.post(LoginsocialURL, {
                 social_id: response.id,
                 password:response.id,
@@ -41,10 +41,14 @@ const LoginFacebook=()=>{
             localStorage.setItem("expirationDate",expiri);
             localStorage.setItem('refresh',refresh);
             localStorage.setItem('token',access);
-            console.log(res.data)
             const search = window.location.search;
             const params = new URLSearchParams(search);
-            
+            if(params.get('next')!=null){
+                window.location.href=params.get('next')
+            }
+            else{
+                window.location.href='/'
+            }
         }
         catch(e){
             console.log(e)

@@ -307,6 +307,10 @@ height:20px;
     border-radius: 0.2em;
     top: -94px;
 };
+.image-preview{
+    position:absolute;
+    top: -80px;
+};
 .seek-time{
     position:absolute;
     color: #f7f7f7;
@@ -424,6 +428,7 @@ Video.propTypes = {
 }
 const MV=()=>{
     const mvplayer=useSelector(state=>state.mvplayer)
+    console.log(mvplayer)
     const {song,currentIndex,time,duration,play}=mvplayer
     const {slug}=useParams()
     const dispatch = useDispatch()
@@ -433,7 +438,7 @@ const MV=()=>{
     const [volume,setVolume]=useState(0.5)
     const [percentload,setPercentload]=useState(0)
     const timeref=useRef()
-    const [urlvideo,seturlvideo]=useState()
+    const [imagepreview,setImagepreview]=useState()
     const [state,setState]=useState({width:document.documentElement.clientWidth})
     const timer=useRef()
     const [ramdom,setRamdom]=useState(false)
@@ -447,22 +452,15 @@ const MV=()=>{
     useEffect(()=>{
         (async()=>{
             const res = await axios.get(listmvURL,headers())
-            setListmv(res.data)
-            
             const mvcurrent=res.data.find(item=>item.id==song.id)
             const mvupdate=res.data.filter(item=>item.id!=song.id)
             setListmv([mvcurrent,...mvupdate])
         })()  
     },[slug,song.id])
+
     const mv=listmv.length>0?listmv[currentIndex]:song
-    useEffect(() => {
-        const url=mv.mv.file
-        axios({url,responseType: 'blob',})
-        .then((response) => {
-            const urlObject = window.URL.createObjectURL(new Blob([response.data]));
-            seturlvideo(urlObject)
-        });
-    }, [mv.id])
+    console.log(listmv)
+    console.log(song)
     const videoRef=useRef()
     const forward=(e)=>{
         e.stopPropagation()
@@ -480,16 +478,28 @@ const MV=()=>{
     const [showtime,setShowtime]=useState(false)
     const canvasRef=useRef()
     const [image,setImage]=useState()
-    const settimeshow=(e)=>{
-        e.stopPropagation()
+    const settimeshow=(event)=>{
         setShowtime(true)
         const rects = timeref.current.getBoundingClientRect();
         const {left,width}=rects
-        const clientX=e.clientX
+        const clientX=event.clientX
         const percent=(clientX-left)/width
         const times=percent*duration
         setTimeshow(times)
-        
+        const video=document.createElement('video')
+        video.src=mv.mv.file
+        video.addEventListener('loadeddata', e =>{
+            video.currentTime =times
+        })
+        video.addEventListener('timeupdate',e=>{
+            let canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let image = canvas.toDataURL("image/png");
+            setImagepreview(image)
+            console.log(image)
+        })
     }
     const settimeaudio=(e)=>{
         e.stopPropagation() 
@@ -812,8 +822,6 @@ const MV=()=>{
                                                         onMouseMove={(e)=>settimeshow(e)} 
                                                         onMouseLeave={()=>setShowtime(false)}
                                                         onMouseDown={(e)=>{
-                                                            
-                                                            
                                                             setDrag({...drag,time:true})
                                                             settimeaudio(e)
                                                             
@@ -825,7 +833,7 @@ const MV=()=>{
                                                         <span className="bar --z--bar-fill-load" style={{backgroundColor: `rgb(184, 184, 184)`, width: `${percentload}%`}}></span>
                                                         <SeekBar className="seekbar" style={{width:`${percent}%`}}></SeekBar>
                                                         <span className={`seek-time ${showtime?'':'hiden'}`} style={{left: `${timeshow*100/duration}%`, marginLeft: `-19.5px`}}>{('0'+Math.floor((timeshow) / 60) % 60).slice(-2)}:{('0'+Math.floor(timeshow)  % 60).slice(-2)}</span>
-                                                        
+                                                        <div className={`image-preview ${showtime?'':'hiden'}`}><img height="60" width="120" src={imagepreview}/></div>
                                                     </Contentprogess> 
                                                 </div>
                                                 <ControlVideo className="control-video flex">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState,useMemo } from "react"
+import { useEffect, useRef, useState,useMemo, useCallback } from "react"
 import { useSelector,useDispatch } from "react-redux"
 import { headers, setrequestlogin,token,expiry } from "../../actions/auth"
 import { setshowvideo} from "../../actions/mv"
@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useParams } from "react-router"
 import VideoPlayer from "./Media"
 import { dataURLtoFile } from "../../constants"
+import {debounce} from "lodash"
 
 export const Item=styled.div`
     position: relative;
@@ -428,7 +429,7 @@ Video.propTypes = {
 }
 const MV=()=>{
     const mvplayer=useSelector(state=>state.mvplayer)
-    console.log(mvplayer)
+    
     const {song,currentIndex,time,duration,play}=mvplayer
     const {slug}=useParams()
     const dispatch = useDispatch()
@@ -459,8 +460,7 @@ const MV=()=>{
     },[slug,song.id])
 
     const mv=listmv.length>0?listmv[currentIndex]:song
-    console.log(listmv)
-    console.log(song)
+    
     const videoRef=useRef()
     const forward=(e)=>{
         e.stopPropagation()
@@ -477,8 +477,11 @@ const MV=()=>{
     const [timeshow,setTimeshow]=useState(0)
     const [showtime,setShowtime]=useState(false)
     const canvasRef=useRef()
+    const [urlvideo,seturlvideo]=useState()
     const [image,setImage]=useState()
-    const settimeshow=(event)=>{
+    const [delayHandler, setDelayHandler] = useState(null)
+    const settimeshow=(event)=>{ 
+        event.stopPropagation()
         setShowtime(true)
         const rects = timeref.current.getBoundingClientRect();
         const {left,width}=rects
@@ -486,20 +489,33 @@ const MV=()=>{
         const percent=(clientX-left)/width
         const times=percent*duration
         setTimeshow(times)
+        debouncetime(times)
+    }
+    
+    const debouncetime=(times)=>{
+        if(times!==timeshow){
         const video=document.createElement('video')
-        video.src=mv.mv.file
-        video.addEventListener('loadeddata', e =>{
-            video.currentTime =times
-        })
-        video.addEventListener('timeupdate',e=>{
-            let canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            let image = canvas.toDataURL("image/png");
-            setImagepreview(image)
-            console.log(image)
-        })
+            video.src=urlvideo
+            video.addEventListener('loadeddata', e =>{
+                video.currentTime =times
+            })
+            video.addEventListener('timeupdate',e=>{
+                console.log(timeshow)
+                let canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                let image = canvas.toDataURL("image/png");
+                let success = image.length > 100000;
+                if(success){
+                    
+                URL.revokeObjectURL(urlvideo);
+                setImagepreview(image)
+                }
+            })
+            video.preload = 'metadata';
+            video.muted = true;
+        }
     }
     const settimeaudio=(e)=>{
         e.stopPropagation() 
@@ -516,6 +532,15 @@ const MV=()=>{
         
     }
     const volumeref=useRef()
+    useEffect(() => {
+        const url=mv.mv.file
+        axios({url,responseType: 'blob',})
+        .then((response) => {
+            const urlObject = window.URL.createObjectURL(new Blob([response.data]));
+            seturlvideo(urlObject)
+            
+        });
+    }, [mv.id])
     
     useEffect(()=>{
         const setprogess=(e)=>{
@@ -819,6 +844,7 @@ const MV=()=>{
                                             <div onClick={e=>e.stopPropagation()} className="controls-wrapper">
                                                 <div  className="song-player-slider item-center">
                                                     <Contentprogess 
+                                                        
                                                         onMouseMove={(e)=>settimeshow(e)} 
                                                         onMouseLeave={()=>setShowtime(false)}
                                                         onMouseDown={(e)=>{
@@ -833,7 +859,7 @@ const MV=()=>{
                                                         <span className="bar --z--bar-fill-load" style={{backgroundColor: `rgb(184, 184, 184)`, width: `${percentload}%`}}></span>
                                                         <SeekBar className="seekbar" style={{width:`${percent}%`}}></SeekBar>
                                                         <span className={`seek-time ${showtime?'':'hiden'}`} style={{left: `${timeshow*100/duration}%`, marginLeft: `-19.5px`}}>{('0'+Math.floor((timeshow) / 60) % 60).slice(-2)}:{('0'+Math.floor(timeshow)  % 60).slice(-2)}</span>
-                                                        <div className={`image-preview ${showtime?'':'hiden'}`}><img height="60" width="120" src={imagepreview}/></div>
+                                                        <div style={{left: `${timeshow*100/duration}%`, marginLeft: `-60.5px`}} className={`image-preview ${showtime?'':'hiden'}`}><img  style={{height:"60px", width:"120px"}} src={imagepreview}/></div>
                                                     </Contentprogess> 
                                                 </div>
                                                 <ControlVideo className="control-video flex">

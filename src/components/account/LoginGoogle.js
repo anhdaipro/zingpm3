@@ -47,7 +47,12 @@ const LoginGoogle=(props)=>{
             localStorage.setItem('token',access);
             const search = window.location.search;
             const params = new URLSearchParams(search);
-            
+            if(params.get('next')!=null){
+                window.location.href=params.get('next')
+            }
+            else{
+                window.location.href='/'
+            }
         }
         catch(e){
             dispatch({

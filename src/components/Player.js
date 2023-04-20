@@ -16,12 +16,7 @@ import { dataURLtoFile } from "../constants"
 import { useNavigate } from "react-router"
 import VideoPlayer from "./home/Media"
 import dayjs from "dayjs"
-const Dot=styled.div`
-heigth:100%;
-width:1px;
-margin:0 12px;
-background-color:#fff
-`
+
 const SeekBarProgress=styled.div`
     height: 2px;
     width: 100%;
@@ -71,19 +66,6 @@ height:16px;
     display:block
 }
 `
-const Flexcenter=styled.div`
-display:flex;
-background-color: #120c1c;
-color:#fff;
-padding:8px 8px;
-align-items:center
-`
-const Center=styled.div`
-display:flex;
-padding:4px 8px;
-justify-content:center;
-align-items:center
-`
 const  randomIntFromInterval=(min, max)=> { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
@@ -110,10 +92,10 @@ const Player=()=>{
         const currentTime=time.seconds+time.minutes*60
         return duration?currentTime/duration:0
     },[time.seconds,time.minutes,duration])
-    const url=songs[currentIndex].file?songs[currentIndex].file:localStorage.getItem('url')
+    const url=songs[currentIndex].file
     const index=currentIndex
     const song=songs[index]
-  
+    console.log(duration)
     useEffect(()=>{
         ( async ()=>{ 
             if(!song.file){
@@ -131,7 +113,7 @@ const Player=()=>{
             dispatch(setsong({duration:0,time:{seconds:0,minutes:0}}))
         }
     })()
-    },[song.file,dispatch])
+    },[song.id,dispatch])
    
     useEffect(() => {
         const now=() =>dayjs()
@@ -143,22 +125,9 @@ const Player=()=>{
         }
     }, [time_stop_player,dispatch,song,show,play,time])
     
-    useEffect(() => {
-        if(localStorage.getItem('index')){
-            dispatch(setsong({currentIndex:parseInt(localStorage.getItem('index'))}))
-        }
-    }, [dispatch])
+    
     const audioref=useRef()
-    useEffect(()=>{
-        const listener=(event)=>{
-            localStorage.setItem('index',currentIndex)
-            localStorage.setItem('url',url)
-            localStorage.setItem('songs',JSON.stringify(songs))
-            localStorage.setItem('time',time.seconds+time.minutes*60)
-        }
-        window.addEventListener('beforeunload', listener)
-        return () => window.removeEventListener('beforeunload', listener)
-    },[currentIndex,time.seconds,time.minutes,url,songs])
+    
     
     const forward=(e)=>{
         if(ramdom){
@@ -219,7 +188,7 @@ const Player=()=>{
                 setVolume(percent)
             }
         }
-        
+       
         const settime=(e)=>{
             e.preventDefault();
             if(drag.time){
@@ -313,11 +282,10 @@ const Player=()=>{
         handleEndScroll();
     };
     
-    const item="Drivin' towards the sun"
     const sentencesshow=useMemo(() =>{
-        const itemcurrent=song.sentences?song.sentences.findLast(item=>item.words[0].startTime<=timecurent):null
+        const lSentences = song.sentences && song.sentences.length > 0 ? song.sentences.filter(item=>item.words[0].startTime<=timecurent) : []
+        const itemcurrent= lSentences.length ? lSentences[lSentences.length-1]:null
         return itemcurrent
-        
     },[timecurent,song.sentences])
     
     const listdisplay=()=>{
@@ -677,8 +645,7 @@ const Player=()=>{
                             dispatch(setsong({change:true,time:{seconds:audioref.current.currentTime % 60,minutes:Math.floor((audioref.current.currentTime) / 60) % 60}}))
                         }  
                     }}             
-                    onLoadStart={()=>dispatch(setsong({duration:0}))}
-                    onLoadedData={(e)=>{
+                    onLoadedMetadata={(e)=>{
                             dispatch(setsong({duration:audioref.current.duration}))
                            
                                                 
